@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-class DungeonGenerator : MonoBehaviour
+public class DungeonGenerator : MonoBehaviour
 {
     public int width;
     public int height;
@@ -18,21 +18,22 @@ class DungeonGenerator : MonoBehaviour
         public int CenterY() { return y + h / 2; }
     }
 
-    public int[,] Map { get { return map; } set { map = value; } }
+    public byte[,] Map { get { return map; } set { map = value; } }
 
-    int[,] map = null;
+    byte[,] map = null;
     Room[] rooms = new Room[64];
     int roomCount = 0;
 
     // xorshift
     public uint seed = 123456789;
+    private uint rand;
 
     uint Rand()
     {
-        seed ^= seed << 13;
-        seed ^= seed >> 17;
-        seed ^= seed << 5;
-        return seed;
+        rand ^= rand << 13;
+        rand ^= rand >> 17;
+        rand ^= rand << 5;
+        return rand;
     }
 
     int RandRange(int min, int max)
@@ -194,9 +195,12 @@ class DungeonGenerator : MonoBehaviour
         }
     }
 
-    public int[,] GenerateMap()
+    public GridMap GenerateMap()
     {
-        map = new int[height, width];
+        rand = seed;
+
+        map = new byte[height, width];
+
         roomCount = 0;
 
         // 맵 초기화
@@ -213,6 +217,6 @@ class DungeonGenerator : MonoBehaviour
 
         AddExtraConnectionsSmart(5);
 
-        return map;
+        return new GridMap(map);
     }
 }
