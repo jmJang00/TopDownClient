@@ -20,7 +20,7 @@ public class GridMeshBuilder : MonoBehaviour
 
     int width;
     int height;
-    int[,] map = null;
+    byte[,] map = null;
 
     public void SetMap()
     {
