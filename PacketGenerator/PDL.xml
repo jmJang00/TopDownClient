@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PDL>
+  <packet name="S_CreateMyCharacter">
+    <int name="serverTick"/>
+    <uint name="accountId"/>
+  </packet>
+  <packet name="S_CreateOtherCharacter">
+    <int name="serverTick"/>
+    <uint name="accountId"/>
+  </packet>
+  <packet name="S_DeleteCharacter">
+    <int name="serverTick"/>
+    <uint name="accountId"/>
+  </packet>
+  <packet name="C_MoveStart">
+    <int name="clientTick"/>
+    <byte name="dir"/>
+    <float name="targetX"/>
+    <float name="targetY"/>
+  </packet>
+  <packet name="S_MoveStart">
+    <int name="acceptTick"/>
+    <uint name="accountId"/>
+    <byte name="dir"/>
+    <float name="targetX"/>
+    <float name="targetY"/>
+  </packet>
+  <packet name="S_MoveState">
+    <int name="currentTick"/>
+    <uint name="accountId"/>
+    <byte name="dir"/>
+    <float name="serverX"/>
+    <float name="serverY"/>
+    <float name="targetX"/>
+    <float name="targetY"/>
+  </packet>
+  <packet name="S_TickSync">
+    <int name="serverTick"/>
+  </packet>
+  <packet name="C_RotateStart">
+    <int name="clientTick"/>
+    <float name="targetAngle"/>
+  </packet>
+  <packet name="S_RotateStart">
+    <int name="accpetTick"/>
+    <uint name="accountId"/>
+    <float name="targetAngle"/>
+  </packet>
+  <packet name="S_RotateState">
+    <int name="currentTick"/>
+    <uint name="accountId"/>
+    <float name="currentAngle"/>
+    <float name="targetAngle"/>
+  </packet>
+  <packet name="C_ProjectileShootStart">
+    <int name="clientTick"/>
+  </packet>
+  <packet name="S_ProjectileShootStart">
+    <int name="accpetTick"/>
+    <uint name="accountId"/>
+  </packet>
+  <packet name="S_ProjectileShootState">
+    <int name="currentTick"/>
+    <uint name="accountId"/>
+    <ulong name="bulletMaskLow"/>
+    <ulong name="bulletMaskHigh"/>
+    <int name="baseTick"/>
+  </packet>
+</PDL>

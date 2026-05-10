@@ -6,40 +6,20 @@ using ServerCore;
 
 public enum PacketID
 {
-    // 100 - 계정
-
-    // 200 - 커뮤니티 (친구)
-
-    // 300 - 파티
-
-    // 400 - 플레이
-
-    // 500 - 스폰
-    S_CreateMyCharacter = 500,
-	S_CreateOtherCharacter = 501,
-	S_DeleteCharacter = 502,
-
-    // 600 - 게임 진행
-
-    // 700 - 무기
-	C_ProjectileShootStart = 700,
-	S_ProjectileShootStart = 701,
-	S_ProjectileShootState = 702,
-
-    // 800 - 경험치
-
-    // 900 - 아이템
-
-    // 1000 - 상자
-
-    // 1100 - 이동
-	C_MoveStart = 1100,
-	S_MoveStart = 1101,
-    S_MoveState = 1102,
-	S_TickSync = 1103,
-	C_RotateStart = 1104,
-	S_RotateStart = 1105,
-    S_RotateState = 1106,
+    S_CreateMyCharacter = 1,
+	S_CreateOtherCharacter = 2,
+	S_DeleteCharacter = 3,
+	C_MoveStart = 4,
+	S_MoveStart = 5,
+	S_MoveState = 6,
+	S_TickSync = 7,
+	C_RotateStart = 8,
+	S_RotateStart = 9,
+	S_RotateState = 10,
+	C_ProjectileShootStart = 11,
+	S_ProjectileShootStart = 12,
+	S_ProjectileShootState = 13,
+	
 }
 
 public interface IPacket

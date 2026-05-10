@@ -16,7 +16,6 @@ public class EntitySystem : MonoBehaviour
     {
         entity.entityId = id;
         _map[id] = entity;
-        entity.OnSpawn();
     }
 
     public void Remove(int id)
@@ -24,7 +23,6 @@ public class EntitySystem : MonoBehaviour
         NetEntity e;
         if (_map.TryGetValue(id, out e))
         {
-            e.OnDespawn();
             _map.Remove(id);
         }
     }
@@ -36,5 +34,13 @@ public class EntitySystem : MonoBehaviour
             kv.Value.OnDespawn();
         }
         _map.Clear();
+    }
+
+    public void RunRender(float alpha)
+    {
+        foreach (var kv in _map)
+        {
+            kv.Value.OnRender(alpha);
+        }
     }
 }
