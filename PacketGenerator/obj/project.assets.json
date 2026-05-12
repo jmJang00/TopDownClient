@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jmjan\\source\\repos\\Server\\PacketGenerator\\PacketGenerator.csproj",
+      "projectUniqueName": "C:\\Users\\jmjan\\TopDown\\PacketGenerator\\PacketGenerator.csproj",
       "projectName": "PacketGenerator",
-      "projectPath": "C:\\Users\\jmjan\\source\\repos\\Server\\PacketGenerator\\PacketGenerator.csproj",
+      "projectPath": "C:\\Users\\jmjan\\TopDown\\PacketGenerator\\PacketGenerator.csproj",
       "packagesPath": "C:\\Users\\jmjan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jmjan\\source\\repos\\Server\\PacketGenerator\\obj\\",
+      "outputPath": "C:\\Users\\jmjan\\TopDown\\PacketGenerator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

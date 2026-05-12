@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class NetEntity : MonoBehaviour
 {
-    public string ownerName = "GameManager";
+    public string ownerName = "NetworkManager";
     public int entityId;
     public int renderDelay;
     public bool active;

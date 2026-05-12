@@ -28,7 +28,7 @@ public class NetworkManager : MonoBehaviour
     {
         if (s_instance == null)
         {
-            GameObject go = GameObject.Find("GameManager");
+            GameObject go = GameObject.Find("NetworkManager");
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<NetworkManager>();
             s_instance.tickScheduler = s_instance.GetComponent<TickScheduler>();
@@ -55,6 +55,23 @@ public class NetworkManager : MonoBehaviour
     void Start()
     {
         Init();
+    }
+    void OnApplicationQuit()
+    {
+        if (_session != null)
+        {
+            _session.Disconnect();
+            _session = null;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_session != null)
+        {
+            _session.Disconnect();
+            _session = null;
+        }
     }
 
     void Update()

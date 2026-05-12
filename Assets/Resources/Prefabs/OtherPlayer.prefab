@@ -10888,7 +10888,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b400222cb0cf8bb4f824f28e394d4024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  ownerName: GameManager
+  ownerName: NetworkManager
   entityId: 0
   renderDelay: 2
   active: 0
@@ -10945,7 +10945,7 @@ MonoBehaviour:
   MutualizeWaitingPools: 0
   NestWaitingPool: 1
   NestUnderThis: 0
-  GameObjectToPool: {fileID: 1854097648223014, guid: 0a888b0296d17f34cbc8990b60176945,
+  GameObjectToPool: {fileID: 1854097648223014, guid: 90a9ecdcd912f034ab07549cf97bd09a,
     type: 3}
   PoolSize: 20
   PoolCanExpand: 1

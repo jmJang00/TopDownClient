@@ -29,7 +29,10 @@ public class TickScheduler : MonoBehaviour
 
     readonly List<ITickRunner> _runners = new List<ITickRunner>();
 
+    [SerializeField]
     private int _serverTick;     // TickSync로 갱신
+    public int _tickDiff;
+    private bool _serverInput;
 
     private bool _hasServerTick; // 초기 동기화 여부
 
@@ -44,6 +47,18 @@ public class TickScheduler : MonoBehaviour
     {
         _dt = 1.0f / tickRate;
         _currentTick = 0;
+    }
+
+    public void UpdateTick(int tick)
+    {
+        if (!_hasServerTick)
+        {
+            _hasServerTick = true;
+            _currentTick = tick;
+        }
+
+        _serverTick = tick;
+        _serverInput = true;
     }
 
     public int ScheduleAfter(int delayTick, System.Action action)
@@ -87,7 +102,14 @@ public class TickScheduler : MonoBehaviour
         //    return;
         //}
 
-        _accum += Time.deltaTime;
+        //if (_serverTick > _currentTick)
+        //{
+        //    _accum += _dt * (_serverTick - _currentTick);
+        //}
+        //else
+        //{
+            _accum += Time.deltaTime;
+        //}
 
         while (_accum >= _dt)
         {
@@ -98,6 +120,7 @@ public class TickScheduler : MonoBehaviour
             _accum -= _dt;
         }
 
+        //_tickDiff = _currentTick - _serverTick;
         Alpha = Mathf.Clamp01(_accum / _dt);
     }
 
