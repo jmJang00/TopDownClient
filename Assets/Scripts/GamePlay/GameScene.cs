@@ -14,6 +14,15 @@ public class GameScene : MonoBehaviour
         pos.y -= 20;
         NetworkManager.Instance.SpawnAt(
             NetworkManager.Instance.tickScheduler.GetCurrentTick(), EntityType.OtherPlayer, 1, pos);
+
+        for (int i = 0; i < 3; i++)
+        {
+            C_MoveStart start = new C_MoveStart();
+            start.clientTick = 0;
+            start.targetX = 1;
+            start.targetY = 2;
+            NetworkManager.Instance.Send(start.Write());
+        }
     }
 
     // Update is called once per frame

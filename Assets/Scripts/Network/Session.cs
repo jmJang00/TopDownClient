@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -26,16 +26,16 @@ namespace ServerCore
 
                 // 패킷이 완전체로 도착했는지 확인
                 ushort dataSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
-                if (buffer.Count < dataSize)
+                if (buffer.Count < dataSize + 2)
                     break;
 
                 // 여기까지 왔으면 패킷 조립 가능
-                OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize));
+                OnRecvPacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, 2 + dataSize));
                 packetCount++;
 
-                processLen += dataSize;
+                processLen += dataSize + 2;
                 // struct라서 힙영역에 생기지 않고 스택 영역에 생김
-                buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);
+                buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + 2 + dataSize, buffer.Count - (2 + dataSize));
             }
 
             if (packetCount > 1)
@@ -50,7 +50,7 @@ namespace ServerCore
     public abstract class Session
     {
         Socket _socket;
-        int _disconnected = 0;
+        int _disconnected = 1;
 
         RecvBuffer _recvBuffer = new RecvBuffer(65535);
 
@@ -80,6 +80,8 @@ namespace ServerCore
             
             _recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecvCompleted);
             _sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
+
+            _disconnected = 0;
 
             RegisterRecv();
         }

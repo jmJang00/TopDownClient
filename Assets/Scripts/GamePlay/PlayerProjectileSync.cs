@@ -98,7 +98,7 @@ public class PlayerProjectileSync : NetBehaviour, ITickable<ProjectileState, Pro
 
     public void Update()
     {
-        if (TargetHandleWeaponAbility.CurrentWeapon != null)
+        if (TargetHandleWeaponAbility?.CurrentWeapon != null)
         {
             if (TargetHandleWeaponAbility.CurrentWeapon is ProjectileWeaponRevised p)
             {

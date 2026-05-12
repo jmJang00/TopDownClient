@@ -29,7 +29,7 @@ public enum PacketID
     // 800 - 경험치
 
     // 900 - 아이템
-
+	
     // 1000 - 상자
 
     // 1100 - 이동
@@ -84,7 +84,7 @@ public class S_CreateMyCharacter : IPacket
 		count += sizeof(int);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), accountId);
 		count += sizeof(uint);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -125,7 +125,7 @@ public class S_CreateOtherCharacter : IPacket
 		count += sizeof(int);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), accountId);
 		count += sizeof(uint);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -166,7 +166,7 @@ public class S_DeleteCharacter : IPacket
 		count += sizeof(int);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), accountId);
 		count += sizeof(uint);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -217,7 +217,7 @@ public class C_MoveStart : IPacket
 		count += sizeof(float);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), targetY);
 		count += sizeof(float);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -273,7 +273,7 @@ public class S_MoveStart : IPacket
 		count += sizeof(float);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), targetY);
 		count += sizeof(float);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -339,7 +339,7 @@ public class S_MoveState : IPacket
 		count += sizeof(float);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), targetY);
 		count += sizeof(float);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -375,7 +375,7 @@ public class S_TickSync : IPacket
         count += sizeof(ushort);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), serverTick);
 		count += sizeof(int);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -416,7 +416,7 @@ public class C_RotateStart : IPacket
 		count += sizeof(int);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), targetAngle);
 		count += sizeof(float);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -462,7 +462,7 @@ public class S_RotateStart : IPacket
 		count += sizeof(uint);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), targetAngle);
 		count += sizeof(float);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -513,7 +513,7 @@ public class S_RotateState : IPacket
 		count += sizeof(float);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), targetAngle);
 		count += sizeof(float);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -549,7 +549,7 @@ public class C_ProjectileShootStart : IPacket
         count += sizeof(ushort);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), clientTick);
 		count += sizeof(int);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -590,7 +590,7 @@ public class S_ProjectileShootStart : IPacket
 		count += sizeof(int);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), accountId);
 		count += sizeof(uint);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
@@ -646,7 +646,7 @@ public class S_ProjectileShootState : IPacket
 		count += sizeof(ulong);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), baseTick);
 		count += sizeof(int);
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);

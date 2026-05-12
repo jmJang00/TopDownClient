@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -136,7 +136,7 @@ public interface IPacket
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.{0});
         count += sizeof(ushort);
         {3}
-        success &= BitConverter.TryWriteBytes(s, count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
         return SendBufferHelper.Close(count);
