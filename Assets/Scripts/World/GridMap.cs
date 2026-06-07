@@ -39,6 +39,6 @@ public class GridMap
         if (x < 0 || z < 0 || x >= width || z >= height)
             return true;
 
-        return data[z, x] == 0;
+        return data[z, x] == 1;
     }
 }

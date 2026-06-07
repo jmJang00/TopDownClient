@@ -21,13 +21,23 @@ public class GridMeshBuilder : MonoBehaviour
     int width;
     int height;
     byte[,] map = null;
+    GridMapSO gridMap;
 
     public void SetMap()
     {
-        DungeonGenerator generator = GetComponent<DungeonGenerator>();
-        map = generator.Map;
-        width = generator.width;
-        height = generator.height;
+        if (gridMap)
+        {
+            width = gridMap.width; 
+            height = gridMap.height;
+            System.Buffer.BlockCopy(map, 0, gridMap.data, 0, height * width);
+        }
+        else
+        {
+            DungeonGenerator generator = GetComponent<DungeonGenerator>();
+            map = generator.Map;
+            width = generator.width;
+            height = generator.height;
+        }
     }
 
     public void SaveAsPrefab(string folderPath)
@@ -182,12 +192,12 @@ public class GridMeshBuilder : MonoBehaviour
 
     bool IsWall(int x, int y, int dx, int dy)
     {
-        if (map[y, x] != 1) return false;
+        if (map[y, x] == 1) return false;
 
         int nx = x + dx;
         int ny = y + dy;
 
-        return (nx < 0 || ny < 0 || nx >= width || ny >= height || map[ny, nx] == 0);
+        return (nx < 0 || ny < 0 || nx >= width || ny >= height || map[ny, nx] == 1);
     }
 
     void CreateHorizontalCollider(int startX, int y, int length, int dy)
@@ -229,7 +239,7 @@ public class GridMeshBuilder : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                if (map[y, x] != 1) continue;
+                if (map[y, x] == 1) continue;
 
                 AddFloor(x, y);
 
@@ -302,7 +312,7 @@ public class GridMeshBuilder : MonoBehaviour
         int nx = x + dx;
         int ny = y + dy;
 
-        if (nx < 0 || ny < 0 || nx >= width || ny >= height || map[ny, nx] == 0)
+        if (nx < 0 || ny < 0 || nx >= width || ny >= height || map[ny, nx] == 1)
         {
             AddWall(x, y, dx, dy);
         }

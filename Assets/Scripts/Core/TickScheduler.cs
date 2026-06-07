@@ -20,19 +20,19 @@ public class TickScheduler : MonoBehaviour
     public float Alpha {  get; private set; }
 
     // 클라가 앞서 나갈 수 있는 허용치
-    public int leadWindow = 2 + 10; // rtt + tickSync period
+    public int leadWindow = 20; // rtt + tickSync period
 
     private float _accum;
     private float _dt;
     [SerializeField]
     private int _currentTick;
+    private bool _waitingForServer = false;
 
     readonly List<ITickRunner> _runners = new List<ITickRunner>();
 
     [SerializeField]
     private int _serverTick;     // TickSync로 갱신
     public int _tickDiff;
-    private bool _serverInput;
 
     private bool _hasServerTick; // 초기 동기화 여부
 
@@ -58,7 +58,6 @@ public class TickScheduler : MonoBehaviour
         }
 
         _serverTick = tick;
-        _serverInput = true;
     }
 
     public int ScheduleAfter(int delayTick, System.Action action)
@@ -96,31 +95,82 @@ public class TickScheduler : MonoBehaviour
 
     public void Simulate()
     {
-        //if (!_hasServerTick)
-        //{
-        //    Alpha = 0f;
-        //    return;
-        //}
+        if (!_hasServerTick)
+        {
+            Alpha = 0f;
+            return;
+        }
 
-        //if (_serverTick > _currentTick)
-        //{
-        //    _accum += _dt * (_serverTick - _currentTick);
-        //}
-        //else
-        //{
-            _accum += Time.deltaTime;
-        //}
+        if (!_waitingForServer)
+        {
+            if (_currentTick >= _serverTick + leadWindow)
+            {
+                _waitingForServer = true;
+            }
+        }
+        else
+        {
+            // 서버가 충분히 따라왔는가?
+            if (_serverTick >= _currentTick)
+            {
+                _waitingForServer = false;
+            }
+        }
+
+        if (_waitingForServer)
+        {
+            Alpha = 0f;
+            return;
+        }
+
+        int diff = _serverTick - _currentTick;
+
+        float scale = 1.0f;
+        // 틱 차이가 너무 많이 나면 고정
+        if (diff > 10)
+        {
+            _accum = diff * _dt;
+        }
+        else
+        {
+            // 서버가 앞서 있음
+            if (diff > 0)
+            {
+                if (diff > 1)
+                    scale = 1.1f;
+
+                if (diff > 3)
+                    scale = 1.5f;
+
+                if (diff > 6)
+                    scale = 2f;
+            }
+            // 클라가 앞서 있음
+            else if (diff < 0)
+            {
+                if (diff < -3)
+                    scale = 0.8f;
+
+                if (diff < -6)
+                    scale = 0.5f;
+
+                if (diff < -leadWindow)
+                    scale = 0.0f;
+            }
+
+            _accum += Time.deltaTime * scale;
+        }
 
         while (_accum >= _dt)
         {
-            //if (!CanAdvance())
-            //    break;
+            if (!CanAdvance())
+                break;
 
             RunTick();
             _accum -= _dt;
         }
 
-        //_tickDiff = _currentTick - _serverTick;
+        _tickDiff = _currentTick - _serverTick;
         Alpha = Mathf.Clamp01(_accum / _dt);
     }
 

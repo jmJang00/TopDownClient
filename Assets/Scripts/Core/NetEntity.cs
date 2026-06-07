@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class NetEntity : MonoBehaviour
 {
-    public string ownerName = "NetworkManager";
-    public int entityId;
+    public uint entityId;
     public int renderDelay;
     public bool active;
     public EntityType type;
-    public NetworkManager Network { get; set; }
     public TickScheduler TickScheduler { get; set; }
     public EntitySystem EntitySystem { get; set; }
 
@@ -17,9 +16,8 @@ public class NetEntity : MonoBehaviour
 
     public virtual void Init() 
     {
-        Network = GameObject.Find(ownerName).GetComponent<NetworkManager>();
-        TickScheduler = Network.tickScheduler;
-        EntitySystem = Network.entitySystem;
+        TickScheduler = NetworkManager.Instance.tickScheduler;
+        EntitySystem = NetworkManager.Instance.entitySystem;
         _behaviours = GetComponents<NetBehaviour>();
         _routeTable = new byte[(int)NetBehaviourType.Max];
 

@@ -78,6 +78,11 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
+        if (!controller.Ready)
+        {
+            return;
+        }
+
         float dt = Time.deltaTime;
         _updateTimer += dt;
 

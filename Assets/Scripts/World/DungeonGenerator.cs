@@ -8,8 +8,8 @@ public class DungeonGenerator : MonoBehaviour
     public int totalRoom;
     public bool showGizmos = true;
 
-    const int EMPTY = 0;
-    const int FLOOR = 1;
+    const int EMPTY = 1;
+    const int FLOOR = 0;
 
     struct Room
     {
