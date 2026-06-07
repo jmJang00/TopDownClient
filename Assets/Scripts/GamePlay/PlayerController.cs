@@ -1,5 +1,7 @@
 using MoreMountains.Feedbacks;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Splines.Interpolators;
 struct MoveState
@@ -22,6 +24,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
     public float radius = 0.3f;
     public float moveSpeed = 4.0f;
     public float stopThreshold = 0.05f;
+    public float spawnHeight = 1;
     public Vector2 Target { get { return _renderTarget; } }
 
     int[] ticks = new int[100];
@@ -53,33 +56,34 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
             onApplied : (int tick, MoveInput input) => 
             {
                 // 서버 연동
-                //C_MoveStart pkt = new C_MoveStart();
-                //pkt.targetX = input.target.x;
-                //pkt.targetY = input.target.y;
-                //pkt.clientTick = tick;
-                //pkt.dir = (byte)input.dir;
-                //NetworkManager.Instance.Send(pkt.Write());
-                // 서버 시뮬레이션
-                _tickScheduler.ScheduleAfter(3, () =>
-                {
-                    S_MoveStart pkt = new S_MoveStart();
-                    pkt.targetX = input.target.x;
-                    pkt.targetY = input.target.y;
-                    pkt.acceptTick = tick;
-                    pkt.dir = (byte)input.dir;
-                    DispatchPacket(pkt);
-                });
+                C_MoveStart pkt = new C_MoveStart();
+                pkt.targetX = input.target.x;
+                pkt.targetY = input.target.y;
+                pkt.clientTick = tick;
+                pkt.dir = (byte)input.dir;
+                NetworkManager.Instance.Send(pkt.Write());
 
-                _tickScheduler.ScheduleAfter(3, () =>
-                {
-                    NetEntity entity = NetworkManager.Instance.entitySystem.Get(1);
-                    S_MoveStart pkt = new S_MoveStart();
-                    pkt.targetX = input.target.x;
-                    pkt.targetY = input.target.y;
-                    pkt.acceptTick = tick;
-                    pkt.dir = (byte)input.dir;
-                    entity.DispatchPacket(NetBehaviourType.Controller, pkt);
-                });
+                // 서버 시뮬레이션
+                //_tickScheduler.ScheduleAfter(3, () =>
+                //{
+                //    S_MoveStart pkt = new S_MoveStart();
+                //    pkt.targetX = input.target.x;
+                //    pkt.targetY = input.target.y;
+                //    pkt.acceptTick = tick;
+                //    pkt.dir = (byte)input.dir;
+                //    DispatchPacket(pkt);
+                //});
+
+                //_tickScheduler.ScheduleAfter(3, () =>
+                //{
+                //    NetEntity entity = NetworkManager.Instance.entitySystem.Get(1);
+                //    S_MoveStart pkt = new S_MoveStart();
+                //    pkt.targetX = input.target.x;
+                //    pkt.targetY = input.target.y;
+                //    pkt.acceptTick = tick;
+                //    pkt.dir = (byte)input.dir;
+                //    entity.DispatchPacket(NetBehaviourType.Controller, pkt);
+                //});
             });
     }
 
@@ -90,6 +94,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
         _state.pos = new Vector2(transform.position.x, transform.position.z);
         _state.target = _state.pos;
         _renderTarget = _state.target;
+        transform.position = new Vector3(transform.position.x, spawnHeight, transform.position.z);
     }
 
     public override void OnDespawn()
@@ -121,15 +126,37 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
 
     public override void DispatchPacket(IPacket packet)
     {
-        if (packet is S_MoveStart p)
+        switch (packet.Protocol)
         {
-            var input = new MoveInput
+            case (ushort)PacketID.S_MoveStart:
             {
-                target = new Vector2(p.targetX, p.targetY),
-                dir = (PlayerDirection)p.dir,
-            };
+                var p = packet as S_MoveStart;
+                var input = new MoveInput
+                {
+                    target = new Vector2(p.targetX, p.targetY),
+                    dir = (PlayerDirection)p.dir,
+                };
 
-            _runner.EnqueueServerInput(p.acceptTick, input);
+                _runner.EnqueueServerInput(p.acceptTick, input);
+                break;
+            }
+            case (ushort)PacketID.S_MoveState:
+            {
+                var p = packet as S_MoveState;
+                var state = new MoveState
+                {
+                    angle = 0,
+                    pos = new Vector2(p.serverX, p.serverY),
+                    target = new Vector2(p.targetX, p.targetY)
+                };
+
+                _runner.EnqueueServerState(p.currentTick, state);
+                break;
+            }
+            default:
+            {
+                break;
+            }
         }
     }
 
@@ -242,11 +269,27 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
         {
             for (int x = minX; x <= maxX; x++)
             {
-                if (map.IsBlocked(x, z))
+                if (!map.IsBlocked(x, z))
+                    continue;
+
+                if (CircleVsCell(nextPos.x, nextPos.y, radius, x, z))
+                {
                     return true;
+                }
             }
         }
         return false;
+    }
+
+    bool CircleVsCell(float cx, float cy, float radius, float cellX, float cellY)
+    {
+        float nearestX = Mathf.Clamp(cx, cellX, cellX + 1.0f);
+        float nearestY = Mathf.Clamp(cy, cellY, cellY + 1.0f);
+
+        float dx = cx - nearestX;
+        float dy = cy - nearestY;
+
+        return (dx * dx + dy * dy) <= (radius * radius);
     }
 
     void ITickable<MoveState, MoveInput>.ApplyInput(in MoveInput input)

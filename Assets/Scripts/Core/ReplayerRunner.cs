@@ -60,6 +60,7 @@ public class ReplayerRunner<TState, TInput> : ITickRunner
                 _hasPending = true;
                 _pendingTick = tick;
                 _pendingInput = input;
+                _lastClientTick = tick;
             }
         }
     }
@@ -99,16 +100,6 @@ public class ReplayerRunner<TState, TInput> : ITickRunner
             {
                 if (_clientPendingInputs.Count == 0)
                 {
-                    //if (_hasPending && _pendingTick == serverPending.tick)
-                    //{
-                    //    _hasPending = false;
-                    //    _replayer.AddInput(serverPending.tick, serverPending.input);
-                    //    minTick = Mathf.Min(minTick, serverPending.tick);
-                    //}
-                    //else
-                    //{
-                    //    throw new Exception("Enqueue server input failed");
-                    //}
                     throw new Exception("Enqueue server input failed");
                     // 클라이언트가 패킷을 보내는 건 클라이언트 입력이 선반영되는 시점
                     // 보내지도 않은 패킷에 대해서 서버 입력 응답이 오는 건 오류
@@ -165,7 +156,7 @@ public class ReplayerRunner<TState, TInput> : ITickRunner
             }
 
             // 렌더틱 이전의 가장 가까운 서버 스냅샷을 찾는다
-            if (serverPending.tick < currentTick - _renderDelay)
+            if (serverPending.tick <= currentTick - _renderDelay)
             {
                 if (serverPending.tick > snapshotTick)
                 {
@@ -204,7 +195,6 @@ public class ReplayerRunner<TState, TInput> : ITickRunner
                 _clientPendingInputs.Enqueue(
                     new PendingInput { tick = _pendingTick, input = _pendingInput });
                 _onAppliedAction(_pendingTick, _pendingInput);
-                _lastClientTick = _pendingTick;
 
                 // 서버로부터 온 입력이 없을 때만 기준으로 삼는다
                 if (_pendingTick < currentTick)

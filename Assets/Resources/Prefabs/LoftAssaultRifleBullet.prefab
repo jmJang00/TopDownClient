@@ -4927,11 +4927,15 @@ GameObject:
   m_Component:
   - component: {fileID: 4585949775055698}
   - component: {fileID: 114564512680273234}
+  - component: {fileID: 114520861229986060}
+  - component: {fileID: 114102311241470466}
+  - component: {fileID: 114692968763625280}
   - component: {fileID: 65720217773407688}
-  - component: {fileID: -3017346629197743792}
-  - component: {fileID: 2502177769822680704}
+  - component: {fileID: 54994276034465240}
+  - component: {fileID: 114675558199215844}
+  - component: {fileID: 114469000093533656}
   m_Layer: 18
-  m_Name: LoftEmptyBullet
+  m_Name: LoftAssaultRifleBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4978,6 +4982,132 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   LifeTime: 5
+--- !u!114 &114520861229986060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854097648223014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e1a732e2aa364c569bbb79498af8c5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BoundsBasedOn: 0
+  ExecuteOnEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  ExecuteOnDisable:
+    m_PersistentCalls:
+      m_Calls: []
+  LifeTime: 2
+  FaceDirection: 1
+  FaceMovement: 0
+  MovementVector: 0
+  Speed: 500
+  Acceleration: 0
+  Direction: {x: -1, y: 0, z: 0}
+  DirectionCanBeChangedBySpawner: 1
+  FlipValue: {x: -1, y: 1, z: 1}
+  ProjectileIsFacingRight: 1
+  InitialInvulnerabilityDuration: 0
+  DamageOwner: 0
+--- !u!114 &114102311241470466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854097648223014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01754710d9f92ec4d9a21b81f5682667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Model: {fileID: 1622653139896216}
+  CurrentHealth: 0
+  Invulnerable: 0
+  InitialHealth: 1
+  MaximumHealth: 1
+  ResetHealthOnEnable: 1
+  OnHealFeedback: {fileID: 0}
+  ImmuneToDamage: 0
+  DamageMMFeedbacks: {fileID: 0}
+  FeedbackIsProportionalToDamage: 0
+  PreventTakeSelfDamage: 0
+  ImmuneToKnockback: 0
+  ImmuneToKnockbackIfZeroDamage: 0
+  KnockbackForceMultiplier: 1
+  DestroyOnDeath: 1
+  DelayBeforeDestruction: 1
+  PointsWhenDestroyed: 0
+  RespawnAtInitialLocation: 0
+  DisableControllerOnDeath: 1
+  DisableModelOnDeath: 1
+  DisableCollisionsOnDeath: 1
+  DisableChildCollisionsOnDeath: 0
+  ChangeLayerOnDeath: 0
+  ChangeLayersRecursivelyOnDeath: 0
+  LayerOnDeath:
+    _layerIndex: 0
+  DeathMMFeedbacks: {fileID: 0}
+  ResetColorOnRevive: 1
+  ColorMaterialPropertyName: _Color
+  UseMaterialPropertyBlocks: 0
+  MasterHealth: {fileID: 0}
+  TargetDamageResistanceProcessor: {fileID: 0}
+  TargetAnimator: {fileID: 0}
+  DisableAnimatorLogs: 1
+--- !u!114 &114692968763625280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854097648223014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76891b3b532f84acaaeed44c357bd00c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetLayerMask:
+    serializedVersion: 2
+    m_Bits: 12032
+  Owner: {fileID: 0}
+  TriggerFilter: 195
+  MinDamageCaused: 10
+  MaxDamageCaused: 10
+  TypedDamages: []
+  DamageDirectionMode: 1
+  DamageCausedKnockbackType: 1
+  DamageCausedKnockbackDirection: 3
+  DamageCausedKnockbackForce: {x: 10, y: 2, z: 0}
+  InvincibilityDuration: 0.1
+  RepeatDamageOverTime: 0
+  AmountOfRepeats: 3
+  DurationBetweenRepeats: 1
+  DamageOverTimeInterruptible: 1
+  RepeatedDamageType: {fileID: 0}
+  DamageTakenHealth: {fileID: 0}
+  DamageTakenEveryTime: 1
+  DamageTakenDamageable: 1
+  DamageTakenNonDamageable: 1
+  DamageTakenKnockbackType: 0
+  DamageTakenKnockbackForce: {x: 0, y: 0, z: 0}
+  DamageTakenInvincibilityDuration: 0.5
+  HitDamageableFeedback: {fileID: 129939367651388674}
+  HitNonDamageableFeedback: {fileID: 9075017781267480604}
+  HitAnythingFeedback: {fileID: 0}
+  HitDamageableEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  HitNonDamageableEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  HitAnythingEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!65 &65720217773407688
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4999,7 +5129,34 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-3017346629197743792
+--- !u!54 &54994276034465240
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854097648223014}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &114675558199215844
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5008,14 +5165,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1854097648223014}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7aecb87bed1db24b858022d64fdf3df, type: 3}
+  m_Script: {fileID: 11500000, guid: 194c644ad43b53c478e2164aa4f41cb0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Bullet
-  entityId: 0
-  renderDelay: 0
-  active: 0
-  type: 0
---- !u!114 &2502177769822680704
+  m_EditorClassIdentifier: 
+  ObstaclesLayerMask:
+    serializedVersion: 2
+    m_Bits: 12032
+  SkinWidth: 0.1
+  RepositionRigidbody: 1
+  RepositionRigidbodyLayerMask:
+    serializedVersion: 2
+    m_Bits: 12032
+  Adjustment: 0
+--- !u!114 &114469000093533656
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5024,13 +5186,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1854097648223014}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4524dbaf806d602499277050af7c3eb5, type: 3}
+  m_Script: {fileID: 11500000, guid: e6b5efd8658a97749a87733fd4bddb28, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BulletMovement
-  stopThreshold: 0.05
-  groundOffset: 2
-  HitDamageableFeedback: {fileID: 129939367651388674}
-  HitNonDamageableFeedback: {fileID: 9075017781267480604}
+  m_EditorClassIdentifier: 
+  PushPower: 50
+  PositionOffset: 0
 --- !u!1 &1018883284677772756
 GameObject:
   m_ObjectHideFlags: 0

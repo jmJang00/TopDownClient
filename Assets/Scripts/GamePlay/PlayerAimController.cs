@@ -1,5 +1,10 @@
 using MoreMountains.Tools;
 using MoreMountains.TopDownEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -43,6 +48,9 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
     private Vector3 _direction;
     private float _angle;
 
+    private int[] ticks = new int[100];
+    private AimInput[] inputs = new AimInput[100];
+
     public override void Init()
     {
         base.Init();
@@ -64,30 +72,37 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
         _runner = new ReplayerRunner<AimState, AimInput>(this, hasAuthority, 
             Entity.renderDelay, (int tick, AimInput input) =>
         {
-            _tickScheduler.ScheduleAfter(3, () =>
-            {
-                S_RotateStart pkt = new S_RotateStart();
-                pkt.targetAngle = input.targetAngle;
-                pkt.accpetTick = tick;
-                DispatchPacket(pkt);
-            });
+            // 서버 연동
+            C_RotateStart pkt = new C_RotateStart();
+            pkt.targetAngle = input.targetAngle;
+            pkt.clientTick = tick;
+            NetworkManager.Instance.Send(pkt.Write());
 
-            _tickScheduler.ScheduleAfter(3, () =>
-            {
-                NetEntity entity = NetworkManager.Instance.entitySystem.Get(1);
-                S_RotateStart pkt = new S_RotateStart();
-                pkt.targetAngle = input.targetAngle;
-                pkt.accpetTick = tick;
-                entity.DispatchPacket(NetBehaviourType.Aim, pkt);
-            });
+            // 서버 시뮬레이션
+            //_tickScheduler.ScheduleAfter(3, () =>
+            //{
+            //    S_RotateStart pkt = new S_RotateStart();
+            //    pkt.targetAngle = input.targetAngle;
+            //    pkt.accpetTick = tick;
+            //    DispatchPacket(pkt);
+            //});
 
-            Debug.Log("Set Angle" + _angle);
+            //_tickScheduler.ScheduleAfter(3, () =>
+            //{
+            //    NetEntity entity = NetworkManager.Instance.entitySystem.Get(1);
+            //    S_RotateStart pkt = new S_RotateStart();
+            //    pkt.targetAngle = input.targetAngle;
+            //    pkt.accpetTick = tick;
+            //    entity.DispatchPacket(NetBehaviourType.Aim, pkt);
+            //});
+
+            //Debug.Log("Set Angle" + _angle);
         });
     }
 
-    public void FixedUpdate()
+    public void Update()
     {
-        if (_init == false)
+        if (!Ready)
         {
             return;
         }
@@ -120,30 +135,23 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
                 AimInput input;
                 input.targetAngle = _angle;
                 _runner.EnqueueClientInput(_tickScheduler.GetCurrentTick(), input, 3);
+                Debug.Log("Set Angle" + _angle);
             }
 
             timer = 0f;
         }
-    }
-
-    // 외부 입력 (마우스, 네트워크 등)
-    public bool SetTarget(float newAngle)
-    {
-        float diff = Mathf.DeltaAngle(_state.targetAngle, newAngle);
-
-        // 일정 차이 이상일 때만 갱신
-        if (Mathf.Abs(diff) > Threshold)
+        else
         {
-            //AimInput input;
-            //input.targetAngle = newAngle;
-            //_runner.EnqueueClientInput(_tickScheduler.GetCurrentTick(), input);
-            _state.targetAngle = newAngle;
-            Debug.Log("Set Angle" + newAngle);
-            
-            return true;
-        }
+            float diff = Mathf.DeltaAngle(_state.targetAngle, _angle);
 
-        return false;
+            if (Mathf.Abs(diff) > Threshold)
+            {
+                AimInput input;
+                input.targetAngle = _angle;
+                _runner.EnqueueClientInput(_tickScheduler.GetCurrentTick(), input, 3);
+                Debug.Log("Set Angle" + _angle);
+            }
+        }
     }
 
     public override void OnSpawn(int tick)
@@ -160,14 +168,31 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
 
     public override void DispatchPacket(IPacket packet)
     {
-        if (packet is S_RotateStart p)
+        switch (packet.Protocol)
         {
-            var input = new AimInput
+            case (ushort)PacketID.S_RotateStart:
             {
-                targetAngle = p.targetAngle,
-            };
+                var p = packet as S_RotateStart;
+                var input = new AimInput
+                {
+                    targetAngle = p.targetAngle,
+                };
 
-            _runner.EnqueueServerInput(p.accpetTick, input);
+                _runner.EnqueueServerInput(p.accpetTick, input);
+                break;
+            }
+            case (ushort)PacketID.S_RotateState:
+            {
+                var p = packet as S_RotateState;
+                var state = new AimState
+                {
+                    currentAngle = p.currentAngle,
+                    targetAngle = p.targetAngle,
+                };
+
+                _runner.EnqueueServerState(p.currentTick, state);
+                break;
+            }
         }
     }
 
@@ -232,7 +257,7 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
         _direction.y = transform.position.y;
         _direction = _direction - transform.position;
 
-        _angle = ToAngleXZ(_direction);
+        _angle = NormalizeAngle(ToAngleXZ(_direction));
     }
 
     protected virtual void ComputeReticlePosition()
@@ -262,16 +287,18 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
         if (Mathf.Abs(diff) <= maxStep)
         {
             _state.currentAngle = _state.targetAngle;
+            _state.currentAngle = NormalizeAngle(_state.currentAngle);
         }
         else
         {
             _state.currentAngle += Mathf.Sign(diff) * maxStep;
+            _state.currentAngle = NormalizeAngle(_state.currentAngle);
         }
     }
 
     void ITickable<AimState, AimInput>.ApplyInput(in AimInput input)
     {
-        _state.targetAngle = input.targetAngle;
+        _state.targetAngle = NormalizeAngle(input.targetAngle);
     }
 
     AimState ITickable<AimState, AimInput>.CaptureState()
@@ -282,5 +309,34 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
     void ITickable<AimState, AimInput>.RestoreState(in AimState state)
     {
         _state = state;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_init == false)
+            return;
+
+        int tick = _tickScheduler.GetCurrentTick();
+        int cnt = _runner.CollectInputs(tick - 16, tick, ticks, inputs, 16);
+        if (cnt <= 0)
+            return;
+
+        for (int i = 0; i < cnt; i++)
+        {
+            Vector3 currPos = ToVectorXZ(inputs[i].targetAngle) * 10;
+            currPos += transform.position;
+
+            // 점
+            Gizmos.DrawSphere(currPos, 0.15f);
+
+            // 선
+            Gizmos.DrawLine(transform.position, currPos);
+
+#if UNITY_EDITOR
+            // 숫자 표시 (tick or index)
+            Handles.Label(currPos + Vector3.up * 0.2f, i.ToString());
+#endif
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -50,6 +50,7 @@ namespace ServerCore
             else
             {
                 Console.WriteLine($"OnConnectCompleted Fail: {args.SocketError}");
+                NetworkManager.ChangeState(NetworkState.ConnectRequested, NetworkState.None);
             }
         }
     }
