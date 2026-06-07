@@ -47,8 +47,23 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ProjectileShootStart, MakePacket<S_ProjectileShootStart>);
         _handler.Add((ushort)PacketID.S_ProjectileShootStart, PacketHandler.S_ProjectileShootStartHandler);
 
-        _makeFunc.Add((ushort)PacketID.S_ProjectileShootState, MakePacket<S_ProjectileShootState>);
-        _handler.Add((ushort)PacketID.S_ProjectileShootState, PacketHandler.S_ProjectileShootStateHandler);
+        _makeFunc.Add((ushort)PacketID.S_SpawnProjectile, MakePacket<S_SpawnProjectile>);
+        _handler.Add((ushort)PacketID.S_SpawnProjectile, PacketHandler.S_SpawnProjectileHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_DespawnProjectile, MakePacket<S_DespawnProjectile>);
+        _handler.Add((ushort)PacketID.S_DespawnProjectile, PacketHandler.S_DespawnProjectileHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_ProjectileHit, MakePacket<S_ProjectileHit>);
+        _handler.Add((ushort)PacketID.S_ProjectileHit, PacketHandler.S_ProjectileHitHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_GameStartWait, MakePacket<S_GameStartWait>);
+        _handler.Add((ushort)PacketID.S_GameStartWait, PacketHandler.S_GameStartWaitHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_GameStart, MakePacket<S_GameStart>);
+        _handler.Add((ushort)PacketID.S_GameStart, PacketHandler.S_GameStartHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_GameEnd, MakePacket<S_GameEnd>);
+        _handler.Add((ushort)PacketID.S_GameEnd, PacketHandler.S_GameEndHandler);
 
     }
 

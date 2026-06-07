@@ -2,32 +2,31 @@ using UnityEngine;
 
 public class GameScene : MonoBehaviour
 {
-    public Transform[] spawnPositions;
+    public TickScheduler tickScheduler;
+    public EntitySystem entitySystem;
+    public SpawnManager spawnManager;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Init()
     {
-        Vector3 pos = spawnPositions[0].position;
-        NetworkManager.Instance.SpawnAt(
-            NetworkManager.Instance.tickScheduler.GetCurrentTick(), EntityType.MyPlayer, 0, pos);
-
-        pos.y -= 20;
-        NetworkManager.Instance.SpawnAt(
-            NetworkManager.Instance.tickScheduler.GetCurrentTick(), EntityType.OtherPlayer, 1, pos);
-
-        for (int i = 0; i < 3; i++)
-        {
-            C_MoveStart start = new C_MoveStart();
-            start.clientTick = 0;
-            start.targetX = 1;
-            start.targetY = 2;
-            NetworkManager.Instance.Send(start.Write());
-        }
+        tickScheduler = GetComponent<TickScheduler>();
+        entitySystem = GetComponent<EntitySystem>();
+        spawnManager = GetComponent<SpawnManager>();
+        NetworkManager.Instance.SetGameScene(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ProcessUpdate()
     {
-        
+        tickScheduler.Simulate();
+
+        entitySystem.RunRender(tickScheduler.Alpha);
+    }
+
+    public void Clear()
+    {
+        if (entitySystem.MyCharacter)
+        {
+            GameObject.Destroy(entitySystem.MyCharacter.gameObject);
+        }
+        entitySystem.Clear();
     }
 }

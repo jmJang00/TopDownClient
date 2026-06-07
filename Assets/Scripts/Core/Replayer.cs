@@ -62,10 +62,8 @@ public class Replayer<TState, TInput>
     public void OverwriteState(int tick, in TState state)
     {
         ref var slot = ref _buffer[Mask(tick)];
-        if (slot.tick == tick)
-        {
-            slot.state = state;
-        }
+        slot.state = state;
+        slot.tick = tick;
     }
 
     // 일반 Tick 진행
@@ -123,8 +121,8 @@ public class Replayer<TState, TInput>
     // 과거 입력 도착 시 호출
     public void ReSimulate(int fromTick, float dt)
     {
-        if (fromTick > _latestTick)
-            return;
+        //if (fromTick > _latestTick)
+        //    return;
 
         int start = fromTick - 1;
 

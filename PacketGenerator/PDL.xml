@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <PDL>
   <packet name="S_CreateMyCharacter">
     <int name="serverTick"/>
-    <uint name="accountId"/>
+    <uint name="entityId"/>
   </packet>
   <packet name="S_CreateOtherCharacter">
     <int name="serverTick"/>
-    <uint name="accountId"/>
+    <uint name="entityId"/>
   </packet>
   <packet name="S_DeleteCharacter">
     <int name="serverTick"/>
-    <uint name="accountId"/>
+    <uint name="entityId"/>
   </packet>
   <packet name="C_MoveStart">
     <int name="clientTick"/>
@@ -20,14 +20,14 @@
   </packet>
   <packet name="S_MoveStart">
     <int name="acceptTick"/>
-    <uint name="accountId"/>
+    <uint name="entityId"/>
     <byte name="dir"/>
     <float name="targetX"/>
     <float name="targetY"/>
   </packet>
   <packet name="S_MoveState">
     <int name="currentTick"/>
-    <uint name="accountId"/>
+    <uint name="entityId"/>
     <byte name="dir"/>
     <float name="serverX"/>
     <float name="serverY"/>
@@ -43,12 +43,12 @@
   </packet>
   <packet name="S_RotateStart">
     <int name="accpetTick"/>
-    <uint name="accountId"/>
+    <uint name="entityId"/>
     <float name="targetAngle"/>
   </packet>
   <packet name="S_RotateState">
     <int name="currentTick"/>
-    <uint name="accountId"/>
+    <uint name="entityId"/>
     <float name="currentAngle"/>
     <float name="targetAngle"/>
   </packet>
@@ -57,13 +57,43 @@
   </packet>
   <packet name="S_ProjectileShootStart">
     <int name="accpetTick"/>
-    <uint name="accountId"/>
+    <uint name="entityId"/>
   </packet>
-  <packet name="S_ProjectileShootState">
+  <packet name = "S_SpawnProjectile">
     <int name="currentTick"/>
-    <uint name="accountId"/>
-    <ulong name="bulletMaskLow"/>
-    <ulong name="bulletMaskHigh"/>
-    <int name="baseTick"/>
+    <uint name="entityId"/>
+    <float name="spawnPosX"/>
+    <float name="spawnPosY"/>
+    <float name="targetPosX"/>
+    <float name="targetPosY"/>
+  </packet>
+  <packet name = "S_DespawnProjectile">
+    <int name="currentTick"/>
+    <uint name="entityId"/>
+  </packet>
+  <packet name = "S_ProjectileHit">
+    <int name="currentTick"/>
+    <ushort name="damage"/>
+    <uint name="bulletId"/>
+    <uint name="collisionId"/>
+  </packet>
+  <packet name = "C_MatchStart">
+  </packet>
+  <packet name = "C_MatchCancel">
+  </packet>
+  <packet name = "C_GameEnd">
+  </packet>
+  <packet name = "S_GameStartWait">
+  </packet>
+  <packet name = "S_GameStart">
+    <int name="tick"/>
+    <ushort name="weaponId"/>
+  </packet>
+  <packet name = "S_GameEnd">
+  </packet>
+  <packet name = "C_SceneReady">
+  </packet>
+  <packet name = "C_WeaponSelect">
+    <ushort name="weaponId"/>
   </packet>
 </PDL>

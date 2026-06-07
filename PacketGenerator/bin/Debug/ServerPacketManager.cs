@@ -29,6 +29,21 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.C_ProjectileShootStart, MakePacket<C_ProjectileShootStart>);
         _handler.Add((ushort)PacketID.C_ProjectileShootStart, PacketHandler.C_ProjectileShootStartHandler);
 
+        _makeFunc.Add((ushort)PacketID.C_MatchStart, MakePacket<C_MatchStart>);
+        _handler.Add((ushort)PacketID.C_MatchStart, PacketHandler.C_MatchStartHandler);
+
+        _makeFunc.Add((ushort)PacketID.C_MatchCancel, MakePacket<C_MatchCancel>);
+        _handler.Add((ushort)PacketID.C_MatchCancel, PacketHandler.C_MatchCancelHandler);
+
+        _makeFunc.Add((ushort)PacketID.C_GameEnd, MakePacket<C_GameEnd>);
+        _handler.Add((ushort)PacketID.C_GameEnd, PacketHandler.C_GameEndHandler);
+
+        _makeFunc.Add((ushort)PacketID.C_SceneReady, MakePacket<C_SceneReady>);
+        _handler.Add((ushort)PacketID.C_SceneReady, PacketHandler.C_SceneReadyHandler);
+
+        _makeFunc.Add((ushort)PacketID.C_WeaponSelect, MakePacket<C_WeaponSelect>);
+        _handler.Add((ushort)PacketID.C_WeaponSelect, PacketHandler.C_WeaponSelectHandler);
+
     }
 
     public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)

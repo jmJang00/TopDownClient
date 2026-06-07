@@ -10382,7 +10382,7 @@ GameObject:
   - component: {fileID: 675007584358717992}
   - component: {fileID: 1363471116746669495}
   - component: {fileID: 5178328687491955754}
-  - component: {fileID: -4505995275715205094}
+  - component: {fileID: 2939988973214830544}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -10802,7 +10802,7 @@ MonoBehaviour:
   ImmuneToKnockback: 0
   ImmuneToKnockbackIfZeroDamage: 0
   KnockbackForceMultiplier: 1
-  DestroyOnDeath: 1
+  DestroyOnDeath: 0
   DelayBeforeDestruction: 0
   PointsWhenDestroyed: 0
   RespawnAtInitialLocation: 0
@@ -10987,7 +10987,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41733b8e82a81e648a19de820c183345, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyPlayer
-  ownerName: NetworkManager
   entityId: 0
   renderDelay: 0
   active: 0
@@ -11008,6 +11007,7 @@ MonoBehaviour:
   radius: 0.3
   moveSpeed: 4
   stopThreshold: 0.05
+  spawnHeight: 1
   hasAuthority: 1
 --- !u!114 &1363471116746669495
 MonoBehaviour:
@@ -11026,7 +11026,7 @@ MonoBehaviour:
     type: 3}
   sendInterval: 0.05
   timer: 0
-  Threshold: 180
+  Threshold: 15
   RotateSpeed: 270
 --- !u!114 &5178328687491955754
 MonoBehaviour:
@@ -11046,8 +11046,7 @@ MonoBehaviour:
   updateInterval: 0.5
   TargetHandleWeaponAbility: {fileID: 0}
   CurrentWeapon: {fileID: 0}
-  ObjectPooler: {fileID: 0}
---- !u!114 &-4505995275715205094
+--- !u!114 &2939988973214830544
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11056,16 +11055,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1414176428383784}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b7277539b95c0d45895792ecc99ce66, type: 3}
+  m_Script: {fileID: 11500000, guid: 41f9240b3884e5b4c8ba09e048ec6138, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: MoreMountains.Tools::MoreMountains.Tools.MMSimpleObjectPooler
-  MutualizeWaitingPools: 0
-  NestWaitingPool: 1
-  NestUnderThis: 0
-  GameObjectToPool: {fileID: 1854097648223014, guid: 90a9ecdcd912f034ab07549cf97bd09a,
-    type: 3}
-  PoolSize: 20
-  PoolCanExpand: 1
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  InvincibilityDuration: 0
 --- !u!1 &1414199094847710
 GameObject:
   m_ObjectHideFlags: 0
@@ -13176,7 +13169,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: 651706268
         Label: Cinemachine Impulse
-        OriginalLabel: 
+        OriginalLabel: Cinemachine Impulse
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -13293,7 +13286,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: -755670814
         Label: Flash
-        OriginalLabel: 
+        OriginalLabel: Flash
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -13373,7 +13366,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: -106754121
         Label: Chromatic Aberration
-        OriginalLabel: 
+        OriginalLabel: Chromatic Aberration
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -13487,7 +13480,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: 1400177361
         Label: Freeze Frame
-        OriginalLabel: 
+        OriginalLabel: Freeze Frame
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -13563,7 +13556,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: 1961872578
         Label: Sound
-        OriginalLabel: 
+        OriginalLabel: Sound
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -13691,7 +13684,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: 1672840269
         Label: Flicker
-        OriginalLabel: 
+        OriginalLabel: Flicker
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}

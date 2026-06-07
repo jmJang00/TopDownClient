@@ -9,6 +9,8 @@ public enum NetBehaviourType : byte
     Controller,
     Aim,
     Projectile,
+    Health,
+    BulletMovement,
     // ...
     Max
 

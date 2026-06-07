@@ -1,23 +1,59 @@
+using MoreMountains.Feedbacks;
+using MoreMountains.Tools;
 using MoreMountains.TopDownEngine;
 using ServerCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using UnityEngine;
+
+public enum NetworkState 
+{
+    None,
+    ConnectRequested,
+    Connected,
+    Disconnected,
+    Authorized,
+    WaitingForMatch,
+    GameFound,
+    MatchFailed,
+    GameReady,
+    GameStarted,
+}
 
 public class NetworkManager : MonoBehaviour
 {
-    ServerSession _session;
+    private ServerSession _session;
 
-    static NetworkManager s_instance;
+    private static NetworkManager s_instance;
     public static NetworkManager Instance { get { Init(); return s_instance; } }
 
-    public TickScheduler tickScheduler;
-    public EntitySystem entitySystem;
+    private static int _state = (int)NetworkState.None;
+
+    public static NetworkState State { get { return (NetworkState)Volatile.Read(ref _state); } }
+
+    private GameScene _game;
+
+    public TickScheduler tickScheduler { get { return _game.tickScheduler; } }
+    public EntitySystem entitySystem { get { return _game.entitySystem; } }
+    public SpawnManager spawnManager { get { return _game.spawnManager; } }
+
 
     public string ipStr = "127.0.0.1";
     public short port = 6000;
+
+    public static bool ChangeState(NetworkState expected, NetworkState desired)
+    {
+        bool success = Interlocked.CompareExchange(ref _state, (int)desired, (int)expected) == (int)expected;
+        if (!success)
+        {
+            Debug.LogWarning("Expected: " + expected.ToString() + " Desired: " + desired.ToString());
+        }
+
+        return success;
+    }
 
     public void Send(ArraySegment<byte> sendBuff)
     {
@@ -31,11 +67,90 @@ public class NetworkManager : MonoBehaviour
             GameObject go = GameObject.Find("NetworkManager");
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<NetworkManager>();
-            s_instance.tickScheduler = s_instance.GetComponent<TickScheduler>();
-            s_instance.entitySystem = s_instance.GetComponent<EntitySystem>();
             s_instance._session = new ServerSession();
-            s_instance.ConnectServer();
+            s_instance.StartCoroutine(s_instance.TryConnectAndAuthorize());
         }
+    }
+    
+    public IEnumerator TryConnectAndAuthorize()
+    {
+        while (true)
+        {
+            if (ChangeState(NetworkState.None, NetworkState.ConnectRequested))
+            {
+                ConnectServer();
+                Debug.Log("Try Connect");
+            }
+
+            if (State != NetworkState.None && State != NetworkState.ConnectRequested)
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(3);
+        }
+
+        if (State == NetworkState.Connected)
+        {
+            Debug.Log("Connect Success");
+
+            //TODO: 나중에 인증과정 추가
+
+            ChangeState(NetworkState.Connected, NetworkState.Authorized);
+        }
+    }
+
+    public IEnumerator FindGame()
+    {
+        if (State != NetworkState.Authorized)
+            yield break;
+
+        C_MatchStart matchStart = new C_MatchStart();
+        Send(matchStart.Write());
+
+        ChangeState(NetworkState.Authorized, NetworkState.WaitingForMatch);
+
+        yield return new WaitUntil(() => { return State != NetworkState.WaitingForMatch; });
+
+        if (State == NetworkState.GameFound)
+        {
+            MMSceneLoadingManager.LoadScene("ServerSyncTest");
+
+            yield return new WaitUntil(() => { return _game != null; });
+
+            C_SceneReady sceneReady = new C_SceneReady();
+            Send(sceneReady.Write());
+
+            ChangeState(NetworkState.GameFound, NetworkState.GameReady);
+        }
+    }
+
+    public void EndGame()
+    {
+        C_GameEnd gameEnd = new C_GameEnd();
+        Send(gameEnd.Write());
+    }
+
+    public void OnGameFound()
+    {
+        ChangeState(NetworkState.WaitingForMatch, NetworkState.GameFound);
+    }
+
+    public void OnGameStart()
+    {
+        ChangeState(NetworkState.GameReady, NetworkState.GameStarted);
+    }
+
+    public void OnGameEnd()
+    {
+        _game = null;
+        MMSceneLoadingManager.LoadScene("StartScene");
+        ChangeState(NetworkState.GameStarted, NetworkState.Authorized);
+    }
+
+    public void SetGameScene(GameScene scene)
+    {
+        _game = scene;
     }
 
     private void ConnectServer()
@@ -56,6 +171,7 @@ public class NetworkManager : MonoBehaviour
     {
         Init();
     }
+
     void OnApplicationQuit()
     {
         if (_session != null)
@@ -67,6 +183,8 @@ public class NetworkManager : MonoBehaviour
 
     void OnDestroy()
     {
+        _game?.Clear();
+
         if (_session != null)
         {
             _session.Disconnect();
@@ -74,127 +192,12 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         List<IPacket> list = PacketQueue.Instance.PopAll();
         foreach (IPacket packet in list)
             PacketManager.Instance.HandlePacket(_session, packet);
 
-        tickScheduler.Simulate();
-
-        entitySystem.RunRender(tickScheduler.Alpha);
-    }
-
-    public void SpawnAt(int tick, EntityType type, int id, Vector3 position)
-    {
-        NetEntity entity = Spawn(type, id, position);
-        entity.gameObject.SetActive(false);
-        tickScheduler.ScheduleAt(tick, () =>
-        {
-            entity.gameObject.SetActive(true);
-            entity.OnSpawn(tick);
-        });
-    }
-
-    public void DespawnAt(int tick, EntityType type, int id)
-    {
-        tickScheduler.ScheduleAt(tick, () =>
-        {
-            NetEntity entity = entitySystem.Get(id);
-            entity.OnDespawn();
-            Despawn(type, id);
-        });
-    }
-
-    public NetEntity Spawn(EntityType type, int id, Vector3 position)
-    {
-        switch (type)
-        {
-            case EntityType.MyPlayer:
-            {
-                GameObject prefab = Resources.Load<GameObject>("Prefabs/Player");
-                if (prefab == null)
-                {
-                    Debug.Log("Can't find " + type.ToString());
-                    return null;
-                }
-
-                GameObject obj = Instantiate(prefab);
-                MyPlayer myPlayer = obj.GetComponent<MyPlayer>();
-                myPlayer.entityId = id;
-                myPlayer.type = EntityType.MyPlayer;
-                myPlayer.transform.position = position;
-                myPlayer.Init();
-                entitySystem.Register(id, myPlayer);
-                return myPlayer;
-            }
-            case EntityType.OtherPlayer:
-            {
-                GameObject prefab = Resources.Load<GameObject>("Prefabs/OtherPlayer");
-                if (prefab == null)
-                {
-                    Debug.Log("Can't find " + type.ToString());
-                    return null;
-                }
-
-                GameObject obj = Instantiate(prefab);
-                Player player = obj.GetComponent<Player>();
-                player.entityId = id;
-                player.transform.position = position;
-                player.type = EntityType.OtherPlayer;
-                player.Init();
-                entitySystem.Register(id, player);
-                return player;
-            }
-            default:
-            {
-                return null;
-            }
-        }
-    }
-
-    public void Despawn(EntityType type, int id)
-    {
-        switch (type)
-        {
-            case EntityType.MyPlayer:
-            {
-                NetEntity entity = entitySystem.Get(id);
-                if (entity == null)
-                {
-                    Debug.Log("Can't find " + type.ToString());
-                    return;
-                }
-
-                if (entity.type != EntityType.MyPlayer)
-                {
-                    Debug.Log("Incorrect entityType " + type.ToString());
-                    return;
-                }
-
-                entitySystem.Remove(id);
-                GameObject.Destroy(entity.gameObject);
-                break;
-            }
-            case EntityType.OtherPlayer:
-            {
-                NetEntity entity = entitySystem.Get(id);
-                if (entity == null)
-                {
-                    Debug.Log("Can't find " + type.ToString());
-                    return;
-                }
-
-                if (entity.type != EntityType.OtherPlayer)
-                {
-                    Debug.Log("Incorrect entityType " + type.ToString());
-                    return;
-                }
-
-                entitySystem.Remove(id);
-                GameObject.Destroy(entity.gameObject);
-                break;
-            }
-        }
+        _game?.ProcessUpdate();
     }
 }
