@@ -3,24 +3,35 @@ using UnityEngine;
 
 public class EntitySystem : MonoBehaviour
 {
-    private Dictionary<int, NetEntity> _map = new Dictionary<int, NetEntity>(1024);
+    public NetEntity MyCharacter { get; set; }
+    private Dictionary<uint, NetEntity> _map = new Dictionary<uint, NetEntity>(1024);
 
-    public NetEntity Get(int id)
+    public NetEntity Get(uint id)
     {
-        NetEntity e;
+        NetEntity e = null;
         _map.TryGetValue(id, out e);
         return e;
     }
 
-    public void Register(int id, NetEntity entity)
+    public void Register(uint id, NetEntity entity, bool mine = false)
     {
         entity.entityId = id;
         _map[id] = entity;
+        if (mine) 
+        { 
+            MyCharacter = entity;
+        }
     }
 
-    public void Remove(int id)
+    public void Remove(uint id)
     {
         NetEntity e;
+
+        if (MyCharacter?.entityId == id)
+        {
+            MyCharacter = null;
+        }
+
         if (_map.TryGetValue(id, out e))
         {
             _map.Remove(id);
@@ -29,10 +40,6 @@ public class EntitySystem : MonoBehaviour
 
     public void Clear()
     {
-        foreach (var kv in _map)
-        {
-            kv.Value.OnDespawn();
-        }
         _map.Clear();
     }
 

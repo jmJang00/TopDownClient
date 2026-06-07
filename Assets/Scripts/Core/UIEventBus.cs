@@ -24,8 +24,6 @@ public static class UIEventBus
 [핸들러]
 public static void S_CreateMyCharacterHandler(PacketSession session, IPacket packet)
 {
-    PlayerManager.Instance.EnterGame(packet);
-
     UIEventBus.Publish(packet);
 }
 

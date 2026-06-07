@@ -7,14 +7,15 @@ public abstract class NetBehaviour : MonoBehaviour
     public abstract NetBehaviourType Type { get; }
 
     public NetEntity Entity { get; set; }
+    public bool Ready { get { return _spawned; } }
+
     protected bool _init = false;
-    protected NetworkManager _network;
+    protected bool _spawned = false;
     protected TickScheduler _tickScheduler;
     protected EntitySystem _entitySystem;
 
     public virtual void Init()
     {
-        _network = Entity.Network;
         _tickScheduler = Entity.TickScheduler;
         _entitySystem = Entity.EntitySystem;
         _init = true;
@@ -22,7 +23,7 @@ public abstract class NetBehaviour : MonoBehaviour
 
     public virtual void OnSpawn(int tick)
     {
-
+        _spawned = true;
     }
 
     public virtual void OnDespawn()
