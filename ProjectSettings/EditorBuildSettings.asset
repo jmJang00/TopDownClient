@@ -8,10 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/ThirdParty/TopDownEngine/Demos/StartScreen/StartScreen.unity
     guid: 52360e1567e3fee418407abdfd132d73
-  - enabled: 1
-    path: Assets/ThirdParty/TopDownEngine/ThirdParty/MoreMountains/MMTools/Core/MMSceneLoading/LoadingScreens/LoadingScreen.unity
-    guid: 888394d52616e5e42b3b54c3f2bbd3eb
-  - enabled: 1
+  - enabled: 0
     path: Assets/ThirdParty/TopDownEngine/Demos/LevelSelection/LevelSelection.unity
     guid: f991cbe75cb701b43baec351a60a630a
   - enabled: 0
@@ -141,6 +138,12 @@ EditorBuildSettings:
     path: Assets/Scenes/MinimalSceneSyncTest.unity
     guid: 9eb98924ead0ef8469a1cf32241aef68
   - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: 116da6f273cfbc94083169fd32646dcf
+  - enabled: 1
     path: Assets/Scenes/ServerSyncTest.unity
     guid: 630f0900bcd778a4884ceca30cea46ac
+  - enabled: 1
+    path: Assets/ThirdParty/TopDownEngine/ThirdParty/MoreMountains/MMTools/Core/MMSceneLoading/LoadingScreens/LoadingScreen.unity
+    guid: 888394d52616e5e42b3b54c3f2bbd3eb
   m_configObjects: {}

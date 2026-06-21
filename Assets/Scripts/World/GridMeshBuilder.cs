@@ -21,7 +21,7 @@ public class GridMeshBuilder : MonoBehaviour
     int width;
     int height;
     byte[,] map = null;
-    GridMapSO gridMap;
+    public GridMapSO gridMap;
 
     public void SetMap()
     {
@@ -29,7 +29,8 @@ public class GridMeshBuilder : MonoBehaviour
         {
             width = gridMap.width; 
             height = gridMap.height;
-            System.Buffer.BlockCopy(map, 0, gridMap.data, 0, height * width);
+            map = new byte[width, height];
+            System.Buffer.BlockCopy(gridMap.data, 0, map, 0, height * width);
         }
         else
         {
@@ -339,4 +340,14 @@ public class GridMeshBuilder : MonoBehaviour
 
         AddQuad(p0, p1, p2, p3);
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (gridMap != null)
+        {
+            gridMap.Draw();
+        }
+    }
+#endif
 }

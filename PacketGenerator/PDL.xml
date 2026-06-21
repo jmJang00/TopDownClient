@@ -14,21 +14,18 @@
   </packet>
   <packet name="C_MoveStart">
     <int name="clientTick"/>
-    <byte name="dir"/>
     <float name="targetX"/>
     <float name="targetY"/>
   </packet>
   <packet name="S_MoveStart">
     <int name="acceptTick"/>
     <uint name="entityId"/>
-    <byte name="dir"/>
     <float name="targetX"/>
     <float name="targetY"/>
   </packet>
   <packet name="S_MoveState">
     <int name="currentTick"/>
     <uint name="entityId"/>
-    <byte name="dir"/>
     <float name="serverX"/>
     <float name="serverY"/>
     <float name="targetX"/>
@@ -81,19 +78,27 @@
   </packet>
   <packet name = "C_MatchCancel">
   </packet>
-  <packet name = "C_GameEnd">
-  </packet>
-  <packet name = "S_GameStartWait">
+  <packet name = "S_MatchFound">
+    <bool name="success"/>
   </packet>
   <packet name = "S_GameStart">
+    <bool name="success"/>
     <int name="tick"/>
     <ushort name="weaponId"/>
   </packet>
   <packet name = "S_GameEnd">
+    <bool name="win"/>
   </packet>
   <packet name = "C_SceneReady">
   </packet>
   <packet name = "C_WeaponSelect">
     <ushort name="weaponId"/>
+  </packet>
+  <packet name = "C_AccountInfoDebug">
+    <long name="accountId"/>
+  </packet>
+  <packet name = "C_ReturnToLobby">
+  </packet>
+  <packet name = "S_ReturnToLobby">
   </packet>
 </PDL>

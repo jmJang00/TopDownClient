@@ -153,7 +153,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GridMeshBuilder
   tileSize: 4
   wallHeight: 6
-  material: {fileID: 2100000, guid: 7612bd6f820e09b459f45672c8bbcd71, type: 2}
+  material: {fileID: 2100000, guid: 82da3ef8ffba57445a7fba8ad983a0e4, type: 2}
+  gridMap: {fileID: 11400000, guid: a0102db427c9c09419c25483eefdad2b, type: 2}
 --- !u!23 &87208022
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -241,7 +242,7 @@ MonoBehaviour:
   height: 50
   totalRoom: 15
   showGizmos: 1
-  seed: 3699885496
+  seed: 817148613
 --- !u!1 &753115743
 GameObject:
   m_ObjectHideFlags: 0

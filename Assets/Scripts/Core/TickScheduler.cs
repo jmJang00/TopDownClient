@@ -20,7 +20,7 @@ public class TickScheduler : MonoBehaviour
     public float Alpha {  get; private set; }
 
     // 클라가 앞서 나갈 수 있는 허용치
-    public int leadWindow = 20; // rtt + tickSync period
+    public int leadWindow = 14; // rtt + tickSync period
 
     private float _accum;
     private float _dt;
@@ -32,12 +32,10 @@ public class TickScheduler : MonoBehaviour
 
     [SerializeField]
     private int _serverTick;     // TickSync로 갱신
-    public int _tickDiff;
 
     private bool _hasServerTick; // 초기 동기화 여부
 
-    private MinHeap<ScheduledEvent> _pq
-        = new MinHeap<ScheduledEvent>();
+    private MinHeap<ScheduledEvent> _pq = new MinHeap<ScheduledEvent>();
 
     private HashSet<int> _canceled = new HashSet<int>();
 
@@ -136,26 +134,22 @@ public class TickScheduler : MonoBehaviour
             // 서버가 앞서 있음
             if (diff > 0)
             {
-                if (diff > 1)
-                    scale = 1.1f;
-
-                if (diff > 3)
-                    scale = 1.5f;
-
-                if (diff > 6)
-                    scale = 2f;
+                if (diff >= 5)
+                    scale = ((float)6 / 3);
+                else if (diff >= 3)
+                    scale = ((float)5 / 3);
+                else if (diff >= 1)
+                    scale = ((float)4 / 3);
             }
             // 클라가 앞서 있음
+            // 기본적으로 클라가 앞설 수 밖에 없기 때문에 기대되는 서버 틱 간격 만큼은 1로 예측
+            // 5틱마다 보낸다면 차이가 최소 5틱보다는 커야 다른 속도를 적용시킬 수 있음
             else if (diff < 0)
             {
-                if (diff < -3)
-                    scale = 0.8f;
-
-                if (diff < -6)
-                    scale = 0.5f;
-
-                if (diff < -leadWindow)
-                    scale = 0.0f;
+                if (diff <= -7)
+                    scale = ((float)1 / 3);
+                else if (diff <= -5)
+                    scale = ((float)2 / 3);
             }
 
             _accum += Time.deltaTime * scale;
@@ -163,21 +157,11 @@ public class TickScheduler : MonoBehaviour
 
         while (_accum >= _dt)
         {
-            if (!CanAdvance())
-                break;
-
             RunTick();
             _accum -= _dt;
         }
 
-        _tickDiff = _currentTick - _serverTick;
         Alpha = Mathf.Clamp01(_accum / _dt);
-    }
-
-    bool CanAdvance()
-    {
-        // 클라가 너무 앞서지 못하게 제한
-        return _currentTick < _serverTick + leadWindow;
     }
 
     void RunTick()

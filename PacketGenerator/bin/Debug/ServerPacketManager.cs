@@ -35,14 +35,17 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.C_MatchCancel, MakePacket<C_MatchCancel>);
         _handler.Add((ushort)PacketID.C_MatchCancel, PacketHandler.C_MatchCancelHandler);
 
-        _makeFunc.Add((ushort)PacketID.C_GameEnd, MakePacket<C_GameEnd>);
-        _handler.Add((ushort)PacketID.C_GameEnd, PacketHandler.C_GameEndHandler);
-
         _makeFunc.Add((ushort)PacketID.C_SceneReady, MakePacket<C_SceneReady>);
         _handler.Add((ushort)PacketID.C_SceneReady, PacketHandler.C_SceneReadyHandler);
 
         _makeFunc.Add((ushort)PacketID.C_WeaponSelect, MakePacket<C_WeaponSelect>);
         _handler.Add((ushort)PacketID.C_WeaponSelect, PacketHandler.C_WeaponSelectHandler);
+
+        _makeFunc.Add((ushort)PacketID.C_AccountInfoDebug, MakePacket<C_AccountInfoDebug>);
+        _handler.Add((ushort)PacketID.C_AccountInfoDebug, PacketHandler.C_AccountInfoDebugHandler);
+
+        _makeFunc.Add((ushort)PacketID.C_ReturnToLobby, MakePacket<C_ReturnToLobby>);
+        _handler.Add((ushort)PacketID.C_ReturnToLobby, PacketHandler.C_ReturnToLobbyHandler);
 
     }
 
