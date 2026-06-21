@@ -119,7 +119,9 @@ public class SpawnManager : MonoBehaviour
         {
             case EntityType.MyPlayer:
             {
-                entity.gameObject.SetActive(false);
+                //entity.gameObject.SetActive(false);
+                //오브젝트를 false로 설정하면 Pause화면이 나옴
+                GameObject.Destroy(entity.gameObject);
                 break;
             }
             case EntityType.OtherPlayer:

@@ -50,7 +50,7 @@ namespace ServerCore
             else
             {
                 Console.WriteLine($"OnConnectCompleted Fail: {args.SocketError}");
-                NetworkManager.ChangeState(NetworkState.ConnectRequested, NetworkState.None);
+                NetworkManager.AssignState(NetworkState.None);
             }
         }
     }

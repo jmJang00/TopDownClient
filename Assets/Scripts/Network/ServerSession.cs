@@ -12,13 +12,13 @@ class ServerSession : PacketSession
     public override void OnConnected(EndPoint endPoint)
     {
         Console.WriteLine($"OnConnected: {endPoint}");
-        NetworkManager.ChangeState(NetworkState.ConnectRequested, NetworkState.Connected);
+        NetworkManager.AssignState(NetworkState.Connected);
     }
 
     public override void OnDisconnected(EndPoint endPoint)
     {
         Console.WriteLine($"OnDisconnected: {endPoint}");
-        NetworkManager.ChangeState(NetworkState.ConnectRequested, NetworkState.Disconnected);
+        NetworkManager.AssignState(NetworkState.Disconnected);
     }
 
     public override void OnRecvPacket(ArraySegment<byte> buffer)

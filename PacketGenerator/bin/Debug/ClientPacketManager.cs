@@ -56,14 +56,17 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ProjectileHit, MakePacket<S_ProjectileHit>);
         _handler.Add((ushort)PacketID.S_ProjectileHit, PacketHandler.S_ProjectileHitHandler);
 
-        _makeFunc.Add((ushort)PacketID.S_GameStartWait, MakePacket<S_GameStartWait>);
-        _handler.Add((ushort)PacketID.S_GameStartWait, PacketHandler.S_GameStartWaitHandler);
+        _makeFunc.Add((ushort)PacketID.S_MatchFound, MakePacket<S_MatchFound>);
+        _handler.Add((ushort)PacketID.S_MatchFound, PacketHandler.S_MatchFoundHandler);
 
         _makeFunc.Add((ushort)PacketID.S_GameStart, MakePacket<S_GameStart>);
         _handler.Add((ushort)PacketID.S_GameStart, PacketHandler.S_GameStartHandler);
 
         _makeFunc.Add((ushort)PacketID.S_GameEnd, MakePacket<S_GameEnd>);
         _handler.Add((ushort)PacketID.S_GameEnd, PacketHandler.S_GameEndHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_ReturnToLobby, MakePacket<S_ReturnToLobby>);
+        _handler.Add((ushort)PacketID.S_ReturnToLobby, PacketHandler.S_ReturnToLobbyHandler);
 
     }
 

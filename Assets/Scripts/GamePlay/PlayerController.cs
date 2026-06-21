@@ -14,7 +14,7 @@ struct MoveState
 struct MoveInput
 {
     public Vector2 target;
-    public PlayerDirection dir;
+    //public PlayerDirection dir;
 }
 
 public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
@@ -60,7 +60,6 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
                 pkt.targetX = input.target.x;
                 pkt.targetY = input.target.y;
                 pkt.clientTick = tick;
-                pkt.dir = (byte)input.dir;
                 NetworkManager.Instance.Send(pkt.Write());
 
                 // 서버 시뮬레이션
@@ -134,7 +133,6 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
                 var input = new MoveInput
                 {
                     target = new Vector2(p.targetX, p.targetY),
-                    dir = (PlayerDirection)p.dir,
                 };
 
                 _runner.EnqueueServerInput(p.acceptTick, input);
@@ -209,7 +207,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
 
         MoveInput input;
         input.target = clamped;
-        input.dir = dir;
+        //input.dir = dir;
         _renderTarget = clamped;
         _runner.EnqueueClientInput(_tickScheduler.GetCurrentTick(), input);
     }
@@ -295,7 +293,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
     void ITickable<MoveState, MoveInput>.ApplyInput(in MoveInput input)
     {
         _state.target = input.target;
-        _state.angle = PlayerInput.dirAngle[(byte)input.dir];
+        //_state.angle = PlayerInput.dirAngle[(byte)input.dir];
     }
 
     MoveState ITickable<MoveState, MoveInput>.CaptureState()

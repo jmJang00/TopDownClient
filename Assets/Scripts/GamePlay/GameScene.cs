@@ -5,8 +5,9 @@ public class GameScene : MonoBehaviour
     public TickScheduler tickScheduler;
     public EntitySystem entitySystem;
     public SpawnManager spawnManager;
+    public UI_GameEnd gameSelectUI;
 
-    public void Init()
+    public void Start()
     {
         tickScheduler = GetComponent<TickScheduler>();
         entitySystem = GetComponent<EntitySystem>();
