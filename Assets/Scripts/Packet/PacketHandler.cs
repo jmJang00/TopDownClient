@@ -49,11 +49,13 @@ class PacketHandler
     {
         S_MoveStart pkt = packet as S_MoveStart;
 
+
         if (NetworkManager.Instance.game)
         {
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Controller, packet);
         }
+
     }
 
     public static void S_TickSyncHandler(PacketSession session, IPacket packet)
@@ -70,49 +72,58 @@ class PacketHandler
     {
         S_RotateStart pkt = packet as S_RotateStart;
 
+
         if (NetworkManager.Instance.game)
         {
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Aim, packet);
         }
+
     }
 
     internal static void S_MoveStateHandler(PacketSession session, IPacket packet)
     {
         S_MoveState pkt = packet as S_MoveState;
 
+
         if (NetworkManager.Instance.game)
         {
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Controller, packet);
         }
+
     }
 
     internal static void S_RotateStateHandler(PacketSession session, IPacket packet)
     {
         S_RotateState pkt = packet as S_RotateState;
 
+
         if (NetworkManager.Instance.game)
         {
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Aim, packet);
         }
+
     }
 
     internal static void S_ProjectileShootStartHandler(PacketSession session, IPacket packet)
     {
         S_ProjectileShootStart pkt = packet as S_ProjectileShootStart;
 
+
         if (NetworkManager.Instance.game)
         {
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Projectile, packet);
         }
+
     }
 
     internal static void S_SpawnProjectileHandler(PacketSession session, IPacket packet)
     {
         S_SpawnProjectile pkt = packet as S_SpawnProjectile;
+
 
         if (NetworkManager.Instance.game)
         {
@@ -173,5 +184,6 @@ class PacketHandler
     internal static void S_ReturnToLobbyHandler(PacketSession session, IPacket packet)
     {
         NetworkManager.Instance.OnReturnToLobby();
+
     }
 }
