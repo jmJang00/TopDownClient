@@ -293,7 +293,6 @@ public class NetworkManager : MonoBehaviour
         List<IPacket> list = PacketQueue.Instance.PopAll();
         foreach (IPacket packet in list)
             PacketManager.Instance.HandlePacket(_session, packet);
-
         game?.ProcessUpdate();
     }
 }
