@@ -10,6 +10,8 @@ public enum EntityType
     MyPlayer,
     OtherPlayer,
     Projectile,
-    Item
+    Item, 
+    MyPlayerH,
+    OtherPlayerH,
 }
 

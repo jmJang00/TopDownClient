@@ -91,6 +91,44 @@ public class SpawnManager : MonoBehaviour
                 _game.entitySystem.Register(id, bullet);
                 return bullet;
             }
+            case EntityType.MyPlayerH:
+            {
+                GameObject prefab = Resources.Load<GameObject>("Prefabs/PlayerHitscan");
+                if (prefab == null)
+                {
+                    Debug.Log("Can't find " + type.ToString());
+                    return null;
+                }
+
+                GameObject obj = Instantiate(prefab);
+                MyPlayer myPlayer = obj.GetComponent<MyPlayer>();
+                myPlayer.entityId = id;
+                myPlayer.type = EntityType.MyPlayer;
+                myPlayer.transform.position = position;
+                myPlayer.Init();
+                _game.entitySystem.Register(id, myPlayer, true);
+                myPlayer.gameObject.SetActive(false);
+                return myPlayer;
+            }
+            case EntityType.OtherPlayerH:
+            {
+                GameObject prefab = Resources.Load<GameObject>("Prefabs/OtherPlayerHitscan");
+                if (prefab == null)
+                {
+                    Debug.Log("Can't find " + type.ToString());
+                    return null;
+                }
+
+                GameObject obj = Instantiate(prefab);
+                Player player = obj.GetComponent<Player>();
+                player.entityId = id;
+                player.transform.position = position;
+                player.type = EntityType.OtherPlayer;
+                player.Init();
+                _game.entitySystem.Register(id, player);
+                player.gameObject.SetActive(false);
+                return player;
+            }
             default:
             {
                 return null;

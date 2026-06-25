@@ -68,6 +68,20 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ReturnToLobby, MakePacket<S_ReturnToLobby>);
         _handler.Add((ushort)PacketID.S_ReturnToLobby, PacketHandler.S_ReturnToLobbyHandler);
 
+        _makeFunc.Add((ushort)PacketID.S_CreateChest, MakePacket<S_CreateChest>);
+        _handler.Add((ushort)PacketID.S_CreateChest, PacketHandler.S_CreateChestHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_ResChestInfo, MakePacket<S_ResChestInfo>);
+        _handler.Add((ushort)PacketID.S_ResChestInfo, PacketHandler.S_ResChestInfoHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_ResInventoryToChest, MakePacket<S_ResInventoryToChest>);
+        _handler.Add((ushort)PacketID.S_ResInventoryToChest, PacketHandler.S_ResInventoryToChestHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_ResChestToInventory, MakePacket<S_ResChestToInventory>);
+        _handler.Add((ushort)PacketID.S_ResChestToInventory, PacketHandler.S_ResChestToInventoryHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_ResInventoryInfo, MakePacket<S_ResInventoryInfo>);
+        _handler.Add((ushort)PacketID.S_ResInventoryInfo, PacketHandler.S_ResInventoryInfoHandler);
     }
 
     public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)
