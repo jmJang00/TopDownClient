@@ -1,3 +1,4 @@
+using MoreMountains.InventoryEngine;
 using ServerCore;
 using System;
 using System.Collections.Generic;
@@ -185,5 +186,63 @@ class PacketHandler
     {
         NetworkManager.Instance.OnReturnToLobby();
 
+    }
+
+    internal static void S_CreateChestHandler(PacketSession session, IPacket packet)
+    {
+    }
+
+    internal static void S_ResChestInfoHandler(PacketSession session, IPacket packet)
+    {
+        S_ResChestInfo pkt = packet as S_ResChestInfo;
+
+
+        MyChestInventoryManager manager = MyChestInventoryManager.Instance;
+        if (manager == null)
+        {
+            //아직 매니저 초기화 안됨.
+            return;
+        }
+
+        InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
+        for (int i = 0; i < pkt.itemLists.Count; ++i)
+        {
+            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemId);
+            items[i].Quantity = (int)pkt.itemLists[i].quantity;
+        }
+
+        manager.CurrentChestInventory.SetInventoryFromItemArray(items);
+    }
+
+    internal static void S_ResInventoryToChestHandler(PacketSession session, IPacket packet)
+    {
+
+    }
+
+    internal static void S_ResChestToInventoryHandler(PacketSession session, IPacket packet)
+    {
+
+    }
+
+    internal static void S_ResInventoryInfoHandler(PacketSession session, IPacket packet)
+    {
+        S_ResInventoryInfo pkt = packet as S_ResInventoryInfo;
+
+
+        MyChestInventoryManager manager = MyChestInventoryManager.Instance;
+        if (manager == null)
+        {
+            //아직 매니저 초기화 안됨.
+            return;
+        }
+
+        InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
+        for (int i = 0; i < pkt.itemLists.Count; ++i)
+        {
+            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemId);
+            items[i].Quantity = (int)pkt.itemLists[i].quantity;
+        }
+
+        manager.CurrentPlayerInventory.SetInventoryFromItemArray(items);
     }
 }
