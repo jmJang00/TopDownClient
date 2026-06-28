@@ -159,6 +159,33 @@ class PacketHandler
         }
     }
 
+    internal static void S_NtfSpawnItemPickerHandler(PacketSession session, IPacket packet)
+    {
+        S_NtfSpawnItemPicker pkt = packet as S_NtfSpawnItemPicker;
+
+        if (NetworkManager.Instance.game)
+        {
+            GameSceneTest game = NetworkManager.Instance.game as GameSceneTest;
+            game.pickerSpawnManager.Spawn(pkt.itemId, (ItemType)pkt.itemType, new Vector3(pkt.targetX, 1, pkt.targetY));            
+        }
+    }
+
+    internal static void S_NtfDespawnItemPickerHandler(PacketSession session, IPacket packet)
+    {
+        S_NtfDespawnItemPicker pkt = packet as S_NtfDespawnItemPicker;
+
+        if (NetworkManager.Instance.game)
+        {
+            GameSceneTest game = NetworkManager.Instance.game as GameSceneTest;
+            game.pickerSpawnManager.Despawn(pkt.itemId);
+        }
+    }
+
+    internal static void C_ReqPickupItemPickerHandler(PacketSession session, IPacket packet)
+    {
+
+    }
+
     internal static void S_GameStartHandler(PacketSession session, IPacket packet)
     {
         S_GameStart pkt = packet as S_GameStart;
@@ -207,7 +234,7 @@ class PacketHandler
         InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
         for (int i = 0; i < pkt.itemLists.Count; ++i)
         {
-            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemId);
+            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemType);
             items[i].Quantity = (int)pkt.itemLists[i].quantity;
         }
 

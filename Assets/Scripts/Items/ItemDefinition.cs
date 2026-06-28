@@ -21,14 +21,15 @@ public static class EnumToItemResource
 {
     private static readonly string[] PickerPaths =
     {
-        "Prefabs/Items/Picker/LoftAssaultRiifle",
-        "Prefabs/Items/Picker/LoftAssaultRifleHitscan",
-        "Prefabs/Items/Picker/LoftAmmoCrateAssaultRifle",
-        "Prefabs/Items/Picker/LoftAmmoCrateAssaultRifleHitscan",
+        //총알, 힐팩, 경험치팩만 드롭될거임.
+        "Prefabs/Items/Picker/Undefined",
+        "Prefabs/Items/Picker/Undefined",
+        "Prefabs/Items/Picker/AmmoProjectile",
+        "Prefabs/Items/Picker/AmmoHitscan",
         "Prefabs/Items/Picker/LoftStimpack",
-        "Prefabs/Items/Picker/LoftStimpack",
-        "Prefabs/Items/Picker/LoftStimpack",
-        "Prefabs/Items/Picker/LoftStimpack",
+        "Prefabs/Items/Picker/Undefined",
+        "Prefabs/Items/Picker/ExpPack",
+        "Prefabs/Items/Picker/Undefined",
         "Undefined"
     };
 

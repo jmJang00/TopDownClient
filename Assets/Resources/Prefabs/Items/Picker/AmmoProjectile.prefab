@@ -1261,10 +1261,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4585229457997940}
   - component: {fileID: 65837538634164224}
-  - component: {fileID: 114293813051018108}
-  - component: {fileID: 114621598893091784}
+  - component: {fileID: 7768776690923651195}
   m_Layer: 0
-  m_Name: LoftAmmoCrateAssaultRifleHitscan
+  m_Name: AmmoProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1308,7 +1307,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6, y: 0.6, z: 0.6}
   m_Center: {x: 0, y: 0.3, z: 0}
---- !u!114 &114293813051018108
+--- !u!114 &7768776690923651195
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1317,9 +1316,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1701181934317786}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1feff4042ae759c49a290443b9bfdd71, type: 3}
+  m_Script: {fileID: 11500000, guid: 19539112fb9f0854ba4c970ce7de77c0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoreMountains.TopDownEngine.DummyPicker
   PickedMMFeedbacks: {fileID: 1859863724247503604}
   DisableColliderOnPick: 0
   DisableObjectOnPick: 1
@@ -1331,24 +1330,7 @@ MonoBehaviour:
   Model: {fileID: 0}
   RequireCharacterComponent: 1
   RequirePlayerType: 1
---- !u!114 &114621598893091784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1701181934317786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86fd837a0abc28d4d91c55590bd2c090, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Item: {fileID: 11400000, guid: df8dd27ceaa5e4d44b9916f2c5fcc3f2, type: 2}
-  Quantity: 500
-  RemainingQuantity: 1
-  PickableIfInventoryIsFull: 0
-  DisableObjectWhenDepleted: 1
-  RequirePlayerTag: 1
+  OnlyForPlayerCharacter: 1
 --- !u!1 &1859820890897486
 GameObject:
   m_ObjectHideFlags: 0

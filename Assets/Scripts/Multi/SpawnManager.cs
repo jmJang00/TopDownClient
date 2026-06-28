@@ -173,6 +173,20 @@ public class SpawnManager : MonoBehaviour
                 _pool.Release((Bullet)entity);
                 break;
             }
+            case EntityType.MyPlayerH:
+            {
+                //entity.gameObject.SetActive(false);
+                //오브젝트를 false로 설정하면 Pause화면이 나옴
+                GameObject.Destroy(entity.gameObject);
+                break;
+            }
+            case EntityType.OtherPlayerH:
+            {
+                //entity.gameObject.SetActive(false);
+                //오브젝트를 false로 설정하면 Pause화면이 나옴
+                GameObject.Destroy(entity.gameObject);
+                break;
+            }
         }
     }
 }
