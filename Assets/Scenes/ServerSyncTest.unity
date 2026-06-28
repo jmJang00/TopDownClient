@@ -491,6 +491,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameScene
       objectReference: {fileID: 0}
+    - target: {fileID: 4372227253839474085, guid: 586f9e35636968641b38eb7ff53c953c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8285817401219089867, guid: 586f9e35636968641b38eb7ff53c953c,
         type: 3}
       propertyPath: gameSelectUI

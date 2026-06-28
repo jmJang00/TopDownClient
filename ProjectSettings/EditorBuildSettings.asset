@@ -144,6 +144,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ServerSyncTest.unity
     guid: 630f0900bcd778a4884ceca30cea46ac
   - enabled: 1
+    path: Assets/Scenes/ModServerSyncTest.unity
+    guid: 68c9d8ad4d8cd5c408eaa45cf79787d7
+  - enabled: 1
     path: Assets/ThirdParty/TopDownEngine/ThirdParty/MoreMountains/MMTools/Core/MMSceneLoading/LoadingScreens/LoadingScreen.unity
     guid: 888394d52616e5e42b3b54c3f2bbd3eb
   m_configObjects: {}

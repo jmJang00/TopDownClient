@@ -159,7 +159,8 @@ public class NetworkManager : MonoBehaviour
 
         if (State == NetworkState.GameFound)
         {
-            MMSceneLoadingManager.LoadScene("ServerSyncTest");
+            //MMSceneLoadingManager.LoadScene("ServerSyncTest");
+            MMSceneLoadingManager.LoadScene("ModServerSyncTest");
 
             yield return new WaitUntil(() => { return game != null; });
 

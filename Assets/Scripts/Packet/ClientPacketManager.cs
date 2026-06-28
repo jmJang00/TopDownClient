@@ -56,6 +56,15 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ProjectileHit, MakePacket<S_ProjectileHit>);
         _handler.Add((ushort)PacketID.S_ProjectileHit, PacketHandler.S_ProjectileHitHandler);
 
+        _makeFunc.Add((ushort)PacketID.S_NtfSpawnItemPicker, MakePacket<S_NtfSpawnItemPicker>);
+        _handler.Add((ushort)PacketID.S_NtfSpawnItemPicker, PacketHandler.S_NtfSpawnItemPickerHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_NtfDespawnItemPicker, MakePacket<S_NtfDespawnItemPicker>);
+        _handler.Add((ushort)PacketID.S_NtfDespawnItemPicker, PacketHandler.S_NtfDespawnItemPickerHandler);
+
+        _makeFunc.Add((ushort)PacketID.C_ReqPickupItemPicker, MakePacket<C_ReqPickupItemPicker>);
+        _handler.Add((ushort)PacketID.C_ReqPickupItemPicker, PacketHandler.C_ReqPickupItemPickerHandler);
+
         _makeFunc.Add((ushort)PacketID.S_MatchFound, MakePacket<S_MatchFound>);
         _handler.Add((ushort)PacketID.S_MatchFound, PacketHandler.S_MatchFoundHandler);
 

@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 6135945670756876823}
   - component: {fileID: 6655916379970738598}
   - component: {fileID: 3322368110302181332}
-  - component: {fileID: 5388042626268008779}
+  - component: {fileID: 2143026283122348904}
+  - component: {fileID: 1935436086280267677}
   m_Layer: 0
-  m_Name: GameSceneOld
+  m_Name: GameSceneTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   _bulletPrefab: {fileID: -3017346629197743792, guid: 90a9ecdcd912f034ab07549cf97bd09a,
     type: 3}
---- !u!114 &5388042626268008779
+--- !u!114 &2143026283122348904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -86,11 +87,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 4372227253839474085}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22e9d52ce1cd2dc43bd96be9b6516d54, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ec1663223fe9d14f86a7bf4d97aca41, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameSceneOld
+  m_EditorClassIdentifier: Assembly-CSharp::PickerSpawnManager
+--- !u!114 &1935436086280267677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4372227253839474085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732b56490eaadcc4983a816851e8f31c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameSceneTest
   tickScheduler: {fileID: 0}
   entitySystem: {fileID: 0}
   spawnManager: {fileID: 0}
   gameSelectUI: {fileID: 0}
   spawnPositions: []
+  pickerSpawnManager: {fileID: 0}
+  tickCount: 0
+  tickRate: 20
+  remainTick: 0.15
