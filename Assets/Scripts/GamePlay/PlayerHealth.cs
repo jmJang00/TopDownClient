@@ -2,6 +2,7 @@ using MoreMountains.Tools;
 using MoreMountains.TopDownEngine;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.PlayerLoop;
@@ -16,6 +17,8 @@ public class PlayerHealth : NetBehaviour
 
     private Health _health;
 
+    public ushort currentHealth = 150;
+
     public float InvincibilityDuration = 0.0f;
 
     public override void Init()
@@ -27,6 +30,7 @@ public class PlayerHealth : NetBehaviour
     public override void OnSpawn(int tick)
     {
         base.OnSpawn(tick);
+        _health.SetHealth(currentHealth);
     }
 
     public override void OnDespawn()
@@ -54,11 +58,17 @@ public class PlayerHealth : NetBehaviour
                         InvincibilityDuration, 
                         InvincibilityDuration,
                         Vector3.up);
+                    currentHealth -= p.damage;
                 });
 
                 break;
             }
         }
+    }
+
+    public void SetHealth(ushort health)
+    {
+        currentHealth = health;
     }
 
     void Update()

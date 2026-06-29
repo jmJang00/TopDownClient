@@ -39,8 +39,8 @@ public class NetworkManager : MonoBehaviour
     public EntitySystem entitySystem { get { return game.entitySystem; } }
     public SpawnManager spawnManager { get { return game.spawnManager; } }
 
-
-    public long accountId;
+    public bool autoConnect = true;
+    public long accountId = 0;
     public string ipStr = "127.0.0.1";
     public short port = 6000;
 
@@ -57,7 +57,7 @@ public class NetworkManager : MonoBehaviour
         bool success = value == (int)expected;
         if (!success)
         {
-            Debug.LogWarning("Current: " + ((NetworkState)value).ToString() + " Expected: " + expected.ToString() + " Desired: " + desired.ToString());
+            Debug.LogError("Current: " + ((NetworkState)value).ToString() + " Expected: " + expected.ToString() + " Desired: " + desired.ToString());
         }
 
         return success;
@@ -76,7 +76,10 @@ public class NetworkManager : MonoBehaviour
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<NetworkManager>();
             s_instance._session = new ServerSession();
-            s_instance.StartCoroutine(s_instance.TryConnectAndAuthorize());
+            if (s_instance.autoConnect)
+            {
+                s_instance.StartCoroutine(s_instance.TryConnectAndAuthorize());
+            }
         }
     }
     

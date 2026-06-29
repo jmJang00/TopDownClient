@@ -2,12 +2,6 @@ using MoreMountains.Tools;
 using System.Collections;
 using UnityEngine;
 
-public enum SelectWeaponType
-{
-    Rifle = 0,
-    Laser = 1,
-}
-
 public class UI_WeaponSelect : UI_Panel 
 {
     public MMTouchButton laserButton;
@@ -15,15 +9,15 @@ public class UI_WeaponSelect : UI_Panel
 
     public void SelectLaserWeapon()
     {
-        StartCoroutine(CoSelectWeapon(SelectWeaponType.Laser));
+        StartCoroutine(CoSelectWeapon(WeaponType.Laser));
     }
 
     public void SelectRifleWeapon()
     {
-        StartCoroutine(CoSelectWeapon(SelectWeaponType.Rifle));
+        StartCoroutine(CoSelectWeapon(WeaponType.Rifle));
     }
 
-    public IEnumerator CoSelectWeapon(SelectWeaponType type)
+    public IEnumerator CoSelectWeapon(WeaponType type)
     {
         C_WeaponSelect weaponSelect = new C_WeaponSelect();
         weaponSelect.weaponId = (ushort)type;

@@ -8,6 +8,7 @@ public class NetEntity : MonoBehaviour
     public int renderDelay;
     public bool active;
     public EntityType type;
+    public bool isDebugMode = false;
     public TickScheduler TickScheduler { get; set; }
     public EntitySystem EntitySystem { get; set; }
 

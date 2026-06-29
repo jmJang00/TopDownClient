@@ -3,10 +3,14 @@
   <packet name="S_CreateMyCharacter">
     <int name="serverTick"/>
     <uint name="entityId"/>
+    <ushort name="hp"/>
+    <ushort name="weaponId"/>
   </packet>
   <packet name="S_CreateOtherCharacter">
     <int name="serverTick"/>
     <uint name="entityId"/>
+    <ushort name="hp"/>
+    <ushort name="weaponId"/>
   </packet>
   <packet name="S_DeleteCharacter">
     <int name="serverTick"/>
@@ -74,31 +78,30 @@
     <uint name="bulletId"/>
     <uint name="collisionId"/>
   </packet>
-  <packet name = "C_MatchStart">
+  <packet name="C_MatchStart">
   </packet>
-  <packet name = "C_MatchCancel">
+  <packet name="C_MatchCancel">
   </packet>
-  <packet name = "S_MatchFound">
+  <packet name="S_MatchFound">
     <bool name="success"/>
   </packet>
-  <packet name = "S_GameStart">
+  <packet name="S_GameStart">
     <bool name="success"/>
     <int name="tick"/>
-    <ushort name="weaponId"/>
   </packet>
-  <packet name = "S_GameEnd">
+  <packet name="S_GameEnd">
     <bool name="win"/>
   </packet>
-  <packet name = "C_SceneReady">
+  <packet name="C_SceneReady">
   </packet>
-  <packet name = "C_WeaponSelect">
+  <packet name="C_WeaponSelect">
     <ushort name="weaponId"/>
   </packet>
-  <packet name = "C_AccountInfoDebug">
+  <packet name="C_AccountInfoDebug">
     <long name="accountId"/>
   </packet>
-  <packet name = "C_ReturnToLobby">
+  <packet name="C_ReturnToLobby">
   </packet>
-  <packet name = "S_ReturnToLobby">
+  <packet name="S_ReturnToLobby">
   </packet>
 </PDL>
