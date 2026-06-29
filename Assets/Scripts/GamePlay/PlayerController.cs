@@ -56,33 +56,36 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
             onApplied : (int tick, MoveInput input) => 
             {
                 // 서버 연동
-                C_MoveStart pkt = new C_MoveStart();
-                pkt.targetX = input.target.x;
-                pkt.targetY = input.target.y;
-                pkt.clientTick = tick;
-                NetworkManager.Instance.Send(pkt.Write());
-
+                if (!Entity.isDebugMode)
+                {
+                    C_MoveStart pkt = new C_MoveStart();
+                    pkt.targetX = input.target.x;
+                    pkt.targetY = input.target.y;
+                    pkt.clientTick = tick;
+                    NetworkManager.Instance.Send(pkt.Write());
+                }
                 // 서버 시뮬레이션
-                //_tickScheduler.ScheduleAfter(3, () =>
-                //{
-                //    S_MoveStart pkt = new S_MoveStart();
-                //    pkt.targetX = input.target.x;
-                //    pkt.targetY = input.target.y;
-                //    pkt.acceptTick = tick;
-                //    pkt.dir = (byte)input.dir;
-                //    DispatchPacket(pkt);
-                //});
+                else
+                {
+                    _tickScheduler.ScheduleAfter(3, () =>
+                    {
+                        S_MoveStart pkt = new S_MoveStart();
+                        pkt.targetX = input.target.x;
+                        pkt.targetY = input.target.y;
+                        pkt.acceptTick = tick;
+                        DispatchPacket(pkt);
+                    });
 
-                //_tickScheduler.ScheduleAfter(3, () =>
-                //{
-                //    NetEntity entity = NetworkManager.Instance.entitySystem.Get(1);
-                //    S_MoveStart pkt = new S_MoveStart();
-                //    pkt.targetX = input.target.x;
-                //    pkt.targetY = input.target.y;
-                //    pkt.acceptTick = tick;
-                //    pkt.dir = (byte)input.dir;
-                //    entity.DispatchPacket(NetBehaviourType.Controller, pkt);
-                //});
+                    _tickScheduler.ScheduleAfter(3, () =>
+                    {
+                        NetEntity entity = NetworkManager.Instance.entitySystem.Get(1);
+                        S_MoveStart pkt = new S_MoveStart();
+                        pkt.targetX = input.target.x;
+                        pkt.targetY = input.target.y;
+                        pkt.acceptTick = tick;
+                        entity.DispatchPacket(NetBehaviourType.Controller, pkt);
+                    });
+                }
             });
     }
 
@@ -93,7 +96,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
         _state.pos = new Vector2(transform.position.x, transform.position.z);
         _state.target = _state.pos;
         _renderTarget = _state.target;
-        transform.position = new Vector3(transform.position.x, spawnHeight, transform.position.z);
+        //transform.position = new Vector3(transform.position.x, spawnHeight, transform.position.z);
     }
 
     public override void OnDespawn()
@@ -243,6 +246,12 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
         else
         { 
             nextPos = _state.pos + dir.normalized * step;
+        }
+
+        if (Entity.type == EntityType.OtherPlayer)
+        {
+            _state.pos = nextPos;
+            return;
         }
 
         if (!CheckWall(_map, nextPos))

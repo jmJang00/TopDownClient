@@ -82,6 +82,8 @@ public class S_CreateMyCharacter : IPacket
 {
     public int serverTick;
 	public uint entityId;
+	public ushort hp;
+	public ushort weaponId;
 
     public ushort Protocol { get { return (ushort)PacketID.S_CreateMyCharacter; } }
 
@@ -96,6 +98,10 @@ public class S_CreateMyCharacter : IPacket
 		count += sizeof(int);
 		this.entityId = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
 		count += sizeof(uint);
+		this.hp = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
+		this.weaponId = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
     }
 
     public ArraySegment<byte> Write()
@@ -113,6 +119,10 @@ public class S_CreateMyCharacter : IPacket
 		count += sizeof(int);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), entityId);
 		count += sizeof(uint);
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), hp);
+		count += sizeof(ushort);
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), weaponId);
+		count += sizeof(ushort);
         success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
@@ -123,6 +133,8 @@ public class S_CreateOtherCharacter : IPacket
 {
     public int serverTick;
 	public uint entityId;
+	public ushort hp;
+	public ushort weaponId;
 
     public ushort Protocol { get { return (ushort)PacketID.S_CreateOtherCharacter; } }
 
@@ -137,6 +149,10 @@ public class S_CreateOtherCharacter : IPacket
 		count += sizeof(int);
 		this.entityId = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
 		count += sizeof(uint);
+		this.hp = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
+		this.weaponId = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
     }
 
     public ArraySegment<byte> Write()
@@ -154,6 +170,10 @@ public class S_CreateOtherCharacter : IPacket
 		count += sizeof(int);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), entityId);
 		count += sizeof(uint);
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), hp);
+		count += sizeof(ushort);
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), weaponId);
+		count += sizeof(ushort);
         success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;
@@ -1152,7 +1172,6 @@ public class S_GameStart : IPacket
 {
     public bool success;
 	public int tick;
-	public ushort weaponId;
 
     public ushort Protocol { get { return (ushort)PacketID.S_GameStart; } }
 
@@ -1167,8 +1186,6 @@ public class S_GameStart : IPacket
 		count += sizeof(bool);
 		this.tick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
 		count += sizeof(int);
-		this.weaponId = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
-		count += sizeof(ushort);
     }
 
     public ArraySegment<byte> Write()
@@ -1186,8 +1203,6 @@ public class S_GameStart : IPacket
 		count += sizeof(bool);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), tick);
 		count += sizeof(int);
-		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), weaponId);
-		count += sizeof(ushort);
         success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;

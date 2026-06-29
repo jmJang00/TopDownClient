@@ -18,9 +18,9 @@ public class SpawnManager : MonoBehaviour
         _pickerPool = new ObjectPool<Picker>(_pickerPrefab, 32, transform);
     }
 
-    public void SpawnAt(int tick, EntityType type, uint id, Vector3 position)
+    public void SpawnAt(int tick, EntityType type, WeaponType weapon, uint id, Vector3 position, ushort hp)
     {
-        NetEntity entity = Spawn(type, id, position);
+        NetEntity entity = Spawn(type, weapon, id, position, hp);
 
         _game.tickScheduler.ScheduleAt(tick, () =>
         {
@@ -44,13 +44,22 @@ public class SpawnManager : MonoBehaviour
         });
     }
 
-    public NetEntity Spawn(EntityType type, uint id, Vector3 position)
+    public NetEntity Spawn(EntityType type, WeaponType weapon, uint id, Vector3 position, ushort hp)
     {
         switch (type)
         {
             case EntityType.MyPlayer:
             {
-                GameObject prefab = Resources.Load<GameObject>("Prefabs/Player");
+                GameObject prefab = null;
+                if (weapon == WeaponType.Rifle)
+                {
+                     prefab = Resources.Load<GameObject>("Prefabs/Player");
+                }
+                else
+                {
+                     prefab = Resources.Load<GameObject>("Prefabs/Player");
+                }
+
                 if (prefab == null)
                 {
                     Debug.Log("Can't find " + type.ToString());
@@ -63,13 +72,24 @@ public class SpawnManager : MonoBehaviour
                 myPlayer.type = EntityType.MyPlayer;
                 myPlayer.transform.position = position;
                 myPlayer.Init();
+                obj.GetComponent<PlayerHealth>().SetHealth(hp);
                 _game.entitySystem.Register(id, myPlayer, true);
                 myPlayer.gameObject.SetActive(false);
                 return myPlayer;
             }
             case EntityType.OtherPlayer:
             {
-                GameObject prefab = Resources.Load<GameObject>("Prefabs/OtherPlayer");
+                GameObject prefab = null;
+                if (weapon == WeaponType.Rifle)
+                {
+                     prefab = Resources.Load<GameObject>("Prefabs/OtherPlayer");
+                }
+                else
+                {
+                     prefab = Resources.Load<GameObject>("Prefabs/OtherPlayer");
+                }
+
+
                 if (prefab == null)
                 {
                     Debug.Log("Can't find " + type.ToString());
@@ -82,6 +102,7 @@ public class SpawnManager : MonoBehaviour
                 player.transform.position = position;
                 player.type = EntityType.OtherPlayer;
                 player.Init();
+                obj.GetComponent<PlayerHealth>().SetHealth(hp);
                 _game.entitySystem.Register(id, player);
                 player.gameObject.SetActive(false);
                 return player;

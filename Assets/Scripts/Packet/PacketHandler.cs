@@ -15,7 +15,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, pkt.entityId, new Vector3(0, 0, 0));
+            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, (WeaponType)pkt.weaponId, pkt.entityId, new Vector3(0, 2, 0), pkt.hp);
         }
     }
 
@@ -25,7 +25,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayer, pkt.entityId, new Vector3(0, 0, 0));
+            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayer, (WeaponType)pkt.weaponId, pkt.entityId, new Vector3(0, 2, 0), pkt.hp);
         }
     }
 
@@ -129,7 +129,7 @@ class PacketHandler
         if (NetworkManager.Instance.game)
         {
             NetworkManager.Instance.spawnManager.SpawnAt(
-                pkt.currentTick, EntityType.Projectile, pkt.entityId, Vector2.zero);
+                pkt.currentTick, EntityType.Projectile, 0, pkt.entityId, Vector2.zero, 0);
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.BulletMovement, packet);
         }

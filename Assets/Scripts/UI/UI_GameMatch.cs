@@ -17,19 +17,23 @@ public class GameMatch : MonoBehaviour
         UIEventBus.Unsubscribe((ushort)PacketID.C_AccountInfoDebug, TurnOn);
     }
 
-    public void Awake()
+    public void Start()
     {
-        button.Interactable = false;
+        // 다시 처음씬이 로드될 때 실행되지 않도록
+        if (NetworkManager.State == NetworkState.None)
+        {
+            button.DisableButton();
+        }
     }
 
     public void MatchStart()
     {
         NetworkManager.Instance.StartFindGame();
-        button.Interactable = false;
+        button.DisableButton();
     }
 
     public void TurnOn(IPacket packet)
     {
-        button.Interactable = true;
+        button.EnableButton();
     }
 }
