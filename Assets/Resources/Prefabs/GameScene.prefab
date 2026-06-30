@@ -51,7 +51,6 @@ MonoBehaviour:
   leadWindow: 14
   _currentTick: 0
   _serverTick: 0
-  _tickDiff: 0
 --- !u!114 &6655916379970738598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,6 +77,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   _bulletPrefab: {fileID: -3017346629197743792, guid: 90a9ecdcd912f034ab07549cf97bd09a,
     type: 3}
+  _pickerPrefab: {fileID: -1712657821481481012, guid: 7430d3b1b36c96d42baf54b1bd8a8d14,
+    type: 3}
 --- !u!114 &8285817401219089867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,3 +94,4 @@ MonoBehaviour:
   tickScheduler: {fileID: 0}
   entitySystem: {fileID: 0}
   spawnManager: {fileID: 0}
+  gameSelectUI: {fileID: 0}

@@ -5359,7 +5359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7753db4e451e54944bdb62e85b4e3ef1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetInventoryName: Chest1Inventory
+  TargetInventoryName: DummyChestInventory
   PlayerID: Player1
   NumberOfRows: 2
   NumberOfColumns: 6
@@ -9885,6 +9885,7 @@ MonoBehaviour:
   UseButton: {fileID: 0}
   UnEquipButton: {fileID: 0}
   InventoryIsOpen: 0
+  DefaultChestInventoryManager: {fileID: 0}
   TargetChestInventoryGroup: {fileID: 1929171159485686887}
   TargetInventoryButtonGroup: {fileID: 6567024519413366693}
 --- !u!1 &5567047309570121389

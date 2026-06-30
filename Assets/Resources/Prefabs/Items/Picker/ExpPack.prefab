@@ -5334,7 +5334,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1d434455ca872e645801452ca04277e8, type: 2}
-  - {fileID: 2100000, guid: 1d434455ca872e645801452ca04277e8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6019,7 +6018,8 @@ GameObject:
   m_Component:
   - component: {fileID: 154168062650071478}
   - component: {fileID: 154168062650071476}
-  - component: {fileID: -5614141946093237412}
+  - component: {fileID: 8638062988132970590}
+  - component: {fileID: 6565291858313842537}
   m_Layer: 0
   m_Name: ExpPack
   m_TagString: Untagged
@@ -6066,7 +6066,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &-5614141946093237412
+--- !u!114 &8638062988132970590
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6077,20 +6077,36 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19539112fb9f0854ba4c970ce7de77c0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MoreMountains.TopDownEngine.ExpPack
+  m_EditorClassIdentifier: Assembly-CSharp::MoreMountains.TopDownEngine.DummyPicker
   PickedMMFeedbacks: {fileID: 154168061774554502}
-  DisableColliderOnPick: 1
+  DisableColliderOnPick: 0
   DisableObjectOnPick: 1
-  DisableDelay: 3
-  DisableModelOnPick: 1
+  DisableDelay: 0
+  DisableModelOnPick: 0
   DisableTargetObjectOnPick: 0
   TargetObjectToDisable: {fileID: 0}
   TargetObjectDisableDelay: 1
-  Model: {fileID: 154168062526626126}
+  Model: {fileID: 0}
   RequireCharacterComponent: 1
   RequirePlayerType: 1
-  ExpToGive: 10
   OnlyForPlayerCharacter: 1
+--- !u!114 &6565291858313842537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154168062650071481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b366149f7ee3c54ab2784a5ac79af36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Picker
+  entityId: 0
+  renderDelay: 0
+  active: 0
+  type: 0
+  picker: {fileID: 0}
 --- !u!1 &154168062899919541
 GameObject:
   m_ObjectHideFlags: 0
@@ -15815,7 +15831,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 0}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20779,8 +20794,8 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1d434455ca872e645801452ca04277e8, type: 2}
-  - {fileID: 2100000, guid: 1d434455ca872e645801452ca04277e8, type: 2}
+  - {fileID: 2100000, guid: 0ee794f064a51444996c513e3f4d59a9, type: 2}
+  - {fileID: 2100000, guid: 0ee794f064a51444996c513e3f4d59a9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -25686,7 +25701,6 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1d434455ca872e645801452ca04277e8, type: 2}
   - {fileID: 2100000, guid: 1d434455ca872e645801452ca04277e8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
