@@ -77,8 +77,11 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ReturnToLobby, MakePacket<S_ReturnToLobby>);
         _handler.Add((ushort)PacketID.S_ReturnToLobby, PacketHandler.S_ReturnToLobbyHandler);
 
-        _makeFunc.Add((ushort)PacketID.S_CreateChest, MakePacket<S_CreateChest>);
-        _handler.Add((ushort)PacketID.S_CreateChest, PacketHandler.S_CreateChestHandler);
+        _makeFunc.Add((ushort)PacketID.S_NtfCreateChest, MakePacket<S_NtfCreateChest>);
+        _handler.Add((ushort)PacketID.S_NtfCreateChest, PacketHandler.S_NtfCreateChestHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_NtfDestroyChest, MakePacket<S_NtfDestroyChest>);
+        _handler.Add((ushort)PacketID.S_NtfDestroyChest, PacketHandler.S_NtfDestroyChestHandler);
 
         _makeFunc.Add((ushort)PacketID.S_ResChestInfo, MakePacket<S_ResChestInfo>);
         _handler.Add((ushort)PacketID.S_ResChestInfo, PacketHandler.S_ResChestInfoHandler);

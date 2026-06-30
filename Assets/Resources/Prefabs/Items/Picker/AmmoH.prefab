@@ -1261,9 +1261,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4585229457997940}
   - component: {fileID: 65837538634164224}
-  - component: {fileID: 7768776690923651195}
+  - component: {fileID: -3197689212085166287}
+  - component: {fileID: 5021142634624635721}
   m_Layer: 0
-  m_Name: AmmoProjectile
+  m_Name: AmmoH
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1307,7 +1308,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6, y: 0.6, z: 0.6}
   m_Center: {x: 0, y: 0.3, z: 0}
---- !u!114 &7768776690923651195
+--- !u!114 &-3197689212085166287
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1331,6 +1332,23 @@ MonoBehaviour:
   RequireCharacterComponent: 1
   RequirePlayerType: 1
   OnlyForPlayerCharacter: 1
+--- !u!114 &5021142634624635721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701181934317786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b366149f7ee3c54ab2784a5ac79af36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Picker
+  entityId: 0
+  renderDelay: 0
+  active: 0
+  type: 0
+  _picker: {fileID: 0}
 --- !u!1 &1859820890897486
 GameObject:
   m_ObjectHideFlags: 0
