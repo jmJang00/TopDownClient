@@ -6,20 +6,19 @@ using UnityEngine.UI;
 namespace MoreMountains.InventoryEngine
 {
 	public class MyInventoryDisplay: InventoryDisplay
-	{        
+	{
+        static MyInventoryDisplay _instance;
+        public static MyInventoryDisplay Instance { get { return _instance; } }
+
         // Use this for initialization
         void Start()
 		{
-
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
-
-		}
+            if (_instance == null)
+            {               
+                _instance = this;
+            }
+        }
        
-
         /// <summary>
 		/// Draws the content of the inventory (slots and icons)
 		/// </summary>

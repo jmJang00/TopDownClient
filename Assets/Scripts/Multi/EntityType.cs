@@ -9,9 +9,14 @@ public enum EntityType
     None = 0,
     MyPlayer,
     OtherPlayer,
-    Projectile,
-    Item, 
     MyPlayerH,
     OtherPlayerH,
+    Projectile,
+    Chest,
+    ExpPack,
+    HealPack,
+    AmmoP,
+    AmmoH,
+    Granade,
 }
 

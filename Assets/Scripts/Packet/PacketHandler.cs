@@ -165,9 +165,8 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-            GameSceneTest game = NetworkManager.Instance.game as GameSceneTest;
-            game.pickerSpawnManager.Spawn(pkt.itemId, (ItemType)pkt.itemType, new Vector3(pkt.targetX, 1, pkt.targetY));            
-        }
+            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, (EntityType)pkt.itemType, pkt.entityId, new Vector3(pkt.targetX, 1, pkt.targetY));
+        }        
     }
 
     internal static void S_NtfDespawnItemPickerHandler(PacketSession session, IPacket packet)
@@ -176,8 +175,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-            GameSceneTest game = NetworkManager.Instance.game as GameSceneTest;
-            game.pickerSpawnManager.Despawn(pkt.itemId);
+            NetworkManager.Instance.spawnManager.Despawn((EntityType)pkt.itemType, pkt.entityId);
         }
     }
 
@@ -215,8 +213,24 @@ class PacketHandler
 
     }
 
-    internal static void S_CreateChestHandler(PacketSession session, IPacket packet)
+    internal static void S_NtfCreateChestHandler(PacketSession session, IPacket packet)
     {
+        S_NtfCreateChest pkt = packet as S_NtfCreateChest;
+
+        if (NetworkManager.Instance.game)
+        {
+            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.Chest, pkt.entityId, new Vector3(pkt.targetX, 1.0f, pkt.targetY));
+        }
+    }
+
+    internal static void S_NtfDestroyChestHandler(PacketSession session, IPacket packet)
+    {
+        S_NtfDestroyChest pkt = packet as S_NtfDestroyChest;
+
+        if (NetworkManager.Instance.game)
+        {
+            NetworkManager.Instance.spawnManager.DespawnAt(pkt.serverTick, EntityType.Chest, pkt.entityId);
+        }
     }
 
     internal static void S_ResChestInfoHandler(PacketSession session, IPacket packet)
@@ -234,11 +248,12 @@ class PacketHandler
         InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
         for (int i = 0; i < pkt.itemLists.Count; ++i)
         {
-            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemType);
+            items[i] = EnumToItemResource.GetNewInventoryItem((EntityType)pkt.itemLists[i].itemType);
             items[i].Quantity = (int)pkt.itemLists[i].quantity;
         }
 
         manager.CurrentChestInventory.SetInventoryFromItemArray(items);
+       // MMInventoryEvent.Trigger(MMInventoryEventType.Redraw, null, $"Chest{pkt.chestId}Inventory", null, 0, 0, "Player1");
     }
 
     internal static void S_ResInventoryToChestHandler(PacketSession session, IPacket packet)
@@ -266,7 +281,7 @@ class PacketHandler
         InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
         for (int i = 0; i < pkt.itemLists.Count; ++i)
         {
-            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemId);
+            items[i] = EnumToItemResource.GetNewInventoryItem((EntityType)pkt.itemLists[i].itemId);
             items[i].Quantity = (int)pkt.itemLists[i].quantity;
         }
 

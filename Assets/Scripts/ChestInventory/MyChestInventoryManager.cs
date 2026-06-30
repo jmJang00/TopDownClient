@@ -9,8 +9,12 @@ public class MyChestInventoryManager : MMSingleton<MyChestInventoryManager>, MME
     static MyChestInventoryManager _instance;
     public static MyChestInventoryManager Instance { get { return _instance; } }
 
-    
-    public MyInventory DefaultPlayerInventory;
+    [SerializeField]
+    private MyInventoryDisplay _defaultChestInventoryDisplay;
+    public MyInventoryDisplay CurrentChestInventoryDisplay { get { return _defaultChestInventoryDisplay; } }
+
+    [SerializeField]
+    private MyInventory _defaultPlayerInventory;
     public MyInventory CurrentPlayerInventory { get { return _currentPlayerInventory; } }
     private MyInventory _currentPlayerInventory;    
     public MyInventory CurrentChestInventory;
@@ -20,11 +24,11 @@ public class MyChestInventoryManager : MMSingleton<MyChestInventoryManager>, MME
     {
         if (_instance == null)
         {
-            if (DefaultPlayerInventory == null)
+            if (_defaultPlayerInventory == null)
             {
                 Debug.LogError("플레이어 인벤토리를 지정해야합니다");
             }
-            _currentPlayerInventory = DefaultPlayerInventory;
+            _currentPlayerInventory = _defaultPlayerInventory;
 
             _instance = this;
         }
