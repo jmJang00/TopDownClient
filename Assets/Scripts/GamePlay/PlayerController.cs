@@ -143,7 +143,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
             }
             case (ushort)PacketID.S_MoveState:
             {
-                var p = packet as S_MoveState;
+                var p = packet as S_NtfMoveState;
                 var state = new MoveState
                 {
                     angle = 0,

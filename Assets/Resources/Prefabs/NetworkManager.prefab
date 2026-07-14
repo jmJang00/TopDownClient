@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7360396851774859742}
   - component: {fileID: 6318959768764216268}
+  - component: {fileID: -7483613423090085259}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -44,8 +45,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8a218b6278f24a4285d266392231c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkManager
-  tickScheduler: {fileID: 0}
-  entitySystem: {fileID: 0}
+  game: {fileID: 0}
+  autoConnect: 1
+  accountId: 0
   ipStr: 127.0.0.1
   port: 6000
-  _bulletPrefab: {fileID: 0}
+--- !u!114 &-7483613423090085259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4403429853120993452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd2e853bf5acd694a983916dea643ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WebManager

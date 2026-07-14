@@ -49,7 +49,7 @@ public class PlayerHealth : NetBehaviour
         {
             case (ushort)PacketID.S_ProjectileHit:
             {
-                var p = packet as S_ProjectileHit;
+                var p = packet as S_NtfProjectileHit;
                 _tickScheduler.ScheduleAt(p.currentTick, () =>
                 {
                     _health.Damage(

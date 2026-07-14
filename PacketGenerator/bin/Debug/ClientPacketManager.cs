@@ -20,53 +20,8 @@ public class PacketManager
     public void Register()
     {
 
-        _makeFunc.Add((ushort)PacketID.S_CreateMyCharacter, MakePacket<S_CreateMyCharacter>);
-        _handler.Add((ushort)PacketID.S_CreateMyCharacter, PacketHandler.S_CreateMyCharacterHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_CreateOtherCharacter, MakePacket<S_CreateOtherCharacter>);
-        _handler.Add((ushort)PacketID.S_CreateOtherCharacter, PacketHandler.S_CreateOtherCharacterHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_DeleteCharacter, MakePacket<S_DeleteCharacter>);
-        _handler.Add((ushort)PacketID.S_DeleteCharacter, PacketHandler.S_DeleteCharacterHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_MoveStart, MakePacket<S_MoveStart>);
-        _handler.Add((ushort)PacketID.S_MoveStart, PacketHandler.S_MoveStartHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_MoveState, MakePacket<S_MoveState>);
-        _handler.Add((ushort)PacketID.S_MoveState, PacketHandler.S_MoveStateHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_TickSync, MakePacket<S_TickSync>);
-        _handler.Add((ushort)PacketID.S_TickSync, PacketHandler.S_TickSyncHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_RotateStart, MakePacket<S_RotateStart>);
-        _handler.Add((ushort)PacketID.S_RotateStart, PacketHandler.S_RotateStartHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_RotateState, MakePacket<S_RotateState>);
-        _handler.Add((ushort)PacketID.S_RotateState, PacketHandler.S_RotateStateHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_ProjectileShootStart, MakePacket<S_ProjectileShootStart>);
-        _handler.Add((ushort)PacketID.S_ProjectileShootStart, PacketHandler.S_ProjectileShootStartHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_SpawnProjectile, MakePacket<S_SpawnProjectile>);
-        _handler.Add((ushort)PacketID.S_SpawnProjectile, PacketHandler.S_SpawnProjectileHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_DespawnProjectile, MakePacket<S_DespawnProjectile>);
-        _handler.Add((ushort)PacketID.S_DespawnProjectile, PacketHandler.S_DespawnProjectileHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_ProjectileHit, MakePacket<S_ProjectileHit>);
-        _handler.Add((ushort)PacketID.S_ProjectileHit, PacketHandler.S_ProjectileHitHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_MatchFound, MakePacket<S_MatchFound>);
-        _handler.Add((ushort)PacketID.S_MatchFound, PacketHandler.S_MatchFoundHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_GameStart, MakePacket<S_GameStart>);
-        _handler.Add((ushort)PacketID.S_GameStart, PacketHandler.S_GameStartHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_GameEnd, MakePacket<S_GameEnd>);
-        _handler.Add((ushort)PacketID.S_GameEnd, PacketHandler.S_GameEndHandler);
-
-        _makeFunc.Add((ushort)PacketID.S_ReturnToLobby, MakePacket<S_ReturnToLobby>);
-        _handler.Add((ushort)PacketID.S_ReturnToLobby, PacketHandler.S_ReturnToLobbyHandler);
+        _makeFunc.Add((ushort)PacketID.S_ResLoginGameServer, MakePacket<S_ResLoginGameServer>);
+        _handler.Add((ushort)PacketID.S_ResLoginGameServer, PacketHandler.S_ResLoginGameServerHandler);
 
     }
 

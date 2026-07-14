@@ -21,14 +21,14 @@ public class GameScene : MonoBehaviour
         {
             _debugAccum = 0;
             _debugTick = 0;
-            spawnManager.SpawnAt(5, EntityType.MyPlayer, WeaponType.Rifle, 0, new Vector3(0, 2, 0), 150);
+            spawnManager.SpawnAt(5, EntityType.MyPlayer, 0, new Vector3(0, 2, 0));
             tickScheduler.ScheduleAfter(5, () =>
             {
                 NetEntity entity = entitySystem.Get(0);
                 entity.GetComponent<Health>().SetHealth(100);
                 VirtualInput(entity, new Vector2(94, 111), 0);
             });
-            spawnManager.SpawnAt(5, EntityType.OtherPlayer, WeaponType.Rifle, 1, new Vector3(0, -18, 0), 150);
+            spawnManager.SpawnAt(5, EntityType.OtherPlayer, 1, new Vector3(0, -18, 0));
             tickScheduler.ScheduleAfter(5, () =>
             {
                 NetEntity entity = entitySystem.Get(1);
@@ -41,7 +41,7 @@ public class GameScene : MonoBehaviour
     {
         entity.isDebugMode = true;
 
-        S_MoveState moveState = new S_MoveState();
+        S_NtfMoveState moveState = new S_NtfMoveState();
         moveState.serverX = pos.x;
         moveState.serverY = pos.y;
         moveState.targetX = pos.x;
@@ -49,7 +49,7 @@ public class GameScene : MonoBehaviour
         moveState.currentTick = 5;
         entity.DispatchPacket(NetBehaviourType.Controller, moveState);
 
-        S_RotateState state = new S_RotateState();
+        S_NtfRotateState state = new S_NtfRotateState();
         state.currentAngle = angle;
         state.targetAngle = angle;
         state.currentTick = 5;

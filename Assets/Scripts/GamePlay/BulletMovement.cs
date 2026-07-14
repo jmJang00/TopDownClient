@@ -85,7 +85,7 @@ public class BulletMovement : NetBehaviour, ITickable<BulletState, BulletInput>
         {
             case (ushort)PacketID.S_SpawnProjectile:
             {
-                var p = packet as S_SpawnProjectile;
+                var p = packet as S_NtfSpawnProjectile;
                 BulletState state = new BulletState
                 {
                     pos = new Vector2(p.spawnPosX, p.spawnPosY),
@@ -98,7 +98,7 @@ public class BulletMovement : NetBehaviour, ITickable<BulletState, BulletInput>
             }
             case (ushort)PacketID.S_ProjectileHit:
             {
-                var p = packet as S_ProjectileHit;
+                var p = packet as S_NtfProjectileHit;
                 _tickScheduler.ScheduleAt(p.currentTick, () =>
                 {
                     HitDamageableFeedback?.PlayFeedbacks(transform.position);
