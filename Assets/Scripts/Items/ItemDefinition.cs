@@ -22,19 +22,16 @@ using UnityEngine;
 //Granade,
 
 
-//아래는 다음 커밋때 제거하자.
-//public enum ItemType
-//{
-//    ProjectileWeapon,
-//    HitscanWeapon,
-//    ProjectileAmmo,
-//    HitscanAmmo,
-//    Grenade,
-//    HealPack,
-//    ExpPack,
-//    //.....
-//    Max
-//}
+public enum ItemType
+{
+    ExpPack = 7,
+    HealPack,
+    ProjectileAmmo,    
+    HitscanAmmo,
+    Grenade,        
+    //...
+    Max
+}
 
 public static class EnumToItemResource
 {

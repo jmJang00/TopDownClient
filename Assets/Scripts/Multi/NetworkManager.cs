@@ -5,6 +5,7 @@ using ServerCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Net;
 using System.Threading;
 using UnityEngine;
@@ -40,9 +41,9 @@ public class NetworkManager : MonoBehaviour
     public SpawnManager spawnManager { get { return game.spawnManager; } }
 
     public bool autoConnect = true;
-    public long accountId = 0;
     public string ipStr = "127.0.0.1";
-    public short port = 6000;
+    public short portNum = 6000;
+    public string sessionKeyStr = "HGUEynFxicSxGWfQuwnOvRkPEgxPryTWYYCPvKFMnMkswrnkCftsysaPoFzCeUPa";
 
     // 이전 상태와 관련없이 무조건 강제되는 상태인 경우 사용
     public static void AssignState(NetworkState desired)
@@ -78,14 +79,19 @@ public class NetworkManager : MonoBehaviour
             s_instance._session = new ServerSession();
             if (s_instance.autoConnect)
             {
-                s_instance.StartCoroutine(s_instance.TryConnectAndAuthorize());
+                s_instance.ConnectToGame(s_instance.sessionKeyStr, s_instance.ipStr, s_instance.portNum);
             }
         }
+    }
+
+    public void ConnectToGame(string sessionKey, string ip, int port)
+    {
+        StartCoroutine(s_instance.TryConnectAndAuthorize(sessionKey, ip, port));
     }
     
     // 처음 연결을 시작할 때는 연결이 붙을 때까지 계속 재시도
     // 연결이 붙고나서는 한 번 연결이 끊어지면 게임을 종료
-    public IEnumerator TryConnectAndAuthorize()
+    public IEnumerator TryConnectAndAuthorize(string sessionKey, string ip, int port)
     {
         while (true)
         {
@@ -115,7 +121,7 @@ public class NetworkManager : MonoBehaviour
 
                 if (state == NetworkState.None && ChangeState(NetworkState.None, NetworkState.ConnectRequested))
                 {
-                    ConnectServer();
+                    ConnectServer(ip, port);
                     Debug.Log("Try Connect");
                 }
 
@@ -126,13 +132,31 @@ public class NetworkManager : MonoBehaviour
             {
                 Debug.Log("Connect Success");
 
-                C_AccountInfoDebug accountInfoDebug = new C_AccountInfoDebug();
-                accountInfoDebug.accountId = accountId;
-                Send(accountInfoDebug.Write());
-                UIEventBus.Publish(accountInfoDebug);
+                bool success = false;
+                bool completed = false;
 
-                ChangeState(NetworkState.Connected, NetworkState.Authorized);
-                Debug.Log("Player Authorized");
+                UIEventBus.SubscribeOnce((ushort)PacketID.S_ResLoginGameServer, (pkt) =>
+                {
+                    S_ResLoginGameServer packet = pkt as S_ResLoginGameServer;
+                    completed = true;
+                    success = packet.loginOk;
+                });
+
+                C_ReqLoginGameServer login = new C_ReqLoginGameServer();
+                login.sessionKey = sessionKey;
+                Send(login.Write());
+
+                yield return new WaitUntil(() => completed == true);
+
+                if (success)
+                {
+                    ChangeState(NetworkState.Connected, NetworkState.Authorized);
+                    Debug.Log("Player Authorized");
+                }
+                else
+                {
+                    yield break;
+                }
             }
         }
     }
@@ -253,13 +277,9 @@ public class NetworkManager : MonoBehaviour
         game = scene;
     }
 
-    private void ConnectServer()
+    private void ConnectServer(string ip, int port)
     {
-        // string host = Dns.GetHostName();
-        // IPHostEntry ipHost = Dns.GetHostEntry(host);
-        // IPAddress ipAddr = ipHost.AddressList[0];
-
-        IPAddress ipAddr = IPAddress.Parse(ipStr);
+        IPAddress ipAddr = IPAddress.Parse(ip);
         IPEndPoint endPoint = new IPEndPoint(ipAddr, port);
 
         Connector connector = new Connector();

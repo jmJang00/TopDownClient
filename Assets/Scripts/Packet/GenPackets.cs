@@ -7,6 +7,8 @@ using ServerCore;
 public enum PacketID
 {
     // 100 - 계정
+    C_ReqLoginGameServer = 100,
+	S_ResLoginGameServer = 101,
 	
     // 200 - 커뮤니티 (친구)
 
@@ -78,7 +80,85 @@ public interface IPacket
 	ArraySegment<byte> Write();
 }
 
-public class S_CreateMyCharacter : IPacket
+public class C_ReqLoginGameServer : IPacket
+{
+    public string sessionKey;
+
+    public ushort Protocol { get { return (ushort)PacketID.C_ReqLoginGameServer; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        ushort sessionKeyLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
+		this.sessionKey = Encoding.Unicode.GetString(s.Slice(count, sessionKeyLen));
+		count += sessionKeyLen;
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_ReqLoginGameServer);
+        count += sizeof(ushort);
+        ushort sessionKeyLen = (ushort)Encoding.Unicode.GetBytes(this.sessionKey, 0, this.sessionKey.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), sessionKeyLen);
+		count += sizeof(ushort);
+		count += sessionKeyLen;
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+public class S_ResLoginGameServer : IPacket
+{
+    public bool loginOk;
+
+    public ushort Protocol { get { return (ushort)PacketID.S_ResLoginGameServer; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        this.loginOk = BitConverter.ToBoolean(s.Slice(count, s.Length - count));
+		count += sizeof(bool);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.S_ResLoginGameServer);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), loginOk);
+		count += sizeof(bool);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+
+
+public class S_NtfCreateMyCharacter : IPacket
 {
     public int serverTick;
 	public uint entityId;
@@ -129,7 +209,7 @@ public class S_CreateMyCharacter : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_CreateOtherCharacter : IPacket
+public class S_NtfCreateOtherCharacter : IPacket
 {
     public int serverTick;
 	public uint entityId;
@@ -180,7 +260,7 @@ public class S_CreateOtherCharacter : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_DeleteCharacter : IPacket
+public class S_NtfDeleteCharacter : IPacket
 {
     public int serverTick;
 	public uint entityId;
@@ -318,7 +398,7 @@ public class S_MoveStart : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_MoveState : IPacket
+public class S_NtfMoveState : IPacket
 {
     public int currentTick;
 	public uint entityId;
@@ -379,7 +459,7 @@ public class S_MoveState : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_TickSync : IPacket
+public class S_NtfTickSync : IPacket
 {
     public int serverTick;
 
@@ -502,7 +582,7 @@ public class S_RotateStart : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_RotateState : IPacket
+public class S_NtfRotateState : IPacket
 {
     public int currentTick;
 	public uint entityId;
@@ -589,7 +669,7 @@ public class C_ProjectileShootStart : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_ProjectileShootStart : IPacket
+public class S_ShootStart : IPacket
 {
     public int accpetTick;
 	public uint entityId;
@@ -630,7 +710,7 @@ public class S_ProjectileShootStart : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_SpawnProjectile : IPacket
+public class S_NtfSpawnProjectile : IPacket
 {
     public int currentTick;
 	public uint entityId;
@@ -732,7 +812,7 @@ public class S_DespawnProjectile : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_ProjectileHit : IPacket
+public class S_NtfProjectileHit : IPacket
 {
     public int currentTick;
 	public ushort damage;

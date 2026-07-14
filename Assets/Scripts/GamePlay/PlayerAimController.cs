@@ -188,7 +188,7 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
             }
             case (ushort)PacketID.S_RotateState:
             {
-                var p = packet as S_RotateState;
+                var p = packet as S_NtfRotateState;
                 var state = new AimState
                 {
                     currentAngle = p.currentAngle,

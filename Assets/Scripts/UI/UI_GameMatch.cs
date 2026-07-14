@@ -1,20 +1,20 @@
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class GameMatch : MonoBehaviour
+public class UI_GameMatch : MonoBehaviour
 {
     public MMTouchButton button;
 
     public void OnEnable()
     {
         UIEventBus.Subscribe((ushort)PacketID.S_MatchFound, TurnOn);
-        UIEventBus.Subscribe((ushort)PacketID.C_AccountInfoDebug, TurnOn);
+        UIEventBus.Subscribe((ushort)PacketID.S_ResLoginGameServer, TurnOn);
     }
 
     public void OnDisable()
     {
         UIEventBus.Unsubscribe((ushort)PacketID.S_MatchFound, TurnOn);
-        UIEventBus.Unsubscribe((ushort)PacketID.C_AccountInfoDebug, TurnOn);
+        UIEventBus.Unsubscribe((ushort)PacketID.S_ResLoginGameServer, TurnOn);
     }
 
     public void Start()
@@ -24,6 +24,7 @@ public class GameMatch : MonoBehaviour
         {
             button.DisableButton();
         }
+        button.ButtonReleased.AddListener(MatchStart);
     }
 
     public void MatchStart()

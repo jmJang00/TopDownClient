@@ -117,8 +117,15 @@ namespace ServerCore
                 return;
 
             OnDisconnected(_socket.RemoteEndPoint);
-            _socket.Shutdown(SocketShutdown.Both);
-            _socket.Close();
+            try
+            {
+                _socket.Shutdown(SocketShutdown.Both);
+                _socket.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Disconnect Failed {e}");
+            }
             Clear();
         }
 

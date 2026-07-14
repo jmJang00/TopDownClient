@@ -31,7 +31,16 @@ public class LevelManagerRevised : LevelManager
 
         // we trigger a level start event
         TopDownEngineEvent.Trigger(TopDownEngineEventTypes.LevelStart, null);
-        MMGameEvent.Trigger("Load");
 
+        // 세이브 로드 하면 안 됨
+        //MMGameEvent.Trigger("Load");
+    }
+
+    public override void TriggerEndLevelEvents()
+    {
+        TopDownEngineEvent.Trigger(TopDownEngineEventTypes.LevelEnd, null);
+
+        // 세이브하면 안 됨
+        //MMGameEvent.Trigger("Save");
     }
 }

@@ -9,29 +9,56 @@ using UnityEngine;
 
 class PacketHandler
 {
-    public static void S_CreateMyCharacterHandler(PacketSession session, IPacket packet)
+    internal static void S_ResLoginGameServerHandler(PacketSession session, IPacket packet)
     {
-        S_CreateMyCharacter pkt = packet as S_CreateMyCharacter;
+        UIEventBus.Publish(packet);
+    }
+
+    public static void S_NtfCreateMyCharacterHandler(PacketSession session, IPacket packet)
+    {
+        S_NtfCreateMyCharacter pkt = packet as S_NtfCreateMyCharacter;
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, (WeaponType)pkt.weaponId, pkt.entityId, new Vector3(0, 2, 0), pkt.hp);
+             MyPlayer player = null;
+            if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
+            {
+                player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, pkt.entityId, new Vector3(0, 2, 0)) as MyPlayer;
+
+            }
+            else
+            {
+                player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayerH, pkt.entityId, new Vector3(0, 2, 0)) as MyPlayer;
+            }
+
+            player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.hp);
         }
     }
 
-    public static void S_CreateOtherCharacterHandler(PacketSession session, IPacket packet)
+    public static void S_NtfCreateOtherCharacterHandler(PacketSession session, IPacket packet)
     {
-        S_CreateOtherCharacter pkt = packet as S_CreateOtherCharacter;
+        S_NtfCreateOtherCharacter pkt = packet as S_NtfCreateOtherCharacter;
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayer, (WeaponType)pkt.weaponId, pkt.entityId, new Vector3(0, 2, 0), pkt.hp);
+            Player player = null;
+            if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
+            {
+                player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayer, pkt.entityId, new Vector3(0, 2, 0)) as Player;
+
+            }
+            else
+            {
+                player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayerH, pkt.entityId, new Vector3(0, 2, 0)) as Player;
+            }
+
+            player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.hp);
         }
     }
 
-    public static void S_DeleteCharacterHandler(PacketSession session, IPacket packet)
+    public static void S_NtfDeleteCharacterHandler(PacketSession session, IPacket packet)
     {
-        S_DeleteCharacter pkt = packet as S_DeleteCharacter;
+        S_NtfDeleteCharacter pkt = packet as S_NtfDeleteCharacter;
 
         if (NetworkManager.Instance.game)
         {
@@ -59,9 +86,9 @@ class PacketHandler
 
     }
 
-    public static void S_TickSyncHandler(PacketSession session, IPacket packet)
+    public static void S_NtfTickSyncHandler(PacketSession session, IPacket packet)
     {
-        S_TickSync pkt = packet as S_TickSync;
+        S_NtfTickSync pkt = packet as S_NtfTickSync;
 
         if (NetworkManager.Instance.game)
         {
@@ -79,26 +106,22 @@ class PacketHandler
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Aim, packet);
         }
-
     }
 
-    internal static void S_MoveStateHandler(PacketSession session, IPacket packet)
+    internal static void S_NtfMoveStateHandler(PacketSession session, IPacket packet)
     {
-        S_MoveState pkt = packet as S_MoveState;
-
+        S_NtfMoveState pkt = packet as S_NtfMoveState;
 
         if (NetworkManager.Instance.game)
         {
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Controller, packet);
         }
-
     }
 
-    internal static void S_RotateStateHandler(PacketSession session, IPacket packet)
+    internal static void S_NtfRotateStateHandler(PacketSession session, IPacket packet)
     {
-        S_RotateState pkt = packet as S_RotateState;
-
+        S_NtfRotateState pkt = packet as S_NtfRotateState;
 
         if (NetworkManager.Instance.game)
         {
@@ -108,10 +131,9 @@ class PacketHandler
 
     }
 
-    internal static void S_ProjectileShootStartHandler(PacketSession session, IPacket packet)
+    internal static void S_ShootStartHandler(PacketSession session, IPacket packet)
     {
-        S_ProjectileShootStart pkt = packet as S_ProjectileShootStart;
-
+        S_ShootStart pkt = packet as S_ShootStart;
 
         if (NetworkManager.Instance.game)
         {
@@ -121,21 +143,19 @@ class PacketHandler
 
     }
 
-    internal static void S_SpawnProjectileHandler(PacketSession session, IPacket packet)
+    internal static void S_NtfSpawnProjectileHandler(PacketSession session, IPacket packet)
     {
-        S_SpawnProjectile pkt = packet as S_SpawnProjectile;
-
+        S_NtfSpawnProjectile pkt = packet as S_NtfSpawnProjectile;
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.SpawnAt(
-                pkt.currentTick, EntityType.Projectile, 0, pkt.entityId, Vector2.zero, 0);
+            NetworkManager.Instance.spawnManager.SpawnAt(pkt.currentTick, EntityType.Projectile, pkt.entityId, Vector2.zero);
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.BulletMovement, packet);
         }
     }
 
-    internal static void S_DespawnProjectileHandler(PacketSession session, IPacket packet)
+    internal static void S_NtfDespawnProjectileHandler(PacketSession session, IPacket packet)
     {
         S_DespawnProjectile pkt = packet as S_DespawnProjectile;
 
@@ -145,9 +165,9 @@ class PacketHandler
         }
     }
 
-    internal static void S_ProjectileHitHandler(PacketSession session, IPacket packet)
+    internal static void S_NtfProjectileHitHandler(PacketSession session, IPacket packet)
     {
-        S_ProjectileHit pkt = packet as S_ProjectileHit;
+        S_NtfProjectileHit pkt = packet as S_NtfProjectileHit;
 
         if (NetworkManager.Instance.game)
         {
@@ -236,7 +256,6 @@ class PacketHandler
     internal static void S_ResChestInfoHandler(PacketSession session, IPacket packet)
     {
         S_ResChestInfo pkt = packet as S_ResChestInfo;
-
 
         MyChestInventoryManager manager = MyChestInventoryManager.Instance;
         if (manager == null)
