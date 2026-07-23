@@ -19,14 +19,9 @@ public class PacketManager
 
     public void Register()
     {
-<<<<<<< Updated upstream
-
         _makeFunc.Add((ushort)PacketID.S_CreateMyCharacter, MakePacket<S_NtfCreateMyCharacter>);
         _handler.Add((ushort)PacketID.S_CreateMyCharacter, PacketHandler.S_NtfCreateMyCharacterHandler);
-=======
-        _makeFunc.Add((ushort)PacketID.S_CreateMyCharacter, MakePacket<S_CreateMyCharacter>);
-        _handler.Add((ushort)PacketID.S_CreateMyCharacter, PacketHandler.S_CreateMyCharacterHandler);
->>>>>>> Stashed changes
+
 
         _makeFunc.Add((ushort)PacketID.S_CreateOtherCharacter, MakePacket<S_NtfCreateOtherCharacter>);
         _handler.Add((ushort)PacketID.S_CreateOtherCharacter, PacketHandler.S_NtfCreateOtherCharacterHandler);
