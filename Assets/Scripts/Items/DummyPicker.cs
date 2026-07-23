@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using MoreMountains.Tools;
+using System;
+using UnityEngine.Events;
 
 namespace MoreMountains.TopDownEngine
 {
@@ -14,7 +16,7 @@ namespace MoreMountains.TopDownEngine
 		/// if this is true, only player characters can pick this up
 		[Tooltip("if this is true, only player characters can pick this up")]
 		public bool OnlyForPlayerCharacter = true;
-
+        public UnityEvent OnPick;
 
         public override void PickItem(GameObject picker)
         {
@@ -27,8 +29,8 @@ namespace MoreMountains.TopDownEngine
 		/// </summary>
 		/// <param name="collider">Other.</param>
 		protected override void Pick(GameObject picker)
-		{			
-            //TODO :: Override To Each Picker			 
+		{
+            OnPick.Invoke();
 		}
 	}
 }

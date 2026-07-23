@@ -4,7 +4,7 @@ using MoreMountains.TopDownEngine;
 using NUnit.Framework;
 using UnityEngine;
 
-public class MyChestInventoryManager : MMSingleton<MyChestInventoryManager>, MMEventListener<MMMyChestInventoryEvent>
+public class MyChestInventoryManager : MonoBehaviour, MMEventListener<MMMyChestInventoryEvent>
 {
     static MyChestInventoryManager _instance;
     public static MyChestInventoryManager Instance { get { return _instance; } }
@@ -14,23 +14,32 @@ public class MyChestInventoryManager : MMSingleton<MyChestInventoryManager>, MME
     public MyInventoryDisplay CurrentChestInventoryDisplay { get { return _defaultChestInventoryDisplay; } }
 
     [SerializeField]
+    private MyInventoryInputManager _defaultInventoryInputManager;
+    public MyInventoryInputManager CurrentInventoryInputManager { get { return _defaultInventoryInputManager; } }
+
+    [SerializeField]
     private MyInventory _defaultPlayerInventory;
     public MyInventory CurrentPlayerInventory { get { return _currentPlayerInventory; } }
-    private MyInventory _currentPlayerInventory;    
+    private MyInventory _currentPlayerInventory;
+
+    public Chest CurrentChest;
     public MyInventory CurrentChestInventory;
+
+    public bool IsOpenChest { get { return _isOpen; }  set { _isOpen = value; } }
+    private bool _isOpen = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (_instance == null)
         {
+            _instance = this;
+
             if (_defaultPlayerInventory == null)
             {
                 Debug.LogError("플레이어 인벤토리를 지정해야합니다");
             }
-            _currentPlayerInventory = _defaultPlayerInventory;
-
-            _instance = this;
+            _currentPlayerInventory = _defaultPlayerInventory;            
         }
     }
 
@@ -48,6 +57,11 @@ public class MyChestInventoryManager : MMSingleton<MyChestInventoryManager>, MME
     private void OnDisable()
     {
         this.MMEventStopListening<MMMyChestInventoryEvent>();
+    }
+
+    public void SetCurrentChest(Chest chest)
+    {
+        CurrentChest = chest;        
     }
 
     public void SetCurrentChestInventory(MyInventory inventory)

@@ -34,15 +34,24 @@ namespace MoreMountains.InventoryEngine
             TargetInventoryButtonGroup.alpha = 1;
 
             C_ReqInventoryInfo pkt = new C_ReqInventoryInfo();
-            pkt.clientTick = 0xFFEE;
+            pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
             NetworkManager.Instance.Send(pkt.Write());
 
             base.OpenInventory();
         }
 
         public override void CloseInventory()
-        {            
+        {               
+            if(CurrentChestInventoryManager.IsOpenChest)
+            {
+                C_CloseChest pkt1 = new C_CloseChest();
+                pkt1.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
+                pkt1.chestId = CurrentChestInventoryManager.CurrentChest.entityId;
+                NetworkManager.Instance.Send(pkt1.Write());
+                CurrentChestInventoryManager.IsOpenChest = false;
+            }
             base.CloseInventory();
+            
             //CurrentChestInventoryManager.SetCurrentChestInventory(null);
         }
         public virtual void OpenInventoryWithChest(uint index)        
@@ -55,19 +64,10 @@ namespace MoreMountains.InventoryEngine
             TargetChestInventoryGroup.alpha = 1;
             TargetInventoryButtonGroup.alpha = 0;
 
-            int tick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
-
-            C_ReqInventoryInfo pkt = new C_ReqInventoryInfo();
-            pkt.clientTick = tick;
-            NetworkManager.Instance.Send(pkt.Write());
-
-            C_ReqChestInfo pkt2 = new C_ReqChestInfo();
-            pkt2.clientTick = tick;
-            pkt2.chestId = (uint)index;
-            NetworkManager.Instance.Send(pkt2.Write());
-
+            CurrentChestInventoryManager.IsOpenChest = true;
             base.OpenInventory();
             Debug.Log("Selected Chest : " + index.ToString());
-        }        
+        }
+
 	}
 }

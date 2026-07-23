@@ -100,7 +100,7 @@ public class SpawnManager : MonoBehaviour
                 GameObject obj = Instantiate(prefab);
                 MyPlayer myPlayer = obj.GetComponent<MyPlayer>();
                 myPlayer.entityId = id;
-                myPlayer.type = EntityType.MyPlayer;
+                myPlayer.type = EntityType.MyPlayerH;
                 myPlayer.transform.position = position;
                 myPlayer.Init();
                 _game.entitySystem.Register(id, myPlayer, true);
@@ -120,7 +120,7 @@ public class SpawnManager : MonoBehaviour
                 Player player = obj.GetComponent<Player>();
                 player.entityId = id;
                 player.transform.position = position;
-                player.type = EntityType.OtherPlayer;
+                player.type = EntityType.OtherPlayerH;
                 player.Init();
                 _game.entitySystem.Register(id, player);
                 player.gameObject.SetActive(false);
@@ -156,7 +156,7 @@ public class SpawnManager : MonoBehaviour
             }
             case EntityType.HealPack:
             {
-                GameObject obj = EnumToItemResource.GetPickerPrefab(EntityType.HealPack); 
+                GameObject obj = EnumToItemResource.GetPickerPrefab(ItemType.HealPack); 
                 if(obj == null)
                 {
                     //todo
@@ -174,7 +174,7 @@ public class SpawnManager : MonoBehaviour
             }
             case EntityType.ExpPack:
             {
-                GameObject obj = EnumToItemResource.GetPickerPrefab(EntityType.ExpPack);
+                GameObject obj = EnumToItemResource.GetPickerPrefab(ItemType.ExpPack);
                 if (obj == null)
                 {
                     //todo
@@ -192,7 +192,7 @@ public class SpawnManager : MonoBehaviour
             }
             case EntityType.AmmoP:
             {
-                GameObject obj = EnumToItemResource.GetPickerPrefab(EntityType.AmmoP);
+                GameObject obj = EnumToItemResource.GetPickerPrefab(ItemType.AmmoP);
                 if (obj == null)
                 {
                     //todo
@@ -210,7 +210,7 @@ public class SpawnManager : MonoBehaviour
             }
             case EntityType.AmmoH:
             {
-                GameObject obj = EnumToItemResource.GetPickerPrefab(EntityType.AmmoH);
+                GameObject obj = EnumToItemResource.GetPickerPrefab(ItemType.AmmoH);
                 if (obj == null)
                 {
                     //todo

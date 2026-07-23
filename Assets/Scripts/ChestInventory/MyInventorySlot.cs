@@ -30,7 +30,8 @@ namespace MoreMountains.InventoryEngine
                 if(inven.isPlayer)
                 {
                     C_ReqInventoryToChest pkt = new C_ReqInventoryToChest();
-                    pkt.clientTick = 0xFFBB;
+                    pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
+                    pkt.lastChestUpdateTick = manager.CurrentChest.LastUpdateTick;
                     pkt.chestId = manager.CurrentChestInventory.Index;
                     pkt.inventoryCursor = (uint)this.Index;
                     NetworkManager.Instance.Send(pkt.Write());
@@ -45,7 +46,8 @@ namespace MoreMountains.InventoryEngine
                 {
 
                     C_ReqChestToInventory pkt = new C_ReqChestToInventory();
-                    pkt.clientTick = 0xFFAA;
+                    pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
+                    pkt.lastChestUpdateTick = manager.CurrentChest.LastUpdateTick;
                     pkt.chestId = manager.CurrentChestInventory.Index;
                     pkt.chestCursor = (uint)this.Index;
                     NetworkManager.Instance.Send(pkt.Write());
