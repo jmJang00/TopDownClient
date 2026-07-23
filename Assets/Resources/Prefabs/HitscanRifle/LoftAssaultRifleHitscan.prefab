@@ -266,18 +266,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitscanWeaponRevised
   WeaponName: 
   WeaponCurrentlyActive: 1
-  InputAuthorized: 1
+  InputAuthorized: 0
   TriggerMode: 1
   DelayBeforeUse: 0
   DelayBeforeUseReleaseInterruption: 1
-  TimeBetweenUses: 0.5
+  TimeBetweenUses: 0.1
   TimeBetweenUsesReleaseInterruption: 1
   UseBurstMode: 0
   BurstLength: 3
   BurstTimeBetweenShots: 0.1
   MagazineBased: 0
-  MagazineSize: 0
-  AutoReload: 0
+  MagazineSize: 30
+  AutoReload: 1
   NoInputReload: 0
   ReloadTime: 2
   AmmoConsumedPerShot: 1
@@ -330,12 +330,12 @@ MonoBehaviour:
   ProjectileSpawnOffset: {x: 0, y: 0, z: 0}
   Spread: {x: 0, y: 0, z: 0}
   RotateWeaponOnSpread: 0
-  RandomSpread: 1
+  RandomSpread: 0
   SpawnPosition: {x: 0, y: 0, z: 0}
   Mode: 1
   HitscanTargetLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1280
   HitscanMaxDistance: 100
   MinDamageCaused: 5
   MaxDamageCaused: 5
@@ -26005,7 +26005,7 @@ MonoBehaviour:
       type: {class: MMF_CinemachineImpulse, ns: MoreMountains.FeedbacksForThirdParty,
         asm: MoreMountains.Tools}
       data:
-        Active: 1
+        Active: 0
         UniqueID: 234322681
         Label: Cinemachine Impulse
         OriginalLabel: Cinemachine Impulse

@@ -26,25 +26,12 @@ public struct HitscanInput
 }
 
 
-public class PlayerHitscanSync : NetBehaviour, ITickable<HitscanState, HitscanInput> 
-{
-    // De Brujin
-
-    public static readonly int[] index64 = new int[64]
-    {
-         0, 1, 48, 2, 57, 49, 28, 3,
-        61, 58, 50, 42, 38, 29, 17, 4,
-        62, 55, 59, 36, 53, 51, 43, 22,
-        45, 39, 33, 30, 24, 18, 12, 5,
-        63, 47, 56, 27, 60, 41, 37, 16,
-        54, 35, 52, 21, 44, 32, 23, 11,
-        46, 26, 40, 15, 34, 20, 31, 10,
-        25, 14, 19, 9, 13, 8, 7, 6
-    };
+public class PlayerHitscanSync : NetBehaviour 
+{   
 
     public override int RenderingOrder => 2;
 
-    public override ITickRunner Runner => _runner;
+    public override ITickRunner Runner => null;
 
     public override NetBehaviourType Type => NetBehaviourType.Hitscan;
 
@@ -57,13 +44,10 @@ public class PlayerHitscanSync : NetBehaviour, ITickable<HitscanState, HitscanIn
     public CharacterHandleWeapon TargetHandleWeaponAbility;
     public HitscanWeaponRevised CurrentWeapon;
     public MMObjectPooler ObjectPooler;
-
-    private Dictionary<int, GameObject> _spawnedProjectile;
-    private HitscanState _spawnedState;
+    
     private HitscanState _state;
     protected Character _character;
-    private bool _wasInput;
-    private ReplayerRunner<HitscanState, HitscanInput> _runner;
+    private bool _wasInput;    
 
     private PlayerAimController _playerAimController;
     private PlayerController _playerController;
@@ -71,28 +55,6 @@ public class PlayerHitscanSync : NetBehaviour, ITickable<HitscanState, HitscanIn
     public override void Init()
     {
         base.Init();
-        _spawnedProjectile = new Dictionary<int, GameObject>();
-        _runner = new ReplayerRunner<HitscanState, HitscanInput>(this, hasAuthority,
-            Entity.renderDelay, (int tick, HitscanInput input) =>
-            {
-                _tickScheduler.ScheduleAfter(2, () =>
-                {
-                    S_HitscanShootStart pkt = new S_HitscanShootStart();
-                    pkt.accpetTick = tick;
-                    DispatchPacket(pkt);
-                });
-
-                _tickScheduler.ScheduleAfter(2, () =>
-                {
-                    NetEntity entity = NetworkManager.Instance.entitySystem.Get(1);
-                    S_HitscanShootStart pkt = new S_HitscanShootStart();
-                    pkt.accpetTick = tick;
-                    entity.DispatchPacket(NetBehaviourType.Hitscan, pkt);
-                });
-
-            });
-        _playerAimController = GetComponent<PlayerAimController>();
-        _playerController = GetComponent<PlayerController>();
         _character = GetComponentInParent<Character>();
         TargetHandleWeaponAbility = _character?.FindAbility<CharacterHandleWeapon>();
         _updateTimer = updateInterval;
@@ -136,8 +98,7 @@ public class PlayerHitscanSync : NetBehaviour, ITickable<HitscanState, HitscanIn
 
     public override void OnSpawn(int tick)
     {
-        base.OnSpawn(tick);
-        _tickScheduler.Register(_runner);
+        base.OnSpawn(tick);        
         _state.mask.baseTick = tick;
         _state.mask.low = 0;
         _state.mask.high = 0;
@@ -145,28 +106,29 @@ public class PlayerHitscanSync : NetBehaviour, ITickable<HitscanState, HitscanIn
 
     public override void OnDespawn()
     {
-        base.OnDespawn();
-        _tickScheduler.Unregister(_runner);
+        base.OnDespawn();        
     }
 
     public override void OnRender(float alpha)
     {       
+
+
     }
 
     public override void DispatchPacket(IPacket packet)
     {
-        if (packet is S_HitscanShootStart p)
+        switch (packet.Protocol)
         {
-            var input = new HitscanInput
+            case (ushort)PacketID.S_HitscanShootStart:
             {
-                fireTick = p.accpetTick
-            };
-
-            if (!hasAuthority)
-            {
-                StartCoroutine(ShootTrigger());
+                if (!hasAuthority)
+                {
+                    StartCoroutine(ShootTrigger());
+                    S_HitscanShootStart pkt = packet as S_HitscanShootStart;
+                    LaserManager.Instance.DrawLaser(new Vector3(pkt.startX, 2.23f, pkt.startY), new Vector3(pkt.endX, 2.23f, pkt.endY));
+                }
+                break;
             }
-            _runner.EnqueueServerInput(p.accpetTick, input);
         }
     }
 
@@ -186,23 +148,11 @@ public class PlayerHitscanSync : NetBehaviour, ITickable<HitscanState, HitscanIn
     }
 
     public IEnumerator ShootTrigger()
-    {
-        //TargetHandleWeaponAbility.PlayAbilityStartFeedbacks();
-
-        if (hasAuthority)
-        {
-            int tick = _tickScheduler.GetCurrentTick();
-            HitscanInput input;
-            input.fireTick = tick;
-            _runner.EnqueueClientInput(tick, input);
-        }        
-        else
-        {
-            TargetHandleWeaponAbility.ShootStart();            
-        }
+    {        
+        TargetHandleWeaponAbility.ShootStart();
 
         yield return new WaitForSeconds(0.05f);
-        TargetHandleWeaponAbility.ShootStop();
+        TargetHandleWeaponAbility.ForceStop();
     }
 
    

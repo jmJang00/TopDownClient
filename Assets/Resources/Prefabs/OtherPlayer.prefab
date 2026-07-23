@@ -10379,6 +10379,7 @@ GameObject:
   - component: {fileID: -7937578379884637891}
   - component: {fileID: -4810099577786930115}
   - component: {fileID: -7762917827241713979}
+  - component: {fileID: -6317392272775385298}
   m_Layer: 10
   m_Name: OtherPlayer
   m_TagString: Player
@@ -10942,6 +10943,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   InvincibilityDuration: 0
+--- !u!65 &-6317392272775385298
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414176428383784}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 2.5, z: 0.8}
+  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!1 &1414199094847710
 GameObject:
   m_ObjectHideFlags: 0

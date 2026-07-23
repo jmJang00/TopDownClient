@@ -1,3 +1,4 @@
+using MoreMountains.Feedbacks;
 using MoreMountains.InventoryEngine;
 using NUnit.Framework;
 using System;
@@ -24,10 +25,17 @@ using UnityEngine;
 
 public enum ItemType
 {
+<<<<<<< Updated upstream
     ExpPack = 7,
     HealPack,
     ProjectileAmmo,    
     HitscanAmmo,
+=======
+    ExpPack = 0,
+    HealPack,
+    AmmoP,    
+    AmmoH,
+>>>>>>> Stashed changes
     Grenade,        
     //...
     Max
@@ -37,48 +45,36 @@ public static class EnumToItemResource
 {
     private static readonly string[] PickerPaths =
     {
-        //총알, 힐팩, 경험치팩만 드롭될거임 나머지는 그냥 표시
-        "NotUse/None",
-        "NotUse/MyPlayer",
-        "NotUse/OtherPlayer",
-        "NotUse/MyPlayerH",
-        "NotUse/OtherPlayerH",
-        "NotUse/Projectile",
-        "NotUse/Chest",
+        //총알, 힐팩, 경험치팩만 드롭될거임 나머지는 그냥 표시        
         "Prefabs/Items/Picker/ExpPack",
         "Prefabs/Items/Picker/HealPack",        
         "Prefabs/Items/Picker/AmmoP",
         "Prefabs/Items/Picker/AmmoH",
+        "NotUse/Grenade",
         "NotUse/Max"
     };
 
     private static readonly string[] InventoryPaths =
-   {
-        "NotUse/None",
-        "NotUse/MyPlayer",
-        "NotUse/OtherPlayer",
-        "NotUse/MyPlayerH",
-        "NotUse/OtherPlayerH",
-        "NotUse/Projectile",
-        "NotUse/Chest",
+   {        
         "Prefabs/Items/Inventory/Undefined",
         "Prefabs/Items/Inventory/Undefined",
         "Prefabs/Items/Inventory/LoftAssaultRifleAmmo",
         "Prefabs/Items/Inventory/LoftAssaultRifleHitscanAmmo",
+        "Undefined",
         "Undefined"
     };
 
-    public static string GetPickerPath(EntityType type)
+    public static string GetPickerPath(ItemType type)
     {
         return PickerPaths[(int)type];
     }
 
-    public static string GetInventoryPath(EntityType type)
+    public static string GetInventoryPath(ItemType type)
     {
         return InventoryPaths[(int)type];
     }
 
-    public static GameObject GetPickerPrefab(EntityType type)
+    public static GameObject GetPickerPrefab(ItemType type)
     {        
         GameObject item = Resources.Load<GameObject>(GetPickerPath(type));
         if(item == null)
@@ -91,7 +87,7 @@ public static class EnumToItemResource
         return newItem;
     }
 
-    public static InventoryItem GetNewInventoryItem(EntityType type)
+    public static InventoryItem GetNewInventoryItem(ItemType type)
     {
         InventoryItem item = Resources.Load<InventoryItem>(GetInventoryPath(type));
 
@@ -102,9 +98,24 @@ public static class EnumToItemResource
         }
 
         InventoryItem newItem = UnityEngine.Object.Instantiate(item);
-        return newItem;
+        return newItem;       
+    }
 
-        
+    public static EntityType ConvertToEntityType(ItemType itemType)
+    {
+        switch (itemType)
+        {
+            case ItemType.ExpPack:
+                return EntityType.ExpPack;                
+            case ItemType.HealPack:
+                return EntityType.HealPack;                
+            case ItemType.AmmoP:
+                return EntityType.AmmoP;              
+            case ItemType.AmmoH:
+                return EntityType.AmmoH;
+            default:
+                return EntityType.None;                
+        }
     }
 
 }

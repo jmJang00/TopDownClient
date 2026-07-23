@@ -19,9 +19,14 @@ public class PacketManager
 
     public void Register()
     {
+<<<<<<< Updated upstream
 
         _makeFunc.Add((ushort)PacketID.S_CreateMyCharacter, MakePacket<S_NtfCreateMyCharacter>);
         _handler.Add((ushort)PacketID.S_CreateMyCharacter, PacketHandler.S_NtfCreateMyCharacterHandler);
+=======
+        _makeFunc.Add((ushort)PacketID.S_CreateMyCharacter, MakePacket<S_CreateMyCharacter>);
+        _handler.Add((ushort)PacketID.S_CreateMyCharacter, PacketHandler.S_CreateMyCharacterHandler);
+>>>>>>> Stashed changes
 
         _makeFunc.Add((ushort)PacketID.S_CreateOtherCharacter, MakePacket<S_NtfCreateOtherCharacter>);
         _handler.Add((ushort)PacketID.S_CreateOtherCharacter, PacketHandler.S_NtfCreateOtherCharacterHandler);
@@ -56,6 +61,9 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ProjectileHit, MakePacket<S_NtfProjectileHit>);
         _handler.Add((ushort)PacketID.S_ProjectileHit, PacketHandler.S_NtfProjectileHitHandler);
 
+        _makeFunc.Add((ushort)PacketID.S_HitscanShootStart, MakePacket<S_HitscanShootStart>);
+        _handler.Add((ushort)PacketID.S_HitscanShootStart, PacketHandler.S_HitscanShootStartHandler);
+
         _makeFunc.Add((ushort)PacketID.S_NtfSpawnItemPicker, MakePacket<S_NtfSpawnItemPicker>);
         _handler.Add((ushort)PacketID.S_NtfSpawnItemPicker, PacketHandler.S_NtfSpawnItemPickerHandler);
 
@@ -83,8 +91,14 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_NtfDestroyChest, MakePacket<S_NtfDestroyChest>);
         _handler.Add((ushort)PacketID.S_NtfDestroyChest, PacketHandler.S_NtfDestroyChestHandler);
 
-        _makeFunc.Add((ushort)PacketID.S_ResChestInfo, MakePacket<S_ResChestInfo>);
-        _handler.Add((ushort)PacketID.S_ResChestInfo, PacketHandler.S_ResChestInfoHandler);
+        _makeFunc.Add((ushort)PacketID.S_OpenChest, MakePacket<S_OpenChest>);
+        _handler.Add((ushort)PacketID.S_OpenChest, PacketHandler.S_OpenChestHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_CloseChest, MakePacket<S_CloseChest>);
+        _handler.Add((ushort)PacketID.S_CloseChest, PacketHandler.S_CloseChestHandler);
+        
+        _makeFunc.Add((ushort)PacketID.S_NtfChestInfo, MakePacket<S_NtfChestInfo>);
+        _handler.Add((ushort)PacketID.S_NtfChestInfo, PacketHandler.S_NtfChestInfoHandler);        
 
         _makeFunc.Add((ushort)PacketID.S_ResInventoryToChest, MakePacket<S_ResInventoryToChest>);
         _handler.Add((ushort)PacketID.S_ResInventoryToChest, PacketHandler.S_ResInventoryToChestHandler);

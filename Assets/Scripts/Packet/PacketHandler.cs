@@ -20,6 +20,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
+<<<<<<< Updated upstream
              MyPlayer player = null;
             if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
             {
@@ -32,6 +33,10 @@ class PacketHandler
             }
 
             player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.hp);
+=======
+            //NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, pkt.entityId, new Vector3(0, 0, 0));
+            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayerH, pkt.entityId, new Vector3(0, 0, 0));
+>>>>>>> Stashed changes
         }
     }
 
@@ -41,6 +46,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
+<<<<<<< Updated upstream
             Player player = null;
             if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
             {
@@ -53,6 +59,10 @@ class PacketHandler
             }
 
             player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.hp);
+=======
+            //NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayer, pkt.entityId, new Vector3(0, 0, 0));
+            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayerH, pkt.entityId, new Vector3(0, 0, 0));
+>>>>>>> Stashed changes
         }
     }
 
@@ -179,13 +189,26 @@ class PacketHandler
         }
     }
 
+    internal static void S_HitscanShootStartHandler(PacketSession session, IPacket packet)
+    {
+        S_HitscanShootStart pkt = packet as S_HitscanShootStart;
+
+
+        if (NetworkManager.Instance.game)
+        {
+            NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
+            entity.DispatchPacket(NetBehaviourType.Hitscan, packet);
+        }
+
+    }
+
     internal static void S_NtfSpawnItemPickerHandler(PacketSession session, IPacket packet)
     {
         S_NtfSpawnItemPicker pkt = packet as S_NtfSpawnItemPicker;
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, (EntityType)pkt.itemType, pkt.entityId, new Vector3(pkt.targetX, 1, pkt.targetY));
+            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EnumToItemResource.ConvertToEntityType((ItemType)pkt.itemType), pkt.entityId, new Vector3(pkt.targetX, 1, pkt.targetY));
         }        
     }
 
@@ -195,7 +218,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.Despawn((EntityType)pkt.itemType, pkt.entityId);
+            NetworkManager.Instance.spawnManager.Despawn(EnumToItemResource.ConvertToEntityType((ItemType)pkt.itemType), pkt.entityId);
         }
     }
 
@@ -253,9 +276,9 @@ class PacketHandler
         }
     }
 
-    internal static void S_ResChestInfoHandler(PacketSession session, IPacket packet)
+    internal static void S_OpenChestHandler(PacketSession session, IPacket packet)
     {
-        S_ResChestInfo pkt = packet as S_ResChestInfo;
+        S_OpenChest pkt = packet as S_OpenChest;
 
         MyChestInventoryManager manager = MyChestInventoryManager.Instance;
         if (manager == null)
@@ -264,15 +287,55 @@ class PacketHandler
             return;
         }
 
+        if(pkt.resultCode == 1)
+        {
+            manager.CurrentInventoryInputManager.OpenInventoryWithChest(pkt.chestId);
+        }
+    }
+
+    internal static void S_CloseChestHandler(PacketSession session, IPacket packet)
+    {
+        S_CloseChest pkt = packet as S_CloseChest;
+
+        MyChestInventoryManager manager = MyChestInventoryManager.Instance;
+        if (manager == null)
+        {
+            //아직 매니저 초기화 안됨.
+            return;
+        }
+        
+        manager.CurrentInventoryInputManager.CloseInventory();        
+    }
+
+    internal static void S_NtfChestInfoHandler(PacketSession session, IPacket packet)
+    {
+        S_NtfChestInfo pkt = packet as S_NtfChestInfo;
+
+
+        MyChestInventoryManager manager = MyChestInventoryManager.Instance;
+        if (manager == null)
+        {
+            //아직 매니저 초기화 안됨.
+            return;
+        }
+
+        Chest chest = NetworkManager.Instance.entitySystem.Get(pkt.chestId) as Chest;
+        if (chest == null)
+        {
+            Debug.LogError("IN S_NtfChestInfoHandler : 옳바르지않는 EntityID 호출");
+            //TODO ERROR
+        }       
+
         InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
         for (int i = 0; i < pkt.itemLists.Count; ++i)
         {
-            items[i] = EnumToItemResource.GetNewInventoryItem((EntityType)pkt.itemLists[i].itemType);
+            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemType);
             items[i].Quantity = (int)pkt.itemLists[i].quantity;
         }
 
         manager.CurrentChestInventory.SetInventoryFromItemArray(items);
-       // MMInventoryEvent.Trigger(MMInventoryEventType.Redraw, null, $"Chest{pkt.chestId}Inventory", null, 0, 0, "Player1");
+        chest.SetLastUpdateTick(pkt.serverTick);
+        // MMInventoryEvent.Trigger(MMInventoryEventType.Redraw, null, $"Chest{pkt.chestId}Inventory", null, 0, 0, "Player1");
     }
 
     internal static void S_ResInventoryToChestHandler(PacketSession session, IPacket packet)
@@ -300,7 +363,8 @@ class PacketHandler
         InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
         for (int i = 0; i < pkt.itemLists.Count; ++i)
         {
-            items[i] = EnumToItemResource.GetNewInventoryItem((EntityType)pkt.itemLists[i].itemId);
+            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemId);           
+            //Null Check
             items[i].Quantity = (int)pkt.itemLists[i].quantity;
         }
 

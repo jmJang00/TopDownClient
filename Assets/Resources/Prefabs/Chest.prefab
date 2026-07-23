@@ -555,7 +555,7 @@ MonoBehaviour:
   entityId: 0
   renderDelay: 0
   active: 0
-  type: 0
+  type: 6
 --- !u!114 &7337080346330291782
 MonoBehaviour:
   m_ObjectHideFlags: 0
