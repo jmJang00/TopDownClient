@@ -25,17 +25,10 @@ using UnityEngine;
 
 public enum ItemType
 {
-<<<<<<< Updated upstream
-    ExpPack = 7,
-    HealPack,
-    ProjectileAmmo,    
-    HitscanAmmo,
-=======
     ExpPack = 0,
     HealPack,
     AmmoP,    
     AmmoH,
->>>>>>> Stashed changes
     Grenade,        
     //...
     Max

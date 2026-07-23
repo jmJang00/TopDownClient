@@ -20,7 +20,6 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-<<<<<<< Updated upstream
              MyPlayer player = null;
             if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
             {
@@ -33,10 +32,6 @@ class PacketHandler
             }
 
             player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.hp);
-=======
-            //NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, pkt.entityId, new Vector3(0, 0, 0));
-            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayerH, pkt.entityId, new Vector3(0, 0, 0));
->>>>>>> Stashed changes
         }
     }
 
@@ -46,7 +41,6 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-<<<<<<< Updated upstream
             Player player = null;
             if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
             {
@@ -59,10 +53,6 @@ class PacketHandler
             }
 
             player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.hp);
-=======
-            //NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayer, pkt.entityId, new Vector3(0, 0, 0));
-            NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayerH, pkt.entityId, new Vector3(0, 0, 0));
->>>>>>> Stashed changes
         }
     }
 
