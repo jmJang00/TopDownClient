@@ -140,7 +140,7 @@ PrefabInstance:
     - target: {fileID: 6318959768764216268, guid: d084569b0b360614499d0e22980744ee,
         type: 3}
       propertyPath: autoConnect
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6318959768764216268, guid: d084569b0b360614499d0e22980744ee,
         type: 3}

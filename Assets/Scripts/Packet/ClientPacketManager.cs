@@ -45,7 +45,7 @@ public class PacketManager
         _handler.Add((ushort)PacketID.S_RotateState, PacketHandler.S_NtfRotateStateHandler);
 
         _makeFunc.Add((ushort)PacketID.S_ProjectileShootStart, MakePacket<S_ShootStart>);
-        _handler.Add((ushort)PacketID.S_ProjectileShootStart, PacketHandler.S_ShootStartHandler);
+        _handler.Add((ushort)PacketID.S_ProjectileShootStart, PacketHandler.S_ProjectileShootStartHandler);
 
         _makeFunc.Add((ushort)PacketID.S_SpawnProjectile, MakePacket<S_NtfSpawnProjectile>);
         _handler.Add((ushort)PacketID.S_SpawnProjectile, PacketHandler.S_NtfSpawnProjectileHandler);

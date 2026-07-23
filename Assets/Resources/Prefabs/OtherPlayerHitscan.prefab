@@ -10379,6 +10379,7 @@ GameObject:
   - component: {fileID: -7937578379884637891}
   - component: {fileID: 8375971456145734613}
   - component: {fileID: 6904817460903514425}
+  - component: {fileID: -6788932897771080738}
   - component: {fileID: 4732900692274374934}
   m_Layer: 10
   m_Name: OtherPlayerHitscan
@@ -10894,6 +10895,7 @@ MonoBehaviour:
   renderDelay: 0
   active: 0
   type: 0
+  isDebugMode: 0
 --- !u!114 &-7937578379884637891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10950,6 +10952,20 @@ MonoBehaviour:
     type: 3}
   PoolSize: 20
   PoolCanExpand: 1
+--- !u!114 &-6788932897771080738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414176428383784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f9240b3884e5b4c8ba09e048ec6138, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  currentHealth: 150
+  InvincibilityDuration: 0
 --- !u!65 &4732900692274374934
 BoxCollider:
   m_ObjectHideFlags: 0

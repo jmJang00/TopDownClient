@@ -57,8 +57,7 @@ public enum PacketID
 
     // 1000 - 상자
     S_NtfCreateChest = 1000,
-    S_NtfDestroyChest = 1001,
-    //C_ReqChestInfo = 1002, // -> OpenChest 느낌으로 바꾸자
+    S_NtfDestroyChest = 1001,    
     C_OpenChest = 1002, 
     C_CloseChest = 1003, // 체스트에서 멀리떨어지거나, 직접 체스트를 닫을때 송신
     S_OpenChest = 1004,

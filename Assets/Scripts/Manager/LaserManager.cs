@@ -10,6 +10,9 @@ public class LaserManager : MonoBehaviour
     public LineRenderer LaserPrefab;
     public float LaserDuration = 1.0f;
 
+    //TODO
+    //ObjectPool 고려해보자
+
     private void Start()
     {
         if (_instance == null)
@@ -17,6 +20,8 @@ public class LaserManager : MonoBehaviour
             _instance = this;
         }
     }
+
+    
 
     public virtual void DrawLaser(Vector3 start, Vector3 end)
     {

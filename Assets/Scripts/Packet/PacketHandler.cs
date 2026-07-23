@@ -131,7 +131,7 @@ class PacketHandler
 
     }
 
-    internal static void S_ShootStartHandler(PacketSession session, IPacket packet)
+    internal static void S_ProjectileShootStartHandler(PacketSession session, IPacket packet)
     {
         S_ShootStart pkt = packet as S_ShootStart;
 
