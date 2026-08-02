@@ -61,15 +61,8 @@ class PacketHandler
         S_NtfDeleteCharacter pkt = packet as S_NtfDeleteCharacter;
 
         if (NetworkManager.Instance.game)
-        {
-            if (NetworkManager.Instance.entitySystem.MyCharacter.entityId == pkt.entityId)
-            {
-                NetworkManager.Instance.spawnManager.DespawnAt(pkt.serverTick, EntityType.MyPlayer, pkt.entityId);
-            }
-            else
-            {
-                NetworkManager.Instance.spawnManager.DespawnAt(pkt.serverTick, EntityType.OtherPlayer, pkt.entityId);
-            }
+        {            
+            NetworkManager.Instance.spawnManager.DespawnAt(pkt.serverTick, pkt.entityId);                                         
         }
     }
 
@@ -161,7 +154,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.DespawnAt(pkt.currentTick, EntityType.Projectile, pkt.entityId);
+            NetworkManager.Instance.spawnManager.DespawnAt(pkt.currentTick, pkt.entityId);
         }
     }
 
@@ -191,7 +184,16 @@ class PacketHandler
         }
 
     }
+    internal static void S_HitscanHitHandler(PacketSession session, IPacket packet)
+    {
+        S_HitscanHit pkt = packet as S_HitscanHit;
 
+        if (NetworkManager.Instance.game)
+        {            
+            NetEntity collision = NetworkManager.Instance.entitySystem.Get(pkt.targetId);
+            collision.DispatchPacket(NetBehaviourType.Health, packet);
+        }
+    }
     internal static void S_NtfSpawnItemPickerHandler(PacketSession session, IPacket packet)
     {
         S_NtfSpawnItemPicker pkt = packet as S_NtfSpawnItemPicker;
@@ -262,7 +264,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-            NetworkManager.Instance.spawnManager.DespawnAt(pkt.serverTick, EntityType.Chest, pkt.entityId);
+            NetworkManager.Instance.spawnManager.DespawnAt(pkt.serverTick, pkt.entityId);
         }
     }
 
@@ -340,7 +342,7 @@ class PacketHandler
 
     internal static void S_ResInventoryInfoHandler(PacketSession session, IPacket packet)
     {
-        S_ResInventoryInfo pkt = packet as S_ResInventoryInfo;
+        S_NtfInventoryInfo pkt = packet as S_NtfInventoryInfo;
 
 
         MyChestInventoryManager manager = MyChestInventoryManager.Instance;
@@ -349,13 +351,12 @@ class PacketHandler
             //아직 매니저 초기화 안됨.
             return;
         }
-
-        InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
+        
+        InventoryItem[] items = new InventoryItem[12];
         for (int i = 0; i < pkt.itemLists.Count; ++i)
         {
-            items[i] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemId);           
-            //Null Check
-            items[i].Quantity = (int)pkt.itemLists[i].quantity;
+            items[pkt.itemLists[i].cursor] = EnumToItemResource.GetNewInventoryItem((ItemType)pkt.itemLists[i].itemId);
+            items[pkt.itemLists[i].cursor].Quantity = (int)pkt.itemLists[i].quantity;            
         }
 
         manager.CurrentPlayerInventory.SetInventoryFromItemArray(items);

@@ -12,7 +12,9 @@ public enum PacketID
 	
     // 200 - 커뮤니티 (친구)
 
+
     // 300 - 파티
+
 
     // 400 - 플레이
 	C_MatchStart = 400,
@@ -43,9 +45,8 @@ public enum PacketID
     S_HitscanShootStart = 721,
     S_NtfHitscanShootStart = 722,
     S_NtfHitscanShootState = 723,
-    C_HitscanHit = 724,
+    C_HitscanHit = 724,    
     S_HitscanHit = 725,
-    S_NtfHitscanHit = 726,
 
     // 800 - 경험치
 
@@ -67,8 +68,12 @@ public enum PacketID
     S_ResInventoryToChest = 1008,
     C_ReqChestToInventory = 1009,
     S_ResChestToInventory = 1010,
-    C_ReqInventoryInfo = 1011,
-    S_ResInventoryInfo = 1012,
+    C_OpenInventory = 1011,
+    S_NtfInventoryInfo = 1012,
+    C_ReqUseItem = 1013,
+    S_ResUseItem = 1014,
+    C_ReqDropItem = 1015,
+    S_ResDropItem = 1016,
     
 
     // 1100 - 이동
@@ -79,6 +84,9 @@ public enum PacketID
 	C_RotateStart = 1104,
 	S_RotateStart = 1105,
     S_RotateState = 1106,
+
+    //1200 - 채팅
+    C_ChatMessage = 1200,
 }
 
 public interface IPacket
@@ -1086,7 +1094,7 @@ public class S_NtfHitscanShootState : IPacket
     }
 }
 
-public class C_ReqHitscanHit : IPacket
+public class C_HitscanHit : IPacket
 {
     public int currentTick;
     public uint shooterId;
@@ -1133,13 +1141,65 @@ public class C_ReqHitscanHit : IPacket
     }
 }
 
+public class S_HitscanHit : IPacket
+{
+    public int serverTick;
+    public ushort damage;
+    public uint shooterId;
+    public uint targetId;
+
+    public ushort Protocol { get { return (ushort)PacketID.S_HitscanHit; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        this.serverTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);
+        this.damage = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+        count += sizeof(ushort);
+        this.shooterId = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
+        count += sizeof(uint);
+        this.targetId = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
+        count += sizeof(uint);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.S_HitscanHit);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), serverTick);
+        count += sizeof(int);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), damage);
+        count += sizeof(short);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), shooterId);
+        count += sizeof(uint);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), targetId);
+        count += sizeof(uint);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+
 public class S_NtfSpawnItemPicker : IPacket
 {
     public int serverTick;
     public uint entityId;
-    public uint itemType;
+    public uint itemType;    
     public float targetX;
-    public float targetY;
+    public float targetY;    
 
     public ushort Protocol { get { return (ushort)PacketID.S_NtfSpawnItemPicker; } }
 
@@ -1995,6 +2055,7 @@ public class C_ReqInventoryToChest : IPacket
 {
     public int clientTick;
     public int lastChestUpdateTick;
+    public int lastInventoryUpdateTick;
     public uint entityId;
     public uint inventoryCursor;
     public uint chestId;
@@ -2011,6 +2072,8 @@ public class C_ReqInventoryToChest : IPacket
         this.clientTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
         count += sizeof(int);
         this.lastChestUpdateTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);
+        this.lastInventoryUpdateTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
         count += sizeof(int);
         this.entityId = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
         count += sizeof(uint);
@@ -2034,6 +2097,8 @@ public class C_ReqInventoryToChest : IPacket
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), clientTick);
         count += sizeof(int);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), lastChestUpdateTick);
+        count += sizeof(int);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), lastInventoryUpdateTick);
         count += sizeof(int);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), entityId);
         count += sizeof(uint);
@@ -2092,6 +2157,7 @@ public class C_ReqChestToInventory : IPacket
 {
     public int clientTick;
     public int lastChestUpdateTick;
+    public int lastInventoryUpdateTick;
     public uint entityId;
     public uint chestId;
     public uint chestCursor;
@@ -2108,6 +2174,8 @@ public class C_ReqChestToInventory : IPacket
         this.clientTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
         count += sizeof(int);
         this.lastChestUpdateTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);
+        this.lastInventoryUpdateTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
         count += sizeof(int);
         this.entityId = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
         count += sizeof(uint);
@@ -2131,6 +2199,8 @@ public class C_ReqChestToInventory : IPacket
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), clientTick);
         count += sizeof(int);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), lastChestUpdateTick);
+        count += sizeof(int);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), lastInventoryUpdateTick);
         count += sizeof(int);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), entityId);
         count += sizeof(uint);
@@ -2185,11 +2255,11 @@ public class S_ResChestToInventory : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class C_ReqInventoryInfo : IPacket
+public class C_OpenInventory : IPacket
 {
     public int clientTick;
 
-    public ushort Protocol { get { return (ushort)PacketID.C_ReqInventoryInfo; } }
+    public ushort Protocol { get { return (ushort)PacketID.C_OpenInventory; } }
 
     public void Read(ArraySegment<byte> segment)
     {
@@ -2211,7 +2281,7 @@ public class C_ReqInventoryInfo : IPacket
         Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
 
         count += sizeof(ushort);
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_ReqInventoryInfo);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_OpenInventory);
         count += sizeof(ushort);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), clientTick);
         count += sizeof(int);
@@ -2221,7 +2291,7 @@ public class C_ReqInventoryInfo : IPacket
         return SendBufferHelper.Close(count);
     }
 }
-public class S_ResInventoryInfo : IPacket
+public class S_NtfInventoryInfo : IPacket
 {
     public int serverTick;
     public class ItemList
@@ -2256,7 +2326,7 @@ public class S_ResInventoryInfo : IPacket
     public List<ItemList> itemLists = new List<ItemList>();
 
 
-    public ushort Protocol { get { return (ushort)PacketID.S_ResInventoryInfo; } }
+    public ushort Protocol { get { return (ushort)PacketID.S_NtfInventoryInfo; } }
 
     public void Read(ArraySegment<byte> segment)
     {
@@ -2287,7 +2357,7 @@ public class S_ResInventoryInfo : IPacket
         Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
 
         count += sizeof(ushort);
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.S_ResInventoryInfo);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.S_NtfInventoryInfo);
         count += sizeof(ushort);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), serverTick);
         count += sizeof(int);
@@ -2295,6 +2365,141 @@ public class S_ResInventoryInfo : IPacket
         count += sizeof(ushort);
         foreach (ItemList itemList in this.itemLists)
             success &= itemList.Write(s, segment, ref count);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+
+public class C_ReqUseItem : IPacket
+{
+    public int clientTick;
+    public int lastInventoryUpdateTick;    
+    public uint inventoryCursor;    
+
+    public ushort Protocol { get { return (ushort)PacketID.C_ReqUseItem; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        this.clientTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);
+        this.lastInventoryUpdateTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);
+        this.inventoryCursor = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
+        count += sizeof(uint);        
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_ReqUseItem);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), clientTick);
+        count += sizeof(int);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), lastInventoryUpdateTick);
+        count += sizeof(int);        
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), inventoryCursor);
+        count += sizeof(uint);        
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+
+public class C_ReqDropItem : IPacket
+{
+    public int clientTick;
+    public int lastInventoryUpdateTick;
+    public uint inventoryCursor;
+
+    public ushort Protocol { get { return (ushort)PacketID.C_ReqDropItem; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        this.clientTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);
+        this.lastInventoryUpdateTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);
+        this.inventoryCursor = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
+        count += sizeof(uint);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_ReqDropItem);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), clientTick);
+        count += sizeof(int);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), lastInventoryUpdateTick);
+        count += sizeof(int);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), inventoryCursor);
+        count += sizeof(uint);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+
+public class C_ChatMessage : IPacket
+{
+    public string message;
+
+    public ushort Protocol { get { return (ushort)PacketID.C_ChatMessage; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        ushort messageLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+        count += sizeof(ushort);
+        this.message = Encoding.Unicode.GetString(s.Slice(count, messageLen));
+        count += messageLen;
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_ReqLoginGameServer);
+        count += sizeof(ushort);
+        ushort messageLen = (ushort)Encoding.Unicode.GetBytes(this.message, 0, this.message.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), messageLen);
+        count += sizeof(ushort);
+        count += messageLen;
         success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;

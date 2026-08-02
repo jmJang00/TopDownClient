@@ -60,9 +60,6 @@ namespace MoreMountains.InventoryEngine
                 
                 Debug.Log($"RightClick! Index : {Index}, item : {item.name}");
             }
-        }
-
-
-   
+        }   
     }
 }

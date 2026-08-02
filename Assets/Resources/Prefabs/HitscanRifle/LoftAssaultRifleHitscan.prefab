@@ -336,7 +336,7 @@ MonoBehaviour:
   HitscanTargetLayers:
     serializedVersion: 2
     m_Bits: 1280
-  HitscanMaxDistance: 100
+  HitscanMaxDistance: 24
   MinDamageCaused: 5
   MaxDamageCaused: 5
   DamageCausedInvincibilityDuration: 0.2
@@ -348,9 +348,6 @@ MonoBehaviour:
   HitNonDamageable: {fileID: 0}
   NonDamageableImpactParticles: {fileID: 0}
   TestShootButton: 0
-  LaserPrefab: {fileID: 6249689698612514236, guid: 3703246739eff6549bf5fc66b6a04fe3,
-    type: 3}
-  LaserDuration: 0.5
 --- !u!95 &95051391410759500
 Animator:
   serializedVersion: 7

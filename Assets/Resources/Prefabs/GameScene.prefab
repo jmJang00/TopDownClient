@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d0b1361cf3261479dcb3d69fa98b90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TickScheduler
-  tickRate: 20
+  tickRate: 40
   leadWindow: 14
   _currentTick: 0
   _serverTick: 0
@@ -95,3 +95,4 @@ MonoBehaviour:
   entitySystem: {fileID: 0}
   spawnManager: {fileID: 0}
   gameSelectUI: {fileID: 0}
+  debugPlayer: 0

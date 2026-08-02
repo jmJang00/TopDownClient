@@ -14,6 +14,10 @@ public class MyChestInventoryManager : MonoBehaviour, MMEventListener<MMMyChestI
     public MyInventoryDisplay CurrentChestInventoryDisplay { get { return _defaultChestInventoryDisplay; } }
 
     [SerializeField]
+    private MyInventoryDisplay _defaultInventoryDisplay;
+    public MyInventoryDisplay CurrentInventoryDisplay { get { return _defaultInventoryDisplay; } }
+
+    [SerializeField]
     private MyInventoryInputManager _defaultInventoryInputManager;
     public MyInventoryInputManager CurrentInventoryInputManager { get { return _defaultInventoryInputManager; } }
 

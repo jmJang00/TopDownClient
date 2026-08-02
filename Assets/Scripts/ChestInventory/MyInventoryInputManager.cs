@@ -1,5 +1,6 @@
-using UnityEngine;
+using System;
 using System.Collections;
+using UnityEngine;
 
 namespace MoreMountains.InventoryEngine
 {
@@ -33,11 +34,16 @@ namespace MoreMountains.InventoryEngine
             TargetChestInventoryGroup.alpha = 0;            
             TargetInventoryButtonGroup.alpha = 1;
 
-            C_ReqInventoryInfo pkt = new C_ReqInventoryInfo();
+            C_OpenInventory pkt = new C_OpenInventory();
             pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
             NetworkManager.Instance.Send(pkt.Write());
 
             base.OpenInventory();
+
+            if (MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer.Count > 0)
+            {
+                MyChestInventoryManager.Instance.CurrentInventoryDisplay.SetCurrentlySelectedSlot(MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer[0]);
+            }
         }
 
         public override void CloseInventory()
@@ -52,7 +58,7 @@ namespace MoreMountains.InventoryEngine
             }
             base.CloseInventory();
             
-            //CurrentChestInventoryManager.SetCurrentChestInventory(null);
+            
         }
         public virtual void OpenInventoryWithChest(uint index)        
         {
@@ -67,6 +73,12 @@ namespace MoreMountains.InventoryEngine
             CurrentChestInventoryManager.IsOpenChest = true;
             base.OpenInventory();
             Debug.Log("Selected Chest : " + index.ToString());
+
+
+            if (MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer.Count > 0)
+            {
+                MyChestInventoryManager.Instance.CurrentInventoryDisplay.SetCurrentlySelectedSlot(MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer[0]);
+            }
         }
 
 	}

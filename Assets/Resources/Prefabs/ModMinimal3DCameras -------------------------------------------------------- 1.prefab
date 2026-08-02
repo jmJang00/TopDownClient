@@ -4053,7 +4053,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4541298142601984402
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5803,7 +5803,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5912921761651565104
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6171,6 +6171,7 @@ GameObject:
   - component: {fileID: 3217942839827219750}
   - component: {fileID: 9097238931841078045}
   - component: {fileID: 1591413416071291136}
+  - component: {fileID: 2493592473627859697}
   m_Layer: 5
   m_Name: DropButton
   m_TagString: Untagged
@@ -6195,7 +6196,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5, y: -2.629074}
+  m_AnchoredPosition: {x: 0, y: -2.629074}
   m_SizeDelta: {x: 112, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3217942839827219750
@@ -6281,9 +6282,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Drop
+      - m_Target: {fileID: 2493592473627859697}
+        m_TargetAssemblyTypeName: ItemButtonActions, Assembly-CSharp
+        m_MethodName: OnClickDropButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6293,6 +6294,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2493592473627859697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2952687974855721782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f323898e8b966d4439e59169de760ce2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemButtonActions
 --- !u!1 &2957349863802602109
 GameObject:
   m_ObjectHideFlags: 0
@@ -6458,7 +6471,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7372785116333802347
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8383,8 +8396,8 @@ MonoBehaviour:
   DashBars: []
   AmmoDisplays:
   - {fileID: 0}
-  PauseScreen: {fileID: 1292864816858343499}
-  DeathScreen: {fileID: 8167305274818817213}
+  PauseScreen: {fileID: 0}
+  DeathScreen: {fileID: 0}
   Buttons: {fileID: 2036995175770055665}
   Arrows: {fileID: 2372637564896520615}
   Joystick: {fileID: 2154465944846611153}
@@ -8613,7 +8626,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6104567963034460521
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14790,6 +14803,7 @@ GameObject:
   - component: {fileID: 4324337474641804265}
   - component: {fileID: 3388251470464370986}
   - component: {fileID: 2238086099054233353}
+  - component: {fileID: 6812414775150548453}
   m_Layer: 5
   m_Name: UseButton
   m_TagString: Untagged
@@ -14814,7 +14828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -4}
+  m_AnchoredPosition: {x: -5, y: -2.629074}
   m_SizeDelta: {x: 112, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4324337474641804265
@@ -14845,7 +14859,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300008, guid: 7c1ffec91c2f2d44bb5cd98a294de6ce, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7c1ffec91c2f2d44bb5cd98a294de6ce, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14900,9 +14914,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Use
+      - m_Target: {fileID: 6812414775150548453}
+        m_TargetAssemblyTypeName: ItemButtonActions, Assembly-CSharp
+        m_MethodName: OnClickUseButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14912,6 +14926,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6812414775150548453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6737137685858457258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f323898e8b966d4439e59169de760ce2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemButtonActions
 --- !u!1 &6958392386930512934
 GameObject:
   m_ObjectHideFlags: 0
@@ -17807,7 +17833,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 227.9, y: 10.6}
+  m_AnchoredPosition: {x: -172.4827, y: 75.99641}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3172129885738077586

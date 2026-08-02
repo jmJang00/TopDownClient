@@ -63,6 +63,22 @@ public class PlayerHealth : NetBehaviour
 
                 break;
             }
+            case (ushort)PacketID.S_HitscanHit:
+            {
+                var p = packet as S_HitscanHit;
+                _tickScheduler.ScheduleAt(p.serverTick, () =>
+                {
+                    _health.Damage(
+                        p.damage,
+                        gameObject,
+                        InvincibilityDuration,
+                        InvincibilityDuration,
+                        Vector3.up);
+                    currentHealth -= p.damage;
+                });
+
+                break;
+            }
         }
     }
 
