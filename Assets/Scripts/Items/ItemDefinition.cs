@@ -29,10 +29,12 @@ public enum ItemType
     HealPack,
     AmmoP,    
     AmmoH,
+    Shield,
     Grenade,        
     //...
     Max
 }
+
 
 public static class EnumToItemResource
 {
@@ -43,6 +45,7 @@ public static class EnumToItemResource
         "Prefabs/Items/Picker/HealPack",        
         "Prefabs/Items/Picker/AmmoP",
         "Prefabs/Items/Picker/AmmoH",
+        "Prefabs/Items/Picker/Shield",
         "NotUse/Grenade",
         "NotUse/Max"
     };
@@ -50,9 +53,10 @@ public static class EnumToItemResource
     private static readonly string[] InventoryPaths =
    {        
         "Prefabs/Items/Inventory/Undefined",
-        "Prefabs/Items/Inventory/Undefined",
+        "Prefabs/Items/Inventory/HealPack",
         "Prefabs/Items/Inventory/LoftAssaultRifleAmmo",
         "Prefabs/Items/Inventory/LoftAssaultRifleHitscanAmmo",
+        "Prefabs/Items/Inventory/Shield",
         "Undefined",
         "Undefined"
     };
@@ -106,6 +110,8 @@ public static class EnumToItemResource
                 return EntityType.AmmoP;              
             case ItemType.AmmoH:
                 return EntityType.AmmoH;
+            case ItemType.Shield:
+                return EntityType.Shield;
             default:
                 return EntityType.None;                
         }

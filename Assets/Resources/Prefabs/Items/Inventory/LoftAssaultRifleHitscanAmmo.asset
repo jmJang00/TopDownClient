@@ -88,8 +88,8 @@ MonoBehaviour:
     MaximumRotation: {x: 0, y: 0, z: 0}
     MinimumScale: {x: 1, y: 1, z: 1}
     MaximumScale: {x: 1, y: 1, z: 1}
-  MaximumStack: 500
-  MaximumQuantity: 999999999
+  MaximumStack: 99999999
+  MaximumQuantity: 99999999
   ItemClass: 3
   TargetEquipmentInventoryName: 
   EquippedSound: {fileID: 0}

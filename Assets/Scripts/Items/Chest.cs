@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class Chest : NetEntity
 {
-    public int LastUpdateTick { get { return _lastUpdateTick; } }
+    
 
     private MyInventory _inventory;    
     private MyChestInventoryManager _inventoryManager;    
     private Switch _switch;
-    private ButtonActivatedZone _buttonActivatedZone;    
+    private ButtonActivatedZone _buttonActivatedZone;
+
+    public int LastUpdateTick { get { return _lastUpdateTick; } }
     private int _lastUpdateTick;
     //Last Update Itemlist 시점의 Tick을 가지고있어서
     //클라이언트와 서버의 아이템리스트가 동기화가 안되어있을때
@@ -47,7 +49,7 @@ public class Chest : NetEntity
             _inventoryManager.SetCurrentChestInventory(_inventory);
 
             int tick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
-            C_ReqInventoryInfo pkt = new C_ReqInventoryInfo();
+            C_OpenInventory pkt = new C_OpenInventory();
             pkt.clientTick = tick;
             NetworkManager.Instance.Send(pkt.Write());
 

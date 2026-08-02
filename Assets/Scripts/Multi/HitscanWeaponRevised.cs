@@ -38,7 +38,7 @@ public class HitscanWeaponRevised : HitscanWeapon
             Player target = _hitObject.gameObject.GetComponent<Player>();
             int tick = NetworkManager.Instance.tickScheduler.GetCurrentTick();            
 
-            C_ReqHitscanHit pkt2 = new C_ReqHitscanHit();
+            C_HitscanHit pkt2 = new C_HitscanHit();
             pkt2.currentTick = tick;            
             pkt2.shooterId = shooter.entityId;
             pkt2.targetId = target.entityId;

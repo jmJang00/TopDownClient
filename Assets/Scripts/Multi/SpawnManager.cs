@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour
         return entity;
     }
 
-    public void DespawnAt(int tick, EntityType type, uint id)
+    public void DespawnAt(int tick, uint id)
     {
         _game.tickScheduler.ScheduleAt(tick, () =>
         {
@@ -42,7 +42,7 @@ public class SpawnManager : MonoBehaviour
             }
 
             entity.OnDespawn();
-            Despawn(type, id);
+            Despawn(entity.type, id);
         });
     }
 
@@ -226,6 +226,24 @@ public class SpawnManager : MonoBehaviour
                 _game.entitySystem.Register(id, picker);
                 return picker;
             }
+            case EntityType.Shield:
+            {
+                GameObject obj = EnumToItemResource.GetPickerPrefab(ItemType.Shield);
+                if (obj == null)
+                {
+                    //todo
+                    return null;
+                }
+
+                Picker picker = _pickerPool.Acquire();
+                picker.picker = obj.GetComponent<DummyPicker>();
+                picker.entityId = id;
+                picker.transform.position = position;
+                picker.type = EntityType.Shield;
+                picker.Init();
+                _game.entitySystem.Register(id, picker);
+                return picker;
+            }
             default:
             {
                 return null;
@@ -293,6 +311,7 @@ public class SpawnManager : MonoBehaviour
             case EntityType.ExpPack:
             case EntityType.AmmoP:
             case EntityType.AmmoH:
+            case EntityType.Shield:
             {
                 entity.gameObject.SetActive(false);
                 Picker picker = entity as Picker;

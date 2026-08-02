@@ -30,7 +30,9 @@ namespace MoreMountains.TopDownEngine
 		/// <param name="collider">Other.</param>
 		protected override void Pick(GameObject picker)
 		{
-            OnPick.Invoke();
+            //서버 주관으로 처리하기로함.
+            //클라에서는 이펙트만 표현하고 아무것도 하지않음.
+            //OnPick.Invoke();
 		}
 	}
 }

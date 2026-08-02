@@ -6090,6 +6090,9 @@ MonoBehaviour:
   RequireCharacterComponent: 1
   RequirePlayerType: 1
   OnlyForPlayerCharacter: 1
+  OnPick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6565291858313842537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6105,7 +6108,8 @@ MonoBehaviour:
   entityId: 0
   renderDelay: 0
   active: 0
-  type: 0
+  type: 8
+  isDebugMode: 0
   picker: {fileID: 0}
 --- !u!1 &154168062899919541
 GameObject:

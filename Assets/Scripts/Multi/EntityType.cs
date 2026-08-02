@@ -12,6 +12,7 @@ public enum EntityType
     HealPack,
     AmmoP,
     AmmoH,
-    Granade,
+    Shield,
+    Granade,    
 }
 

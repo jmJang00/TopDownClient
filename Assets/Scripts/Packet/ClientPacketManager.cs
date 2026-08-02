@@ -59,6 +59,9 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_HitscanShootStart, MakePacket<S_HitscanShootStart>);
         _handler.Add((ushort)PacketID.S_HitscanShootStart, PacketHandler.S_HitscanShootStartHandler);
 
+        _makeFunc.Add((ushort)PacketID.S_HitscanHit, MakePacket<S_HitscanHit>);
+        _handler.Add((ushort)PacketID.S_HitscanHit, PacketHandler.S_HitscanHitHandler);
+
         _makeFunc.Add((ushort)PacketID.S_NtfSpawnItemPicker, MakePacket<S_NtfSpawnItemPicker>);
         _handler.Add((ushort)PacketID.S_NtfSpawnItemPicker, PacketHandler.S_NtfSpawnItemPickerHandler);
 
@@ -101,8 +104,8 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ResChestToInventory, MakePacket<S_ResChestToInventory>);
         _handler.Add((ushort)PacketID.S_ResChestToInventory, PacketHandler.S_ResChestToInventoryHandler);
 
-        _makeFunc.Add((ushort)PacketID.S_ResInventoryInfo, MakePacket<S_ResInventoryInfo>);
-        _handler.Add((ushort)PacketID.S_ResInventoryInfo, PacketHandler.S_ResInventoryInfoHandler);
+        _makeFunc.Add((ushort)PacketID.S_NtfInventoryInfo, MakePacket<S_NtfInventoryInfo>);
+        _handler.Add((ushort)PacketID.S_NtfInventoryInfo, PacketHandler.S_ResInventoryInfoHandler);
 
         _makeFunc.Add((ushort)PacketID.S_ResLoginGameServer, MakePacket<S_ResLoginGameServer>);
         _handler.Add((ushort)PacketID.S_ResLoginGameServer, PacketHandler.S_ResLoginGameServerHandler);

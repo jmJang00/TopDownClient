@@ -103,8 +103,7 @@ public class BulletMovement : NetBehaviour, ITickable<BulletState, BulletInput>
                 {
                     HitDamageableFeedback?.PlayFeedbacks(transform.position);
                     NetworkManager.Instance.spawnManager.DespawnAt(
-                        _tickScheduler.GetCurrentTick() + 1, 
-                        EntityType.Projectile, 
+                        _tickScheduler.GetCurrentTick() + 1,                        
                         Entity.entityId);
                 });
                 break;
@@ -129,7 +128,7 @@ public class BulletMovement : NetBehaviour, ITickable<BulletState, BulletInput>
             HitNonDamageableFeedback?.PlayFeedbacks(transform.position);
             NetworkManager.Instance.spawnManager.DespawnAt(
                 _tickScheduler.GetCurrentTick() + Entity.renderDelay, 
-                EntityType.Projectile, Entity.entityId);
+                 Entity.entityId);
             return;
         }
 
