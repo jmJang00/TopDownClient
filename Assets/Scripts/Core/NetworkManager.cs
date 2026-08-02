@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public enum NetworkState 
@@ -86,12 +87,12 @@ public class NetworkManager : MonoBehaviour
 
     public void ConnectToGame(string sessionKey, string ip, int port)
     {
-        StartCoroutine(s_instance.TryConnectAndAuthorize(sessionKey, ip, port));
+        StartCoroutine(s_instance.CoTryConnectAndAuthorize(sessionKey, ip, port));
     }
     
     // 처음 연결을 시작할 때는 연결이 붙을 때까지 계속 재시도
     // 연결이 붙고나서는 한 번 연결이 끊어지면 게임을 종료
-    public IEnumerator TryConnectAndAuthorize(string sessionKey, string ip, int port)
+    public IEnumerator CoTryConnectAndAuthorize(string sessionKey, string ip, int port)
     {
         while (true)
         {
@@ -163,13 +164,13 @@ public class NetworkManager : MonoBehaviour
 
     public void StartFindGame()
     {
-        StartCoroutine(FindGame());
+        StartCoroutine(CoFindGame());
     }
 
     // 매칭을 요청하고 매칭을 찾으면 게임씬으로 이동하는 함수
     // 코루틴이 네트워크 매니저의 소유이고 네트워크 매니저는 씬 이동 중에 삭제되지 않으므로 
     // 씬 전환에 있어서 안전하다
-    public IEnumerator FindGame()
+    public IEnumerator CoFindGame()
     {
         if (State != NetworkState.Authorized)
             yield break;
@@ -186,8 +187,8 @@ public class NetworkManager : MonoBehaviour
 
         if (State == NetworkState.GameFound)
         {
-            //MMSceneLoadingManager.LoadScene("ServerSyncTest");
-            MMSceneLoadingManager.LoadScene("ModServerSyncTest");            
+            var config = DevConfig.Load();
+            MMSceneLoadingManager.LoadScene(config.StartScene);
 
             yield return new WaitUntil(() => { return game != null; });
 
@@ -201,12 +202,20 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
+    public void QuitGame()
+    {
+        C_QuitGame quitGame = new C_QuitGame();
+        Send(quitGame.Write());
+        game.gameSelectUI.HideAll();
+    }
+
     // 클라이언트에서 서버측에 보내는 로비로 되돌아가고 싶다는 요청
     // 서버에서 게임씬에 들어간 상태에서만 유효
     public void ReturnToLobby()
     {
         C_ReturnToLobby gameEnd = new C_ReturnToLobby();
         Send(gameEnd.Write());
+        game.gameSelectUI.HideAll();
     }
 
     // success는 매칭 취소 요청이 전달된 경우를 구분하기 위함

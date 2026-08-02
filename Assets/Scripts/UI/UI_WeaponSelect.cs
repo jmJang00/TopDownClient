@@ -9,23 +9,18 @@ public class UI_WeaponSelect : UI_Panel
 
     public void SelectLaserWeapon()
     {
-        StartCoroutine(CoSelectWeapon(WeaponType.Laser));
+        SelectWeapon(WeaponType.Laser);
     }
 
     public void SelectRifleWeapon()
     {
-        StartCoroutine(CoSelectWeapon(WeaponType.Rifle));
+        SelectWeapon(WeaponType.Rifle);
     }
 
-    public IEnumerator CoSelectWeapon(WeaponType type)
+    public void SelectWeapon(WeaponType type)
     {
         C_WeaponSelect weaponSelect = new C_WeaponSelect();
         weaponSelect.weaponId = (ushort)type;
         NetworkManager.Instance.Send(weaponSelect.Write());
-        laserButton.Interactable = false;
-        rifleButton.Interactable = false;
-        yield return new WaitForSeconds(2.0f);
-        laserButton.Interactable = true;
-        rifleButton.Interactable = true;
     }
 }
