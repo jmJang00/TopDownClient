@@ -34,6 +34,7 @@ public enum PacketID
 	C_ReturnToLobby = 605,
 	S_ReturnToLobby = 606,
 	C_AccountInfoDebug = 607,
+    C_QuitGame = 608,
 
     // 700 - 무기
 	C_ProjectileShootStart = 700,
@@ -1627,6 +1628,39 @@ public class C_AccountInfoDebug : IPacket
         return SendBufferHelper.Close(count);
     }
 }
+
+public class C_QuitGame : IPacket
+{
+
+    public ushort Protocol { get { return (ushort)PacketID.C_QuitGame; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_QuitGame);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+
 public class C_ReturnToLobby : IPacket
 {
     

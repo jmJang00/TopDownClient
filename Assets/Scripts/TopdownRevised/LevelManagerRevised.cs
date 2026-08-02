@@ -33,7 +33,7 @@ public class LevelManagerRevised : LevelManager
         TopDownEngineEvent.Trigger(TopDownEngineEventTypes.LevelStart, null);
 
         // 세이브 로드 하면 안 됨
-        //MMGameEvent.Trigger("Load");
+        MMGameEvent.Trigger("Load");
     }
 
     public override void TriggerEndLevelEvents()

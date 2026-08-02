@@ -19,9 +19,12 @@ public class UI_LoginScene : UI_Panel
 
 	public void OnClickCreateButton()
 	{
-        
 		string account = AccountName.GetComponent<TMP_InputField>().text;
 		string password = Password.GetComponent<TMP_InputField>().text;
+        if (string.IsNullOrWhiteSpace(account) || string.IsNullOrWhiteSpace(password))
+        {
+            return;
+        }
 
 		CreateAccountPacketReq packet = new CreateAccountPacketReq()
 		{
@@ -43,7 +46,10 @@ public class UI_LoginScene : UI_Panel
 
 		string account = AccountName.GetComponent<TMP_InputField>().text;
 		string password = Password.GetComponent<TMP_InputField>().text;
-
+        if (string.IsNullOrWhiteSpace(account) || string.IsNullOrWhiteSpace(password))
+        {
+            return;
+        }
 
 		LoginAccountPacketReq packet = new LoginAccountPacketReq()
 		{

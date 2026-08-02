@@ -1,4 +1,5 @@
 using MoreMountains.Feedbacks;
+using MoreMountains.InventoryEngine;
 using MoreMountains.Tools;
 using MoreMountains.TopDownEngine;
 using System;
@@ -33,6 +34,8 @@ public class MyPlayer : NetEntity
         MMCameraEvent.Trigger(MMCameraEventTypes.SetTargetCharacter, _character);
         MMCameraEvent.Trigger(MMCameraEventTypes.StartFollowing);
         MMGameEvent.Trigger("CameraBound");
+
+        //MMInventoryEvent.Trigger(MMInventoryEventType.Redraw, null, $"SuitMainInventory", null, 0, 0, "Player1");
 
         base.OnSpawn(t);
     }

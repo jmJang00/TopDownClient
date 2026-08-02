@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class UI_GameMatch : MonoBehaviour
 {
-    public MMTouchButton button;
+    public MMTouchButton startButton;
+    public MMTouchButton cancelButton;
 
     public void OnEnable()
     {
@@ -22,19 +23,32 @@ public class UI_GameMatch : MonoBehaviour
         // 다시 처음씬이 로드될 때 실행되지 않도록
         if (NetworkManager.State == NetworkState.None)
         {
-            button.DisableButton();
+            startButton.DisableButton();
         }
-        button.ButtonReleased.AddListener(MatchStart);
+
+        cancelButton.DisableButton();
+        startButton.ButtonReleased.AddListener(MatchStart);
+        cancelButton.ButtonReleased.AddListener(MatchCancel);
     }
 
     public void MatchStart()
     {
         NetworkManager.Instance.StartFindGame();
-        button.DisableButton();
+        startButton.DisableButton();
+        cancelButton.EnableButton();
+    }
+
+    public void MatchCancel()
+    {
+        C_MatchCancel matchCancel = new C_MatchCancel();
+        NetworkManager.Instance.Send(matchCancel.Write());
+        startButton.EnableButton();
+        cancelButton.DisableButton();
     }
 
     public void TurnOn(IPacket packet)
     {
-        button.EnableButton();
+        startButton.EnableButton();
+        cancelButton.DisableButton();
     }
 }
