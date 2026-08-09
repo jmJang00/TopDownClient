@@ -7,11 +7,19 @@ public class CreateAccountPacketReq
 {
 	public string AccountName;
 	public string Password;
+    public string Nickname;
+}
+
+public enum CreateAccountError
+{
+    Success,
+    DuplicateAccountName,
+    DuplicateAccountNickName,
 }
 
 public class CreateAccountPacketRes
 {
-	public bool CreateOk;
+    public int ErrorCode;
 }
 
 public class LoginAccountPacketReq

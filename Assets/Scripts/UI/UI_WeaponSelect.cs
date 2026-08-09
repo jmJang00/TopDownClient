@@ -65,6 +65,6 @@ public class UI_WeaponSelect : UI_Panel , IInputModeChangeable
     {
         C_WeaponSelect weaponSelect = new C_WeaponSelect();
         weaponSelect.weaponId = (ushort)type;
-        NetworkManager.Instance.Send(weaponSelect.Write());
+        NetworkManager.Instance.GameSend(weaponSelect.Write());
     }
 }

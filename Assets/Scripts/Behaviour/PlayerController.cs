@@ -62,7 +62,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
                     pkt.targetX = input.target.x;
                     pkt.targetY = input.target.y;
                     pkt.clientTick = tick;
-                    NetworkManager.Instance.Send(pkt.Write());
+                    NetworkManager.Instance.GameSend(pkt.Write());
                 }
                 // 서버 시뮬레이션
                 else

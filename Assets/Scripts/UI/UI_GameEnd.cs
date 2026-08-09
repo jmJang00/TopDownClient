@@ -6,10 +6,18 @@ public class UI_GameEnd : MonoBehaviour
     [SerializeField] private UI_WinSplash victoryPanel;
     [SerializeField] private UI_DeathSplash defeatPanel;
     [SerializeField] private UI_PauseSplash pausePanel;
+    [SerializeField] private UI_Spectate spectate;
 
     public void Update()
     {
 
+    }
+
+    public void ShowSpectate(uint entityId)
+    {
+        HideAll();
+        spectate.SetEntityId(entityId);
+        spectate.RequestShow();
     }
 
     public void ShowWeaponSelect()

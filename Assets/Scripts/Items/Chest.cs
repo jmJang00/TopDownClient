@@ -51,12 +51,12 @@ public class Chest : NetEntity
             int tick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
             C_OpenInventory pkt = new C_OpenInventory();
             pkt.clientTick = tick;
-            NetworkManager.Instance.Send(pkt.Write());
+            NetworkManager.Instance.GameSend(pkt.Write());
 
             C_OpenChest pkt2 = new C_OpenChest();
             pkt2.clientTick = tick;
             pkt2.chestId = this.entityId;
-            NetworkManager.Instance.Send(pkt2.Write());
+            NetworkManager.Instance.GameSend(pkt2.Write());
         }
     }
 

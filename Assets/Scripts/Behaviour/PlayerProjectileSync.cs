@@ -82,7 +82,7 @@ public class PlayerProjectileSync : NetBehaviour
                             C_ReqReloadBullet pkt = new C_ReqReloadBullet();
                             pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
 
-                            NetworkManager.Instance.Send(pkt.Write());
+                            NetworkManager.Instance.GameSend(pkt.Write());
 
                             Debug.Log("Empty Ammo");
                         }
@@ -127,7 +127,7 @@ public class PlayerProjectileSync : NetBehaviour
         {
             C_ProjectileShootStart pkt = new C_ProjectileShootStart();
             pkt.clientTick = _tickScheduler.GetCurrentTick();
-            NetworkManager.Instance.Send(pkt.Write());
+            NetworkManager.Instance.GameSend(pkt.Write());
         }
 
         yield return new WaitForSeconds(0.1f);

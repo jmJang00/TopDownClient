@@ -18,7 +18,6 @@ public enum NetworkState
     Connected,
     Disconnected,
     Authorized,
-    WaitingForMatch,
     GameFound,
     GameReady,
     GameStarted,
@@ -26,14 +25,14 @@ public enum NetworkState
 
 public class NetworkManager : MonoBehaviour
 {
-    private ServerSession _session;
+    private ServerSession _gameSession = null;
+    private ServerSession _chatSession = null;
+
+    public ServerSession GameSession {  get { return _gameSession; } }
+    public ServerSession ChatSession {  get { return _chatSession; } }
 
     private static NetworkManager s_instance;
     public static NetworkManager Instance { get { Init(); return s_instance; } }
-
-    private static int _state = (int)NetworkState.None;
-
-    public static NetworkState State { get { return (NetworkState)Volatile.Read(ref _state); } }
 
     public GameScene game;
 
@@ -41,33 +40,93 @@ public class NetworkManager : MonoBehaviour
     public EntitySystem entitySystem { get { return game.entitySystem; } }
     public SpawnManager spawnManager { get { return game.spawnManager; } }
 
+    public NetworkState State { get { return _gameSession.State; } }
+
     public bool autoConnect = true;
     public string ipStr = "127.0.0.1";
     public short portNum = 6000;
     public string sessionKeyStr = "HGUEynFxicSxGWfQuwnOvRkPEgxPryTWYYCPvKFMnMkswrnkCftsysaPoFzCeUPa";
 
-    // 이전 상태와 관련없이 무조건 강제되는 상태인 경우 사용
-    public static void AssignState(NetworkState desired)
-    {
-        Interlocked.Exchange(ref _state, (int)desired);
-    }
+    public Dictionary<ushort, Queue<PendingRequest>> pendingRequests = new();
+    private CancellationTokenSource _shutdownCts = new();
 
-    // 이전 상태의 연속성이 확보되어야 하는 경우 사용
-    public static bool ChangeState(NetworkState expected, NetworkState desired)
+    public class PendingRequest
     {
-        int value = Interlocked.CompareExchange(ref _state, (int)desired, (int)expected);
-        bool success = value == (int)expected;
-        if (!success)
+        public TaskCompletionSource<IPacket> Source = new();
+        public CancellationTokenRegistration Registration;
+
+        public void TryCancel(CancellationToken token)
         {
-            Debug.LogError("Current: " + ((NetworkState)value).ToString() + " Expected: " + expected.ToString() + " Desired: " + desired.ToString());
+            Source.TrySetCanceled(token);
+            Registration.Dispose();
         }
 
-        return success;
+        public bool TryComplete(IPacket packet)
+        {
+            Registration.Dispose();
+            return Source.TrySetResult(packet);
+        }
     }
 
-    public void Send(ArraySegment<byte> sendBuff)
+    private void OnEnable()
     {
-        _session.Send(sendBuff);
+        NetworkEventBus.Subscribe(PacketID.S_MatchFound, OnGameFound);
+    }
+
+    private void OnDisable()
+    {
+        NetworkEventBus.Unsubscribe(PacketID.S_MatchFound, OnGameFound);
+    }
+
+    public void OnResponse(IPacket packet)
+    {
+        if (pendingRequests.TryGetValue(packet.Protocol, out var queue))
+        {
+            while (queue.Count > 0)
+            {
+                var pending = queue.Dequeue();
+                if (pending.TryComplete(packet))
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    public void GameSend(ArraySegment<byte> sendBuff)
+    {
+        _gameSession.Send(sendBuff);
+    }
+
+    public void ChatSend(ArraySegment<byte> sendBuff)
+    {
+        _chatSession.Send(sendBuff);
+    }
+
+    public async Task<T> GameSendRequest<T>(IPacket packet) where T : IPacket
+    {
+        try
+        {
+            return await _gameSession.SendRequest<T>(packet, _shutdownCts.Token);
+        }
+        catch
+        {
+            Debug.Log("Shutdown GameSendRequest");
+            return default(T);
+        }
+    }
+
+    public async Task<T> ChatSendRequest<T>(IPacket packet) where T : IPacket
+    {
+        try
+        {
+            return await _chatSession.SendRequest<T>(packet, _shutdownCts.Token);
+        }
+        catch
+        {
+            Debug.Log("Shutdown ChatSendRequest");
+            return default(T);
+        }
     }
 
     public static void Init()
@@ -77,88 +136,54 @@ public class NetworkManager : MonoBehaviour
             GameObject go = GameObject.Find("NetworkManager");
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<NetworkManager>();
-            s_instance._session = new ServerSession();
+            s_instance._gameSession = new ServerSession();
+            s_instance._chatSession = new ServerSession();
             if (s_instance.autoConnect)
             {
                 s_instance.ConnectToGame(s_instance.sessionKeyStr, s_instance.ipStr, s_instance.portNum);
             }
         }
     }
-
-    public void ConnectToGame(string sessionKey, string ip, int port)
-    {
-        StartCoroutine(s_instance.CoTryConnectAndAuthorize(sessionKey, ip, port));
-    }
     
-    // 처음 연결을 시작할 때는 연결이 붙을 때까지 계속 재시도
-    // 연결이 붙고나서는 한 번 연결이 끊어지면 게임을 종료
-    public IEnumerator CoTryConnectAndAuthorize(string sessionKey, string ip, int port)
+    public async void ConnectToGame(string sessionKey, string ip, int port)
     {
-        while (true)
+        _chatSession.ConnectHandler = () =>
         {
-            while (State != NetworkState.Disconnected && State != NetworkState.None)
-            {
-                yield return new WaitForSeconds(1);
-            }
+            C_ReqLoginChatServer login = new C_ReqLoginChatServer();
+            login.sessionKey = sessionKey;
+            _chatSession.Send(login.Write());
+        };
 
-            if (State == NetworkState.Disconnected)
-            {
-                //game = null;
-                //MMSceneLoadingManager.LoadScene("StartScene");
-                //ChangeState(NetworkState.Disconnected, NetworkState.None);
+        _chatSession.DisconnectHandler = () =>
+        {
+            Debug.Log("채팅서버와의 연결이 끊어졌습니다");
+        };
 
-                // 원래는 로비씬으로 이동하게 뒀지만, 서버가 끊은 걸 수도 있기 때문에 알기 쉽게 종료창을 띄우도록 수정
-                ApplicationUtil.ShowErrorAndQuit("서버와의 연결이 끊어졌습니다.", "네트워크 오류");
-                yield break;
-            }
+        _gameSession.ConnectHandler = () =>
+        {
+            C_ReqLoginGameServer login = new C_ReqLoginGameServer();
+            login.sessionKey = sessionKey;
+            _gameSession.Send(login.Write());
+        };
 
-            while (true)
-            {
-                NetworkState state = State;
-                if (state != NetworkState.None && state != NetworkState.ConnectRequested)
-                {
-                    break;
-                }
+        _gameSession.DisconnectHandler = () =>
+        {
+            ApplicationUtil.ShowErrorAndQuit("게임서버와의 연결이 끊어졌습니다.", "네트워크 오류");
+        };
 
-                if (state == NetworkState.None && ChangeState(NetworkState.None, NetworkState.ConnectRequested))
-                {
-                    ConnectServer(ip, port);
-                    Debug.Log("Try Connect");
-                }
-
-                yield return new WaitForSeconds(1);
-            }
-
-            if (State == NetworkState.Connected)
-            {
-                Debug.Log("Connect Success");
-
-                bool success = false;
-                bool completed = false;
-
-                UIEventBus.SubscribeOnce((ushort)PacketID.S_ResLoginGameServer, (pkt) =>
-                {
-                    S_ResLoginGameServer packet = pkt as S_ResLoginGameServer;
-                    completed = true;
-                    success = packet.loginOk;
-                });
-
-                C_ReqLoginGameServer login = new C_ReqLoginGameServer();
-                login.sessionKey = sessionKey;
-                Send(login.Write());
-
-                yield return new WaitUntil(() => completed == true);
-
-                if (success)
-                {
-                    ChangeState(NetworkState.Connected, NetworkState.Authorized);
-                    Debug.Log("Player Authorized");
-                }
-                else
-                {
-                    yield break;
-                }
-            }
+        try
+        {
+            Task task1 = _chatSession.TryConnectAndAuthorize(sessionKey, ip, port, _shutdownCts.Token);
+            Task task2 = _gameSession.TryConnectAndAuthorize(sessionKey, ip, port, _shutdownCts.Token);
+            await Task.WhenAll(task1, task2);
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("Network request canceled.");
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
         }
     }
 
@@ -172,40 +197,19 @@ public class NetworkManager : MonoBehaviour
     // 씬 전환에 있어서 안전하다
     public IEnumerator CoFindGame()
     {
-        if (State != NetworkState.Authorized)
+        NetworkState? state = GameSession?.State;
+        if (!state.HasValue || state != NetworkState.Authorized)
             yield break;
 
         C_MatchStart matchStart = new C_MatchStart();
-        Send(matchStart.Write());
-
-        if (!ChangeState(NetworkState.Authorized, NetworkState.WaitingForMatch))
-        {
-            yield break;
-        }
-
-        yield return new WaitUntil(() => { return State != NetworkState.WaitingForMatch; });
-
-        if (State == NetworkState.GameFound)
-        {
-            var config = DevConfig.Load();
-            MMSceneLoadingManager.LoadScene(config.StartScene);
-
-            yield return new WaitUntil(() => { return game != null; });
-
-            C_SceneReady sceneReady = new C_SceneReady();
-            Send(sceneReady.Write());
-
-            ChangeState(NetworkState.GameFound, NetworkState.GameReady);
-
-            game.gameSelectUI.HideAll();
-            game.gameSelectUI.ShowWeaponSelect();
-        }
+        GameSend(matchStart.Write());
     }
 
     public void QuitGame()
     {
         C_QuitGame quitGame = new C_QuitGame();
-        Send(quitGame.Write());        
+        GameSend(quitGame.Write());
+        game.gameSelectUI.HideAll();
     }
 
     // 클라이언트에서 서버측에 보내는 로비로 되돌아가고 싶다는 요청
@@ -213,21 +217,34 @@ public class NetworkManager : MonoBehaviour
     public void ReturnToLobby()
     {
         C_ReturnToLobby gameEnd = new C_ReturnToLobby();
-        Send(gameEnd.Write());        
+        GameSend(gameEnd.Write());
+        game.gameSelectUI.HideAll();
     }
 
     // success는 매칭 취소 요청이 전달된 경우를 구분하기 위함
     // 정상적으로 취소 요청이 반영되어서 매칭이 취소되면 false가 전달
     // 이미 서버에서 게임이 시작되어 버린 경우 그냥 게임 시작
-    public void OnGameFound(bool success)
+    public void OnGameFound(IPacket packet)
+    {
+        S_MatchFound matchFound = packet as S_MatchFound;
+        StartCoroutine(CoOnGameFound(matchFound.success));
+    }
+
+    public IEnumerator CoOnGameFound(bool success)
     {
         if (success)
         {
-            ChangeState(NetworkState.WaitingForMatch, NetworkState.GameFound);
-        }
-        else
-        {
-            ChangeState(NetworkState.WaitingForMatch, NetworkState.Authorized);
+            var config = DevConfig.Load();
+            MMSceneLoadingManager.LoadScene(config.StartScene);
+
+            yield return new WaitUntil(() => { return game != null; });
+
+            C_SceneReady sceneReady = new C_SceneReady();
+            GameSend(sceneReady.Write());
+
+            game.gameSelectUI.HideAll();
+            game.gameSelectUI.ShowWeaponSelect();
+            _gameSession.ChangeState(NetworkState.Authorized, NetworkState.GameReady);
         }
     }
 
@@ -240,13 +257,13 @@ public class NetworkManager : MonoBehaviour
         game.gameSelectUI.HideAll();
         if (success)
         {
-            ChangeState(NetworkState.GameReady, NetworkState.GameStarted);
+            _gameSession.ChangeState(NetworkState.GameReady, NetworkState.GameStarted);
         }
         else
         {
             game = null;
             MMSceneLoadingManager.LoadScene("StartScene");
-            ChangeState(NetworkState.GameReady, NetworkState.Authorized);
+            _gameSession.ChangeState(NetworkState.GameReady, NetworkState.Authorized);
         }
     }
 
@@ -254,7 +271,7 @@ public class NetworkManager : MonoBehaviour
     // 그에 맞게 UI를 띄워주고 UI에서 버튼을 눌렀을 때, 원래 로비씬으로 돌아간다 
     // 타임아웃을 둬서 플레이어가 버튼을 누르지 않으면 서버가 자동으로 로비씬으로 넘어가는 패킷을 전송
     public void OnGameEnd(bool isWinner)
-    {        
+    {
         game.gameSelectUI.HideAll();
         if (isWinner)
         {
@@ -273,7 +290,7 @@ public class NetworkManager : MonoBehaviour
     {
         game = null;
         MMSceneLoadingManager.LoadScene("StartScene");
-        AssignState(NetworkState.Authorized);
+        _gameSession.AssignState(NetworkState.Authorized);
     }
 
     // 게임씬이 로딩되었을 때 씬에 존재하는 GameScene 컴포넌트의 Start 부분에서 이 함수를 호출
@@ -284,16 +301,6 @@ public class NetworkManager : MonoBehaviour
         game = scene;
     }
 
-    private void ConnectServer(string ip, int port)
-    {
-        IPAddress ipAddr = IPAddress.Parse(ip);
-        IPEndPoint endPoint = new IPEndPoint(ipAddr, port);
-
-        Connector connector = new Connector();
-
-        connector.Connect(endPoint, () => { return _session; }, 1);
-    }
-
     void Start()
     {
         Init();
@@ -301,21 +308,37 @@ public class NetworkManager : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        if (_session != null)
+        _shutdownCts.Cancel();
+
+        if (_gameSession != null)
         {
-            _session.Disconnect();
-            _session = null;
+            _gameSession.Disconnect();
+            _gameSession = null;
+        }
+
+        if (_chatSession != null)
+        {
+            _chatSession.Disconnect();
+            _chatSession = null;
         }
     }
 
     void OnDestroy()
     {
+        _shutdownCts.Cancel();
+
         game?.Clear();
 
-        if (_session != null)
+        if (_gameSession != null)
         {
-            _session.Disconnect();
-            _session = null;
+            _gameSession.Disconnect();
+            _gameSession = null;
+        }
+
+        if (_chatSession != null)
+        {
+            _chatSession.Disconnect();
+            _chatSession = null;
         }
     }
 
@@ -323,7 +346,10 @@ public class NetworkManager : MonoBehaviour
     {
         List<IPacket> list = PacketQueue.Instance.PopAll();
         foreach (IPacket packet in list)
-            PacketManager.Instance.HandlePacket(_session, packet);
+        {
+            PacketManager.Instance.HandlePacket(_gameSession, packet);
+            OnResponse(packet);
+        }
         game?.ProcessUpdate();
     }
 }

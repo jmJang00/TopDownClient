@@ -7,6 +7,7 @@ public class UI_LoginScene : UI_Panel
 {
 	public GameObject AccountName;
     public GameObject Password;
+    public GameObject Nickname;
 
     public MMTouchButton CreateButton;
     public MMTouchButton LoginButton;
@@ -17,10 +18,12 @@ public class UI_LoginScene : UI_Panel
         LoginButton.ButtonReleased.AddListener(OnClickLoginButton);
 	}
 
-	public void OnClickCreateButton()
+	public async void OnClickCreateButton()
 	{
 		string account = AccountName.GetComponent<TMP_InputField>().text;
 		string password = Password.GetComponent<TMP_InputField>().text;
+        string nickname = Nickname.GetComponent<TMP_InputField>().text;
+
         if (string.IsNullOrWhiteSpace(account) || string.IsNullOrWhiteSpace(password))
         {
             return;
@@ -29,14 +32,23 @@ public class UI_LoginScene : UI_Panel
 		CreateAccountPacketReq packet = new CreateAccountPacketReq()
 		{
 			AccountName = account,
-			Password = password
+			Password = password,
+            Nickname = nickname
 		};
+
+        C_ReqLoginChatServer p = new C_ReqLoginChatServer();
+        var res = await NetworkManager.Instance.GameSendRequest<S_ResLoginChatServer>(p);
+        if (res.loginOk)
+        {
+
+        }
 
 		WebManager.Instance.SendPostRequest<CreateAccountPacketRes>("account/create", packet, (res) =>
 		{
-			Debug.Log(res.CreateOk);
+			Debug.Log(((CreateAccountError)res.ErrorCode).ToString());
 			AccountName.GetComponent<TMP_InputField>().text = "";
 			Password.GetComponent<TMP_InputField>().text = "";
+            Nickname.GetComponent<TMP_InputField>().text = "";
 		});
 	}
 
@@ -62,6 +74,7 @@ public class UI_LoginScene : UI_Panel
 			Debug.Log(res.LoginOk);
 			AccountName.GetComponent<TMP_InputField>().text = "";
 			Password.GetComponent<TMP_InputField>().text = "";
+            Nickname.GetComponent<TMP_InputField>().text = "";
 
 			if (res.LoginOk)
 			{

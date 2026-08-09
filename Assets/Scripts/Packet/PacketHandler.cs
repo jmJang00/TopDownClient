@@ -12,7 +12,40 @@ class PacketHandler
 {
     internal static void S_ResLoginGameServerHandler(PacketSession session, IPacket packet)
     {
-        UIEventBus.Publish(packet);
+        S_ResLoginGameServer pkt = packet as S_ResLoginGameServer;
+        if (pkt.loginOk)
+        {
+            Debug.Log("게임 서버 인증 성공");
+            NetworkManager.Instance.GameSession.ChangeState(NetworkState.Connected, NetworkState.Authorized);
+            AccountManager.Instance.SetAccount(pkt.accountId, pkt.accountNickname);
+            Debug.Log("Hello " + pkt.accountNickname);
+        }
+        NetworkEventBus.Publish(PacketID.S_ResLoginGameServer, packet);
+    }
+
+    internal static void S_ResLoginChatServerHandler(PacketSession session, IPacket packet)
+    {
+        S_ResLoginChatServer pkt = packet as S_ResLoginChatServer;
+        if (pkt.loginOk)
+        {
+            Debug.Log("채팅 서버 인증 성공");
+            NetworkManager.Instance.ChatSession.ChangeState(NetworkState.Connected, NetworkState.Authorized);
+        }
+    }
+
+
+    internal static void S_NtfAccountInfoHandler(PacketSession session, IPacket packet)
+    {
+        S_NtfAccountInfo pkt = packet as S_NtfAccountInfo;
+        AccountManager.Instance.Clear();
+        foreach (var account in pkt.accounts)
+        {
+            AccountManager.Instance.AddPlayer(new PlayerInfo()
+            {
+                AccountId = account.id,
+                Nickname = account.nickname
+            });
+        }
     }
 
     public static void S_NtfCreateMyCharacterHandler(PacketSession session, IPacket packet)
@@ -21,17 +54,17 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
-             MyPlayer player = null;
+            Player player = null;
             if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
             {
-                player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, pkt.entityId, new Vector3(0, 2, 0)) as MyPlayer;
-
+                player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, pkt.entityId, new Vector3(0, 2, 0)) as Player;
             }
             else
             {
-                player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayerH, pkt.entityId, new Vector3(0, 2, 0)) as MyPlayer;
+                player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayerH, pkt.entityId, new Vector3(0, 2, 0)) as Player;
             }
 
+            player.AccountId = AccountManager.Instance.AccountId;
             player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.hp);
         }
     }
@@ -46,14 +79,15 @@ class PacketHandler
             if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
             {
                 player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayer, pkt.entityId, new Vector3(0, 2, 0)) as Player;
-
             }
             else
             {
                 player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.OtherPlayerH, pkt.entityId, new Vector3(0, 2, 0)) as Player;
             }
 
-            player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.hp);
+            player.AccountId = pkt.accountId;
+            player.IsBot = pkt.isBot;
+            player.gameObject.GetComponent<PlayerHealth>().SetHealth(pkt.health);
         }
     }
 
@@ -65,6 +99,12 @@ class PacketHandler
         {            
             NetworkManager.Instance.spawnManager.DespawnAt(pkt.serverTick, pkt.entityId);                                         
         }
+    }
+
+
+    internal static void S_NtfSpectateUserHandler(PacketSession session, IPacket packet)
+    {
+
     }
 
     public static void S_MoveStartHandler(PacketSession session, IPacket packet)
@@ -122,7 +162,6 @@ class PacketHandler
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Aim, packet);
         }
-
     }
 
     internal static void S_ProjectileShootStartHandler(PacketSession session, IPacket packet)
@@ -243,15 +282,13 @@ class PacketHandler
 
     internal static void S_MatchFoundHandler(PacketSession session, IPacket packet)
     {
-        S_MatchFound pkt = packet as S_MatchFound;
-        UIEventBus.Publish(packet);
-        NetworkManager.Instance.OnGameFound(pkt.success);
+        NetworkEventBus.Publish(PacketID.S_MatchFound, packet);
     }
 
     internal static void S_ReturnToLobbyHandler(PacketSession session, IPacket packet)
     {
+        AccountManager.Instance.Clear();
         NetworkManager.Instance.OnReturnToLobby();
-
     }
 
     internal static void S_NtfCreateChestHandler(PacketSession session, IPacket packet)
