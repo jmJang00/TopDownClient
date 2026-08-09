@@ -1,9 +1,49 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <PDL>
-  <packet name="C_RegLoginGameServer">
-    <string name="sessionKey"/>
-  </packet>
-  <packet name="S_ResLoginGameServer">
-    <bool name="loginOk"/>
-  </packet>
+	<packet name="C_RegLoginGameServer">
+		<string name="sessionKey"/>
+	</packet>
+	<packet name="S_ResLoginGameServer">
+		<bool name="loginOk"/>
+	</packet>
+	<packet name="C_SendFriendReq"> 
+		<string name ="friendname"/>
+	</packet>
+	<packet name="S_SendFriendReqResult">
+		<int name="result"/>
+	</packet>	
+	<packet name="S_FriendReqFromOther">
+		<string name="friendname"/>
+	</packet>
+	<packet name ="C_FriendReqRespons">
+		<int name="result"/>		
+	</packet>
+	<packet name="S_FriendReqResFromTarget">
+		<int name="result"/>
+	</packet>
+	<packet name="C_RemoveFriend">
+		<string name ="friendname"/>
+	</packet>
+	<packet name="S_RemoveFriendResult">
+		<int name="result"/>
+	</packet>
+	<packet name="C_FriendList">		
+	</packet>
+	<packet name="S_FriendList">
+		<int name="friendCount"/>
+		<array name="friendList" count="friendCount">
+			<string name="friendname"/>
+			<int name="isOnline"/>
+		</array>
+	</packet>
+	<packet name="C_FriendReqList">		
+	</packet>
+	<packet name="S_FriendReqList">
+		<int name="requestCount"/>
+		<array name="requestList" count="requestCount">
+			<string name="friendname"/>
+		</array>
+	</packet>
+	
+	
 </PDL>
