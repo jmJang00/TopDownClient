@@ -69,4 +69,14 @@ public class UI_LoginScene : UI_Panel
 			}
 		});
 	}
+
+    public override bool RequestShow()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override bool RequestHide()
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -32,6 +32,11 @@ public class MyChestInventoryManager : MonoBehaviour, MMEventListener<MMMyChestI
     public bool IsOpenChest { get { return _isOpen; }  set { _isOpen = value; } }
     private bool _isOpen = false;
 
+    private ushort _playerMaxAmmo = 0;
+    private ushort _playerCurrentAmmo = 0;
+    public ushort MaxUsableBullet { get { return _playerMaxAmmo; } }
+    public ushort CurrentUsableBullet { get { return _playerCurrentAmmo; } }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -114,6 +119,33 @@ public class MyChestInventoryManager : MonoBehaviour, MMEventListener<MMMyChestI
                 break;
 
 
+        }
+    }
+
+    public void UpdateAmmoInfo(ushort maxAmmo, ushort currentAmmo)
+    {
+        _playerMaxAmmo = maxAmmo;
+        _playerCurrentAmmo = currentAmmo;
+        UpdateAmmoDisplay();
+    }
+
+    public void UpdateAmmoDisplay()
+    {
+        GUIManager.Instance.SetAmmoDisplays(true, "Player1", 0);
+        GUIManager.Instance.UpdateAmmoDisplays(false, _playerCurrentAmmo, _playerMaxAmmo, 0, 0, "Player1", 0, false);
+    }
+
+    public bool DecreaseAmmo()
+    {
+        if(_playerCurrentAmmo > 0)
+        {
+            --_playerCurrentAmmo;
+            UpdateAmmoDisplay();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

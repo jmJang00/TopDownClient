@@ -205,8 +205,7 @@ public class NetworkManager : MonoBehaviour
     public void QuitGame()
     {
         C_QuitGame quitGame = new C_QuitGame();
-        Send(quitGame.Write());
-        game.gameSelectUI.HideAll();
+        Send(quitGame.Write());        
     }
 
     // 클라이언트에서 서버측에 보내는 로비로 되돌아가고 싶다는 요청
@@ -214,8 +213,7 @@ public class NetworkManager : MonoBehaviour
     public void ReturnToLobby()
     {
         C_ReturnToLobby gameEnd = new C_ReturnToLobby();
-        Send(gameEnd.Write());
-        game.gameSelectUI.HideAll();
+        Send(gameEnd.Write());        
     }
 
     // success는 매칭 취소 요청이 전달된 경우를 구분하기 위함
@@ -256,7 +254,7 @@ public class NetworkManager : MonoBehaviour
     // 그에 맞게 UI를 띄워주고 UI에서 버튼을 눌렀을 때, 원래 로비씬으로 돌아간다 
     // 타임아웃을 둬서 플레이어가 버튼을 누르지 않으면 서버가 자동으로 로비씬으로 넘어가는 패킷을 전송
     public void OnGameEnd(bool isWinner)
-    {
+    {        
         game.gameSelectUI.HideAll();
         if (isWinner)
         {

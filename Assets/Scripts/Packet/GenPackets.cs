@@ -48,6 +48,8 @@ public enum PacketID
     S_NtfHitscanShootState = 723,
     C_HitscanHit = 724,    
     S_HitscanHit = 725,
+    C_ReqReloadBullet = 726,
+    S_NtfUpdateBullet = 727,
 
     // 800 - 경험치
 
@@ -1253,8 +1255,10 @@ public class S_NtfSpawnItemPicker : IPacket
 public class S_NtfDespawnItemPicker : IPacket
 {
     public int serverTick;
-    public uint entityId;
+    public uint entityId;    
     public uint itemType;
+    public bool isObtained;
+    public uint obtainEntityId;
 
 
     public ushort Protocol { get { return (ushort)PacketID.S_NtfDespawnItemPicker; } }
@@ -1271,6 +1275,10 @@ public class S_NtfDespawnItemPicker : IPacket
         this.entityId = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
         count += sizeof(uint);
         this.itemType = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
+        count += sizeof(uint);
+        this.isObtained = BitConverter.ToBoolean(s.Slice(count, s.Length - count));
+        count += sizeof(bool);
+        this.obtainEntityId = BitConverter.ToUInt32(s.Slice(count, s.Length - count));
         count += sizeof(uint);
     }
 
@@ -1290,6 +1298,10 @@ public class S_NtfDespawnItemPicker : IPacket
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), entityId);
         count += sizeof(uint);
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), itemType);
+        count += sizeof(uint);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), isObtained);
+        count += sizeof(bool);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), obtainEntityId);
         count += sizeof(uint);
         success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
@@ -2534,6 +2546,86 @@ public class C_ChatMessage : IPacket
         success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), messageLen);
         count += sizeof(ushort);
         count += messageLen;
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+
+public class C_ReqReloadBullet : IPacket
+{
+    public int clientTick;    
+
+    public ushort Protocol { get { return (ushort)PacketID.C_ReqReloadBullet; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        this.clientTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);        
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_ReqReloadBullet);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), clientTick);
+        count += sizeof(int);        
+        success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
+        if (success == false)
+            return null;
+        return SendBufferHelper.Close(count);
+    }
+}
+
+public class S_NtfUpdateBullet : IPacket
+{
+    public int serverTick;
+    public ushort bulletCount;
+
+
+    public ushort Protocol { get { return (ushort)PacketID.S_NtfUpdateBullet; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        this.serverTick = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+        count += sizeof(int);
+        this.bulletCount = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+        count += sizeof(ushort);
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.S_NtfUpdateBullet);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), serverTick);
+        count += sizeof(int);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), bulletCount);
+        count += sizeof(ushort);
         success &= BitConverter.TryWriteBytes(s, (ushort)(count - 2));
         if (success == false)
             return null;

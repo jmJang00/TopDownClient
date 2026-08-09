@@ -107,6 +107,10 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
 
     public void Update()
     {
+        if (InputModeManager.Instance.CurrentMode != InputMode.Game &&
+            InputModeManager.Instance.CurrentMode != InputMode.Inventory)
+            return;
+
         if (!Ready)
         {
             return;

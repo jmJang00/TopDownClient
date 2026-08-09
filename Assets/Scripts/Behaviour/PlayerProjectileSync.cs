@@ -38,6 +38,9 @@ public class PlayerProjectileSync : NetBehaviour
 
     public void Update()
     {
+        if (InputModeManager.Instance.CurrentMode != InputMode.Game)
+            return;
+
         if (!Ready)
         {
             return;
@@ -64,9 +67,26 @@ public class PlayerProjectileSync : NetBehaviour
                 {
                     if (_updateTimer >= updateInterval)
                     {
-                        StartCoroutine(ShootTrigger());
                         _updateTimer = 0.0f;
-                        Debug.Log("Shoot");
+
+                        //잔여총알있을시 감소.
+                        if (MyChestInventoryManager.Instance.DecreaseAmmo())
+                        {
+                            //남은 총알 있을 시
+                            StartCoroutine(ShootTrigger());
+                            Debug.Log("Shoot");
+                        }
+                        else
+                        {
+                            //없다면 리로드 요청하기.
+                            C_ReqReloadBullet pkt = new C_ReqReloadBullet();
+                            pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
+
+                            NetworkManager.Instance.Send(pkt.Write());
+
+                            Debug.Log("Empty Ammo");
+                        }
+                        
                     }
                 }
             }

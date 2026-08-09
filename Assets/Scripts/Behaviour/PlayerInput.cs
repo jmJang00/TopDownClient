@@ -78,6 +78,12 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
+        if(InputModeManager.Instance.CurrentMode != InputMode.Game &&
+            InputModeManager.Instance.CurrentMode != InputMode.Inventory)
+        {
+            return;
+        }
+
         if (!controller.Ready)
         {
             return;

@@ -8395,7 +8395,7 @@ MonoBehaviour:
   - {fileID: 6604516590429737097}
   DashBars: []
   AmmoDisplays:
-  - {fileID: 0}
+  - {fileID: 2347852584809748631}
   PauseScreen: {fileID: 0}
   DeathScreen: {fileID: 0}
   Buttons: {fileID: 2036995175770055665}

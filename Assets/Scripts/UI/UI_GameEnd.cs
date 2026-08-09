@@ -9,40 +9,62 @@ public class UI_GameEnd : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            if (!pausePanel.IsVisible)
-            {
-                pausePanel.Show();
-            }
-        }
+
     }
 
     public void ShowWeaponSelect()
-    {
-        weaponSelectPanel.Show();
+    {        
+        weaponSelectPanel.RequestShow();        
     }
-
-    public void ShowVictory()
+    public void HideWeaponSelect()
     {
-        victoryPanel.Show();
+        weaponSelectPanel.RequestHide();
+    }
+    public void ShowVictory()
+    {        
+        victoryPanel.RequestShow();        
+    }
+    public void HideVictory()
+    {
+        victoryPanel.RequestHide();
     }
 
     public void ShowDefeat()
+    {        
+        defeatPanel.RequestShow();        
+    }
+    public void HideDefeat()
     {
-        defeatPanel.Show();
+        defeatPanel.RequestHide();
     }
 
     public void ShowPause()
+    {        
+        pausePanel.RequestShow();        
+    }
+
+    public void HidePause()
     {
-        pausePanel.Show();
+        pausePanel.RequestHide();
     }
 
     public void HideAll()
     {
-        weaponSelectPanel.Hide();
-        victoryPanel.Hide();
-        defeatPanel.Hide();
-        pausePanel.Hide();
+        if(weaponSelectPanel.IsVisible)
+            weaponSelectPanel.RequestHide();
+        if(victoryPanel.IsVisible)
+            victoryPanel.RequestHide();
+        if(defeatPanel.IsVisible)
+            defeatPanel.RequestHide();
+        if(pausePanel.IsVisible)
+            pausePanel.RequestHide();
+    }
+
+    public InputModeChangeableInfo GetDescription()
+    {
+        InputModeChangeableInfo info;
+        info.Name = "UI";
+        info.Description = "Pause UI";
+        return info;
     }
 }
