@@ -23,6 +23,24 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ResLoginGameServer, MakePacket<S_ResLoginGameServer>);
         _handler.Add((ushort)PacketID.S_ResLoginGameServer, PacketHandler.S_ResLoginGameServerHandler);
 
+        _makeFunc.Add((ushort)PacketID.S_SendFriendReqResult, MakePacket<S_SendFriendReqResult>);
+        _handler.Add((ushort)PacketID.S_SendFriendReqResult, PacketHandler.S_SendFriendReqResultHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_FriendReqFromOther, MakePacket<S_FriendReqFromOther>);
+        _handler.Add((ushort)PacketID.S_FriendReqFromOther, PacketHandler.S_FriendReqFromOtherHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_FriendReqResFromTarget, MakePacket<S_FriendReqResFromTarget>);
+        _handler.Add((ushort)PacketID.S_FriendReqResFromTarget, PacketHandler.S_FriendReqResFromTargetHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_RemoveFriendResult, MakePacket<S_RemoveFriendResult>);
+        _handler.Add((ushort)PacketID.S_RemoveFriendResult, PacketHandler.S_RemoveFriendResultHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_FriendList, MakePacket<S_FriendList>);
+        _handler.Add((ushort)PacketID.S_FriendList, PacketHandler.S_FriendListHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_FriendReqList, MakePacket<S_FriendReqList>);
+        _handler.Add((ushort)PacketID.S_FriendReqList, PacketHandler.S_FriendReqListHandler);
+
     }
 
     public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)

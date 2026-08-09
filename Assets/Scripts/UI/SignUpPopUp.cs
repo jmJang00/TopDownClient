@@ -115,11 +115,39 @@ public class SignUpPopUp : MMPopup
             TXT_signupresult.text = "Sign Up is Failed.";
             return;
         }
-        //SendPacketSignUp(newid, newpassword);
-        TXT_signupresult.text = "Sign Up is successful.";
+        if(!SignUp())
+        {
+            TXT_signupresult.text = "Sign Up is Failed.";            
+        }
+        else 
+        {
+            TXT_signupresult.text = "Sign Up is successful.";
+        }           
     }
     public void OnClickClose()
     {        
         Close();
+    }   
+private bool SignUp()
+    {
+        string account = newid;
+        string password = newpassword;
+        if (string.IsNullOrWhiteSpace(account) || string.IsNullOrWhiteSpace(password))
+        {
+            return false;
+        }
+
+        CreateAccountPacketReq packet = new CreateAccountPacketReq()
+        {
+            AccountName = account,
+            Password = password
+        };
+
+        WebManager.Instance.SendPostRequest<CreateAccountPacketRes>("account/create", packet, (res) =>
+        {
+            Debug.Log(res.CreateOk);
+        });
+
+        return true;
     }
 }

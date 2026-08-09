@@ -972,6 +972,7 @@ GameObject:
   m_Component:
   - component: {fileID: 63788978}
   - component: {fileID: 63788979}
+  - component: {fileID: 63788980}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -1007,9 +1008,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkManager
   game: {fileID: 0}
-  accountId: 0
+  autoConnect: 0
   ipStr: 127.0.0.1
-  port: 5000
+  portNum: 6000
+  sessionKeyStr: HGUEynFxicSxGWfQuwnOvRkPEgxPryTWYYCPvKFMnMkswrnkCftsysaPoFzCeUPa
+--- !u!114 &63788980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63788977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd2e853bf5acd694a983916dea643ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WebManager
+  baseUrl: https://localhost:5001/api
 --- !u!1 &64257510
 GameObject:
   m_ObjectHideFlags: 0
@@ -37166,6 +37181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1750702797}
   - component: {fileID: 1750702796}
+  - component: {fileID: 1750702798}
   m_Layer: 0
   m_Name: LoginManager
   m_TagString: Untagged
@@ -37202,6 +37218,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1109613975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1750702798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750702795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd2e853bf5acd694a983916dea643ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WebManager
+  baseUrl: https://localhost:5001/api
 --- !u!1 &1758940571
 GameObject:
   m_ObjectHideFlags: 0
