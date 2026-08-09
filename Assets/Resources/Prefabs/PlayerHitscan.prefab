@@ -10378,7 +10378,6 @@ GameObject:
   - component: {fileID: 2577338877256593037}
   - component: {fileID: 6327808879412355724}
   - component: {fileID: 8774819944720314774}
-  - component: {fileID: -4329039223334911494}
   - component: {fileID: 675007584358717992}
   - component: {fileID: 1363471116746669495}
   - component: {fileID: -1923208448253204943}
@@ -10386,6 +10385,7 @@ GameObject:
   - component: {fileID: -7090873518419303774}
   - component: {fileID: 269987096211731238}
   - component: {fileID: 697862946114452533}
+  - component: {fileID: 4255457925394769077}
   m_Layer: 10
   m_Name: PlayerHitscan
   m_TagString: Player
@@ -10993,23 +10993,6 @@ MonoBehaviour:
   moveSpeed: 4
   predictTime: 1
   updateInterval: 0.5
---- !u!114 &-4329039223334911494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1414176428383784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41733b8e82a81e648a19de820c183345, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MyPlayer
-  entityId: 0
-  renderDelay: 0
-  active: 0
-  type: 0
-  isDebugMode: 0
 --- !u!114 &675007584358717992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11133,6 +11116,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8, y: 2.5, z: 0.8}
   m_Center: {x: 0, y: 1.1, z: 0}
+--- !u!114 &4255457925394769077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414176428383784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b400222cb0cf8bb4f824f28e394d4024, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  entityId: 0
+  renderDelay: 0
+  active: 0
+  type: 0
+  isDebugMode: 0
 --- !u!1 &1414199094847710
 GameObject:
   m_ObjectHideFlags: 0
