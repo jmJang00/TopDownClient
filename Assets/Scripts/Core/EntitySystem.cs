@@ -5,6 +5,7 @@ public class EntitySystem : MonoBehaviour
 {
     public NetEntity MyCharacter { get; set; }
     private Dictionary<uint, NetEntity> _map = new Dictionary<uint, NetEntity>(1024);
+    private Dictionary<uint, NetEntity> _players = new Dictionary<uint, NetEntity>(1024);
 
     public NetEntity Get(uint id)
     {

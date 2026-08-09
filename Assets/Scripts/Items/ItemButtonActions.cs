@@ -11,7 +11,7 @@ public class ItemButtonActions : MonoBehaviour
         pkt.lastInventoryUpdateTick = MyChestInventoryManager.Instance.CurrentPlayerInventory.LastUpdateTick;
         pkt.inventoryCursor = (uint)MyChestInventoryManager.Instance.CurrentInventoryDisplay.CurrentlySelectedInventorySlot().Index;
 
-        NetworkManager.Instance.Send(pkt.Write());
+        NetworkManager.Instance.GameSend(pkt.Write());
     }
 
     public void OnClickDropButton()
@@ -21,7 +21,7 @@ public class ItemButtonActions : MonoBehaviour
         pkt.lastInventoryUpdateTick = MyChestInventoryManager.Instance.CurrentPlayerInventory.LastUpdateTick;
         pkt.inventoryCursor = (uint)MyChestInventoryManager.Instance.CurrentInventoryDisplay.CurrentlySelectedInventorySlot().Index;
 
-        NetworkManager.Instance.Send(pkt.Write());
+        NetworkManager.Instance.GameSend(pkt.Write());
     }
     
 }

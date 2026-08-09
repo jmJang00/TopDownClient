@@ -17,6 +17,6 @@ public class Picker : NetEntity
         pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
         pkt.entityId = this.entityId;
 
-        NetworkManager.Instance.Send(pkt.Write());
+        NetworkManager.Instance.GameSend(pkt.Write());
     }
 }

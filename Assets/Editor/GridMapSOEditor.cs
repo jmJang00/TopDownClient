@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +24,9 @@ public class GridMapSOEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        if (target == null)
+            return;
+
         GridMapSO so = (GridMapSO)target;
 
         DrawDefaultInspector();
@@ -459,3 +463,4 @@ public class GridMapSOEditor : Editor
         Debug.Log($"Exported GridMap: {path}");
     }
 }
+#endif

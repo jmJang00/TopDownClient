@@ -7,6 +7,9 @@ public class GridMeshBuilderEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        if (target == null)
+            return;
+
         DrawDefaultInspector();
 
         GridMeshBuilder builder = (GridMeshBuilder)target;

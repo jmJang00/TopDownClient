@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ public class DungeonGeneratorEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        if (target == null)
+            return;
+
         DrawDefaultInspector();
 
         DungeonGenerator gen = (DungeonGenerator)target;
@@ -20,6 +24,11 @@ public class DungeonGeneratorEditor : Editor
             asset.Copy(map);
             // 저장 경로
             string path = "Assets/Resources/Data/GridMap.asset";
+
+            if (File.Exists(path))
+            {
+                AssetDatabase.DeleteAsset(path);
+            }
 
             AssetDatabase.CreateAsset(asset, path);
 

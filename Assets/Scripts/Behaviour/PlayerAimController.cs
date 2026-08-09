@@ -78,7 +78,7 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
                 C_RotateStart pkt = new C_RotateStart();
                 pkt.targetAngle = input.targetAngle;
                 pkt.clientTick = tick;
-                NetworkManager.Instance.Send(pkt.Write());
+                NetworkManager.Instance.GameSend(pkt.Write());
             }
             // 서버 시뮬레이션
             else
@@ -100,7 +100,7 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
                     entity.DispatchPacket(NetBehaviourType.Aim, pkt);
                 });
 
-                Debug.Log("Set Angle" + _angle);
+                //Debug.Log("Set Angle" + _angle);
             }
         });
     }

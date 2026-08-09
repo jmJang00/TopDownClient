@@ -106,7 +106,7 @@ public class PlayerHitscanSync : NetBehaviour
                             C_ReqReloadBullet pkt = new C_ReqReloadBullet();
                             pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
 
-                            NetworkManager.Instance.Send(pkt.Write());
+                            NetworkManager.Instance.GameSend(pkt.Write());
 
                             Debug.Log("Empty Ammo");
                         }

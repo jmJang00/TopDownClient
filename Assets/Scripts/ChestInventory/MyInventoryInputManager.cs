@@ -47,7 +47,7 @@ namespace MoreMountains.InventoryEngine
 
             C_OpenInventory pkt = new C_OpenInventory();
             pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
-            NetworkManager.Instance.Send(pkt.Write());
+            NetworkManager.Instance.GameSend(pkt.Write());
 
             base.OpenInventory();
             
@@ -64,7 +64,7 @@ namespace MoreMountains.InventoryEngine
                 C_CloseChest pkt1 = new C_CloseChest();
                 pkt1.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
                 pkt1.chestId = CurrentChestInventoryManager.CurrentChest.entityId;
-                NetworkManager.Instance.Send(pkt1.Write());
+                NetworkManager.Instance.GameSend(pkt1.Write());
                 CurrentChestInventoryManager.IsOpenChest = false;
             }
             base.CloseInventory();

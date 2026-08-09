@@ -60,7 +60,7 @@ public class SpawnManager : MonoBehaviour
                 }
 
                 GameObject obj = Instantiate(prefab);
-                MyPlayer myPlayer = obj.GetComponent<MyPlayer>();
+                Player myPlayer = obj.GetComponent<Player>();
                 myPlayer.entityId = id;
                 myPlayer.type = EntityType.MyPlayer;
                 myPlayer.transform.position = position;
@@ -98,7 +98,7 @@ public class SpawnManager : MonoBehaviour
                 }
 
                 GameObject obj = Instantiate(prefab);
-                MyPlayer myPlayer = obj.GetComponent<MyPlayer>();
+                Player myPlayer = obj.GetComponent<Player>();
                 myPlayer.entityId = id;
                 myPlayer.type = EntityType.MyPlayerH;
                 myPlayer.transform.position = position;

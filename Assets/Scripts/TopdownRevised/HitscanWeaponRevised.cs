@@ -34,7 +34,7 @@ public class HitscanWeaponRevised : HitscanWeapon
         //히트요청 보내자.
         if(_hitObject.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            MyPlayer shooter = this.Owner.gameObject.GetComponent<MyPlayer>();
+            Player shooter = Owner.gameObject.GetComponent<Player>();
             Player target = _hitObject.gameObject.GetComponent<Player>();
             int tick = NetworkManager.Instance.tickScheduler.GetCurrentTick();            
 
@@ -42,7 +42,7 @@ public class HitscanWeaponRevised : HitscanWeapon
             pkt2.currentTick = tick;            
             pkt2.shooterId = shooter.entityId;
             pkt2.targetId = target.entityId;
-            NetworkManager.Instance.Send(pkt2.Write());
+            NetworkManager.Instance.GameSend(pkt2.Write());
         }
     }
 
@@ -67,7 +67,7 @@ public class HitscanWeaponRevised : HitscanWeapon
         pkt.startY = v1.z;
         pkt.endX = v2.x;
         pkt.endY = v2.z;
-        NetworkManager.Instance.Send(pkt.Write());
+        NetworkManager.Instance.GameSend(pkt.Write());
 
     }
 

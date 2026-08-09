@@ -3,7 +3,23 @@ using UnityEngine;
 
 public class UI_DeathSplash : UI_Panel , IInputModeChangeable
 {
-    public MMTouchButton button;
+    public MMTouchButton returnButton;
+    public MMTouchButton spectateButton;
+    GameScene gameScene;
+
+
+    private void Start()
+    {
+        gameScene = NetworkManager.Instance.game;
+        returnButton.ButtonReleased.AddListener(ReturnToLobby);
+        spectateButton.ButtonReleased.AddListener(Spectate);
+    }
+
+    private void OnEnable()
+    {
+        returnButton.Interactable = true;
+        spectateButton.Interactable = true;
+    }
 
     public InputModeChangeableInfo GetInputModeInfo()
     {
@@ -52,6 +68,17 @@ public class UI_DeathSplash : UI_Panel , IInputModeChangeable
     {
         RequestHide();
         NetworkManager.Instance.ReturnToLobby();
-        button.Interactable = false;
+        returnButton.Interactable = false;
+    }
+
+    public async void Spectate()
+    {
+        C_ReqSpectateGame spectate = new C_ReqSpectateGame();
+        var user = await NetworkManager.Instance.GameSendRequest<S_NtfSpectateUser>(spectate);
+        NetworkManager.Instance.tickScheduler.ScheduleAt(user.tick, () =>
+        {
+            gameScene.gameSelectUI.ShowSpectate(user.entityId);
+        });
+        spectateButton.Interactable = false;
     }
 }

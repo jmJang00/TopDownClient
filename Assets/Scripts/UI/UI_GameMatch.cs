@@ -8,20 +8,21 @@ public class UI_GameMatch : MonoBehaviour
 
     public void OnEnable()
     {
-        UIEventBus.Subscribe((ushort)PacketID.S_MatchFound, TurnOn);
-        UIEventBus.Subscribe((ushort)PacketID.S_ResLoginGameServer, TurnOn);
+        NetworkEventBus.Subscribe(PacketID.S_MatchFound, TurnOn);
+        NetworkEventBus.Subscribe(PacketID.S_ResLoginGameServer, TurnOn);
     }
 
     public void OnDisable()
     {
-        UIEventBus.Unsubscribe((ushort)PacketID.S_MatchFound, TurnOn);
-        UIEventBus.Unsubscribe((ushort)PacketID.S_ResLoginGameServer, TurnOn);
+        NetworkEventBus.Unsubscribe(PacketID.S_MatchFound, TurnOn);
+        NetworkEventBus.Unsubscribe(PacketID.S_ResLoginGameServer, TurnOn);
     }
 
     public void Start()
     {
         // 다시 처음씬이 로드될 때 실행되지 않도록
-        if (NetworkManager.State == NetworkState.None)
+        NetworkState? state = NetworkManager.Instance.GameSession?.State;
+        if (!state.HasValue || state == NetworkState.None)
         {
             startButton.DisableButton();
         }
@@ -41,7 +42,7 @@ public class UI_GameMatch : MonoBehaviour
     public void MatchCancel()
     {
         C_MatchCancel matchCancel = new C_MatchCancel();
-        NetworkManager.Instance.Send(matchCancel.Write());
+        NetworkManager.Instance.GameSend(matchCancel.Write());
         startButton.EnableButton();
         cancelButton.DisableButton();
     }

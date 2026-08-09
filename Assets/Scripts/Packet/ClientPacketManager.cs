@@ -19,15 +19,23 @@ public class PacketManager
 
     public void Register()
     {
-        _makeFunc.Add((ushort)PacketID.S_CreateMyCharacter, MakePacket<S_NtfCreateMyCharacter>);
-        _handler.Add((ushort)PacketID.S_CreateMyCharacter, PacketHandler.S_NtfCreateMyCharacterHandler);
+        _makeFunc.Add((ushort)PacketID.S_NtfCreateMyCharacter, MakePacket<S_NtfCreateMyCharacter>);
+        _handler.Add((ushort)PacketID.S_NtfCreateMyCharacter, PacketHandler.S_NtfCreateMyCharacterHandler);
 
+        _makeFunc.Add((ushort)PacketID.S_ResLoginChatServer, MakePacket<S_ResLoginChatServer>);
+        _handler.Add((ushort)PacketID.S_ResLoginChatServer, PacketHandler.S_ResLoginChatServerHandler);
 
-        _makeFunc.Add((ushort)PacketID.S_CreateOtherCharacter, MakePacket<S_NtfCreateOtherCharacter>);
-        _handler.Add((ushort)PacketID.S_CreateOtherCharacter, PacketHandler.S_NtfCreateOtherCharacterHandler);
+        _makeFunc.Add((ushort)PacketID.S_NtfAccountInfo, MakePacket<S_NtfAccountInfo>);
+        _handler.Add((ushort)PacketID.S_NtfAccountInfo, PacketHandler.S_NtfAccountInfoHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_NtfCreateOtherCharacter, MakePacket<S_NtfCreateOtherCharacter>);
+        _handler.Add((ushort)PacketID.S_NtfCreateOtherCharacter, PacketHandler.S_NtfCreateOtherCharacterHandler);
 
         _makeFunc.Add((ushort)PacketID.S_DeleteCharacter, MakePacket<S_NtfDeleteCharacter>);
         _handler.Add((ushort)PacketID.S_DeleteCharacter, PacketHandler.S_NtfDeleteCharacterHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_NtfSpectateUser, MakePacket<S_NtfSpectateUser>);
+        _handler.Add((ushort)PacketID.S_NtfSpectateUser, PacketHandler.S_NtfSpectateUserHandler);
 
         _makeFunc.Add((ushort)PacketID.S_MoveStart, MakePacket<S_MoveStart>);
         _handler.Add((ushort)PacketID.S_MoveStart, PacketHandler.S_MoveStartHandler);
