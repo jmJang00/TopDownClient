@@ -2118,7 +2118,7 @@ MonoBehaviour:
   - {fileID: 0}
   InventoryType: 0
   TargetTransform: {fileID: 0}
-  Persistent: 0
+  Persistent: 1
   ResetThisInventorySaveOnStart: 0
   DrawContentInInspector: 0
   DefaultItems: []
@@ -2853,16 +2853,6 @@ PrefabInstance:
     - target: {fileID: 1492094539205299515, guid: 8a9950f6e8c836540b0075a7e0c2b217,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2095060353850074780, guid: 8a9950f6e8c836540b0075a7e0c2b217,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 510112963}
-    - target: {fileID: 3475120676352008442, guid: 8a9950f6e8c836540b0075a7e0c2b217,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

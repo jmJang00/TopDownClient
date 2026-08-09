@@ -1,29 +1,52 @@
+using System;
 using UnityEngine;
 
-public class UI_Panel : MonoBehaviour
+public abstract class UI_Panel : MonoBehaviour
 {
+    [SerializeField]
+    private CanvasGroup targetCanvas;
+
+    private bool _isVisible = false;
+
     public bool IsVisible
     {
-        get { return gameObject.activeSelf; }
+        get { return _isVisible; }
+    }
+    
+    public abstract bool RequestShow();
+    public abstract bool RequestHide();    
+
+    protected virtual void ShowInternal()
+    {
+        targetCanvas.alpha = 1f;
+        targetCanvas.blocksRaycasts = true;
+        targetCanvas.interactable = true;
+        _isVisible = true;
+        //gameObject.SetActive(true);
     }
 
-    public void Show()
+    protected virtual void HideInternal()
     {
-        gameObject.SetActive(true);
+        targetCanvas.blocksRaycasts = false;
+        targetCanvas.interactable = false;
+        targetCanvas.alpha = 0f;
+        _isVisible = false;
+        //gameObject.SetActive(false);
     }
 
-    public void Hide()
+    protected virtual void SetVisible(bool visible)
     {
-        gameObject.SetActive(false);
+        if (visible)
+            ShowInternal();
+        else
+            HideInternal();
+
+        //gameObject.SetActive(visible);
     }
 
-    public void SetVisible(bool visible)
-    {
-        gameObject.SetActive(visible);
-    }
-
-    public void Toggle()
-    {
-        gameObject.SetActive(!gameObject.activeSelf);
+    protected virtual void Toggle()
+    {        
+        SetVisible(!_isVisible);
+        //gameObject.SetActive(!gameObject.activeSelf);
     }
 }

@@ -109,7 +109,12 @@ public class PacketManager
 
         _makeFunc.Add((ushort)PacketID.S_ResLoginGameServer, MakePacket<S_ResLoginGameServer>);
         _handler.Add((ushort)PacketID.S_ResLoginGameServer, PacketHandler.S_ResLoginGameServerHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_NtfUpdateBullet, MakePacket<S_NtfUpdateBullet>);
+        _handler.Add((ushort)PacketID.S_NtfUpdateBullet, PacketHandler.S_NtfUpdateBulletHandler);
+        
     }
+
 
     public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)
     {

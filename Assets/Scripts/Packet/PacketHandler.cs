@@ -1,4 +1,5 @@
 using MoreMountains.InventoryEngine;
+using MoreMountains.TopDownEngine;
 using ServerCore;
 using System;
 using System.Collections.Generic;
@@ -211,6 +212,11 @@ class PacketHandler
         if (NetworkManager.Instance.game)
         {
             NetworkManager.Instance.spawnManager.Despawn(EnumToItemResource.ConvertToEntityType((ItemType)pkt.itemType), pkt.entityId);
+            if (pkt.isObtained)
+            {
+                NetEntity player = NetworkManager.Instance.entitySystem.Get(pkt.obtainEntityId);
+                player.DispatchPacket(NetBehaviourType.Feedback, pkt);
+            }
         }
     }
 
@@ -360,5 +366,12 @@ class PacketHandler
         }
 
         manager.CurrentPlayerInventory.SetInventoryFromItemArray(items);
+    }
+
+    internal static void S_NtfUpdateBulletHandler(PacketSession session, IPacket packet)
+    {
+        S_NtfUpdateBullet pkt = packet as S_NtfUpdateBullet;
+
+        MyChestInventoryManager.Instance.UpdateAmmoInfo(pkt.bulletCount, pkt.bulletCount);        
     }
 }

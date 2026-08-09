@@ -45,17 +45,17 @@ public class ChatManager : MonoBehaviour
         OnMessageReceived -= scrollView.Add;
     }
 
-    public void MessageTest(string message)
+    public void MessageTest(string message, ChatChannel channel)
     {
         ChatMessage newMessage = new ChatMessage();
         newMessage.Message = message;
-        newMessage.Channel = ChatChannel.Normal;
+        newMessage.Channel = channel;
         newMessage.Sender = "Me";
 
         ReceiveChatMessage(newMessage);
     }
 
-    public bool SendChatMessage(string message)
+    public bool SendChatMessage(string message, ChatChannel channel)
     {
         C_ChatMessage pkt = new C_ChatMessage();
         pkt.message = message;
@@ -72,8 +72,6 @@ public class ChatManager : MonoBehaviour
 
         _history.Enqueue(msg);
 
-        OnMessageReceived?.Invoke(msg);
-
-        
+        OnMessageReceived?.Invoke(msg);        
     }
 }

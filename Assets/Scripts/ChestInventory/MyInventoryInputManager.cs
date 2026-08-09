@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MoreMountains.InventoryEngine
 {
-	public class MyInventoryInputManager: InventoryInputManager
+	public class MyInventoryInputManager: InventoryInputManager , IInputModeChangeable
 	{
 
         static MyInventoryInputManager _instance;
@@ -25,7 +25,18 @@ namespace MoreMountains.InventoryEngine
         }
 
         public override void OpenInventory()
-        {
+        {            
+            if (InputModeManager.Instance.CurrentMode != InputMode.Game)
+            {
+                return;
+            }
+
+            if (!InputModeManager.Instance.Enter(InputMode.Inventory, this))
+            {
+                return;
+            }
+
+
             TargetChestInventoryGroup.interactable = false;
             TargetChestInventoryGroup.blocksRaycasts = false;
             TargetInventoryButtonGroup.interactable = true;
@@ -39,7 +50,7 @@ namespace MoreMountains.InventoryEngine
             NetworkManager.Instance.Send(pkt.Write());
 
             base.OpenInventory();
-
+            
             if (MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer.Count > 0)
             {
                 MyChestInventoryManager.Instance.CurrentInventoryDisplay.SetCurrentlySelectedSlot(MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer[0]);
@@ -57,11 +68,23 @@ namespace MoreMountains.InventoryEngine
                 CurrentChestInventoryManager.IsOpenChest = false;
             }
             base.CloseInventory();
-            
-            
+
+            InputModeManager.Instance.Release(this);
+
         }
         public virtual void OpenInventoryWithChest(uint index)        
         {
+            if (InputModeManager.Instance.CurrentMode != InputMode.Game)
+            {
+                return;
+            }
+
+            if (!InputModeManager.Instance.Enter(InputMode.Inventory, this))
+            {
+                return;
+            }
+
+
             TargetChestInventoryGroup.interactable = true;
             TargetChestInventoryGroup.blocksRaycasts = true;
             TargetInventoryButtonGroup.interactable = false;
@@ -71,9 +94,7 @@ namespace MoreMountains.InventoryEngine
             TargetInventoryButtonGroup.alpha = 0;
 
             CurrentChestInventoryManager.IsOpenChest = true;
-            base.OpenInventory();
-            Debug.Log("Selected Chest : " + index.ToString());
-
+            base.OpenInventory();                        
 
             if (MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer.Count > 0)
             {
@@ -81,5 +102,12 @@ namespace MoreMountains.InventoryEngine
             }
         }
 
-	}
+        public InputModeChangeableInfo GetInputModeInfo()
+        {
+            InputModeChangeableInfo info;
+            info.Name = "Inventory";
+            info.Description = "Inventory UI";
+            return info;
+        }
+    }
 }

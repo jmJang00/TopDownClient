@@ -15,7 +15,7 @@ public class PlayerHealth : NetBehaviour
 
     public override NetBehaviourType Type => NetBehaviourType.Health;
 
-    private Health _health;
+    private HealthRevised _health;
 
     public ushort currentHealth = 150;
 
@@ -24,7 +24,7 @@ public class PlayerHealth : NetBehaviour
     public override void Init()
     {
         base.Init();
-        _health = gameObject.MMGetComponentNoAlloc<Health>();
+        _health = gameObject.MMGetComponentNoAlloc<HealthRevised>();
     }
 
     public override void OnSpawn(int tick)
@@ -89,6 +89,10 @@ public class PlayerHealth : NetBehaviour
 
     void Update()
     {
+        if (InputModeManager.Instance.CurrentMode != InputMode.Game)
+            return;
+            
+
         if (Input.GetKeyDown(KeyCode.X))
         {
             if (_health != null)

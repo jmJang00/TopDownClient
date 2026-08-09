@@ -12,6 +12,7 @@ public enum NetBehaviourType : byte
     Hitscan,
     Health,
     BulletMovement,
+    Feedback,
     // ...
     Max
 

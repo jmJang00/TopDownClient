@@ -7,9 +7,10 @@ namespace Assets.Scripts.Chat
     public enum ChatChannel
     {
         Normal,
-        Party,        
+        Party,
         System
     }
+    
 
     public class ChatMessage
     {
