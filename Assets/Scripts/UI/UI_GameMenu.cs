@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_GameEnd : MonoBehaviour
+public class UI_GameMenu : MonoBehaviour
 {
     [SerializeField] private UI_WeaponSelect weaponSelectPanel;
     [SerializeField] private UI_WinSplash victoryPanel;
@@ -15,23 +16,35 @@ public class UI_GameEnd : MonoBehaviour
 
     public void ShowSpectate(uint entityId)
     {
-        HideAll();
+        if (!spectate.IsVisible)
+        {
+            HideAll();
+        }
+
         spectate.SetEntityId(entityId);
-        spectate.RequestShow();
+
+        if (!spectate.IsVisible)
+        {
+            spectate.RequestShow();
+        }
     }
 
     public void ShowWeaponSelect()
     {        
         weaponSelectPanel.RequestShow();        
     }
+
     public void HideWeaponSelect()
     {
         weaponSelectPanel.RequestHide();
     }
-    public void ShowVictory()
+
+    public void ShowVictory(bool isWinner, IReadOnlyList<PlayerResult> results)
     {        
+        victoryPanel.SetGameEndInfo(isWinner, results);
         victoryPanel.RequestShow();        
     }
+
     public void HideVictory()
     {
         victoryPanel.RequestHide();
@@ -41,6 +54,7 @@ public class UI_GameEnd : MonoBehaviour
     {        
         defeatPanel.RequestShow();        
     }
+
     public void HideDefeat()
     {
         defeatPanel.RequestHide();
@@ -66,6 +80,8 @@ public class UI_GameEnd : MonoBehaviour
             defeatPanel.RequestHide();
         if(pausePanel.IsVisible)
             pausePanel.RequestHide();
+        if (spectate.IsVisible)
+            spectate.RequestHide();
     }
 
     public InputModeChangeableInfo GetDescription()

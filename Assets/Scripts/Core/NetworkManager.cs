@@ -78,7 +78,7 @@ public class NetworkManager : MonoBehaviour
         NetworkEventBus.Unsubscribe(PacketID.S_MatchFound, OnGameFound);
     }
 
-    public void OnResponse(IPacket packet)
+    public bool OnResponse(IPacket packet)
     {
         if (pendingRequests.TryGetValue(packet.Protocol, out var queue))
         {
@@ -87,10 +87,12 @@ public class NetworkManager : MonoBehaviour
                 var pending = queue.Dequeue();
                 if (pending.TryComplete(packet))
                 {
-                    break;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     public void GameSend(ArraySegment<byte> sendBuff)
@@ -270,17 +272,11 @@ public class NetworkManager : MonoBehaviour
     // 게임이 종료 조건이 만족되었을 때 접속해 있는 플레이어에게 승패의 결과를 보내면
     // 그에 맞게 UI를 띄워주고 UI에서 버튼을 눌렀을 때, 원래 로비씬으로 돌아간다 
     // 타임아웃을 둬서 플레이어가 버튼을 누르지 않으면 서버가 자동으로 로비씬으로 넘어가는 패킷을 전송
-    public void OnGameEnd(bool isWinner)
+    public void OnGameEnd(bool isWinner, IReadOnlyList<PlayerResult> results)
     {
         game.gameSelectUI.HideAll();
-        if (isWinner)
-        {
-            game.gameSelectUI.ShowVictory();
-        }
-        else
-        {
-            game.gameSelectUI.ShowDefeat();
-        }
+        game.gameSelectUI.ShowVictory(isWinner, results);
+        game.tickScheduler.Stop();
     }
 
     // 대부분 클라이언트가 먼저 로비로 이동하겠다고 요청하고 서버에서 처리해주는 형태
@@ -288,6 +284,7 @@ public class NetworkManager : MonoBehaviour
     // 그제서야 클라이언트는 플레이어를 로비로 이동시켜야 한다
     public void OnReturnToLobby()
     {
+        game.gameSelectUI.HideAll();
         game = null;
         MMSceneLoadingManager.LoadScene("StartScene");
         _gameSession.AssignState(NetworkState.Authorized);
@@ -347,8 +344,11 @@ public class NetworkManager : MonoBehaviour
         List<IPacket> list = PacketQueue.Instance.PopAll();
         foreach (IPacket packet in list)
         {
-            PacketManager.Instance.HandlePacket(_gameSession, packet);
-            OnResponse(packet);
+            if (!OnResponse(packet))
+            {
+                // Fall back
+                PacketManager.Instance.HandlePacket(_gameSession, packet);
+            }
         }
         game?.ProcessUpdate();
     }

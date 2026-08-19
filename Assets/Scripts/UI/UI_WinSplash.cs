@@ -1,12 +1,12 @@
 using MoreMountains.Tools;
-using System.Collections;
-using UnityEngine;
+using System.Collections.Generic;
+using TMPro;
 
 public class UI_WinSplash : UI_Panel , IInputModeChangeable
 {
     public MMTouchButton button;
-
-    
+    public TMP_Text winText;
+    public UI_GameResult gameResult;
 
     public InputModeChangeableInfo GetInputModeInfo()
     {
@@ -22,6 +22,20 @@ public class UI_WinSplash : UI_Panel , IInputModeChangeable
         {
             RequestHide();
         }
+    }
+
+    public void SetGameEndInfo(bool isWinner, IReadOnlyList<PlayerResult> results)
+    {
+        if (isWinner)
+        {
+            winText.text = "You Win!";
+        }
+        else
+        {
+            winText.text = "You Lose!";
+        }
+
+        gameResult.SetResults(results);
     }
 
     public override bool RequestShow()

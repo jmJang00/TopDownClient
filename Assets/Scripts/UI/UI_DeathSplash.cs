@@ -5,12 +5,10 @@ public class UI_DeathSplash : UI_Panel , IInputModeChangeable
 {
     public MMTouchButton returnButton;
     public MMTouchButton spectateButton;
-    GameScene gameScene;
 
 
     private void Start()
     {
-        gameScene = NetworkManager.Instance.game;
         returnButton.ButtonReleased.AddListener(ReturnToLobby);
         spectateButton.ButtonReleased.AddListener(Spectate);
     }
@@ -77,6 +75,7 @@ public class UI_DeathSplash : UI_Panel , IInputModeChangeable
         var user = await NetworkManager.Instance.GameSendRequest<S_NtfSpectateUser>(spectate);
         NetworkManager.Instance.tickScheduler.ScheduleAt(user.tick, () =>
         {
+            var gameScene = NetworkManager.Instance.game;
             gameScene.gameSelectUI.ShowSpectate(user.entityId);
         });
         spectateButton.Interactable = false;

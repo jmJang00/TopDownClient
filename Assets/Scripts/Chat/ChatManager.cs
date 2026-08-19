@@ -10,6 +10,7 @@ public class ChatManager : MonoBehaviour
     private static ChatManager _instance;
     public event Action<ChatMessage> OnMessageReceived;
 
+    public static bool quitting = false;
     int _maxHistory = 100;
     private readonly Queue<ChatMessage> _history = new();
 
@@ -17,6 +18,11 @@ public class ChatManager : MonoBehaviour
     private void Awake()
     {
         Init();
+    }
+
+    private void OnApplicationQuit()
+    {
+        quitting = true;
     }
 
     private static void Init()

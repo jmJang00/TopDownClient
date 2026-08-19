@@ -36,13 +36,6 @@ public class UI_LoginScene : UI_Panel
             Nickname = nickname
 		};
 
-        C_ReqLoginChatServer p = new C_ReqLoginChatServer();
-        var res = await NetworkManager.Instance.GameSendRequest<S_ResLoginChatServer>(p);
-        if (res.loginOk)
-        {
-
-        }
-
 		WebManager.Instance.SendPostRequest<CreateAccountPacketRes>("account/create", packet, (res) =>
 		{
 			Debug.Log(((CreateAccountError)res.ErrorCode).ToString());

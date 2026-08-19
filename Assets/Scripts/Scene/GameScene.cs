@@ -6,7 +6,7 @@ public class GameScene : MonoBehaviour
     public TickScheduler tickScheduler;
     public EntitySystem entitySystem;
     public SpawnManager spawnManager;
-    public UI_GameEnd gameSelectUI;
+    public UI_GameMenu gameSelectUI;
     public bool debugPlayer = false;
     private float _debugAccum;
     private int _debugTick;
