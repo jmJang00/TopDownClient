@@ -63,6 +63,15 @@ public class NetEntity : MonoBehaviour
         }
     }
 
+    public NetBehaviour GetBehaviour(NetBehaviourType type)
+    {
+        int idx = _routeTable[(int)type];
+
+        Debug.Assert(idx != 0xFF, "Behaviour not found");
+
+        return _behaviours[idx];
+    }
+
     public void DispatchPacket(NetBehaviourType type, IPacket packet)
     {
         int idx = _routeTable[(int)type];

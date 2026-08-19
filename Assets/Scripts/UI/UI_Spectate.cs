@@ -2,12 +2,13 @@ using UnityEngine;
 using TMPro;
 using MoreMountains.Tools;
 
-public class UI_Spectate : UI_Panel
+public class UI_Spectate : UI_Panel , IInputModeChangeable
 {
     public TMP_Text nickname;
     public MMTouchButton prevButton;
     public MMTouchButton nextButton;
-    public uint entityId;
+    public uint spectatedEntityId;
+    private Player _player;
 
     void Start()
     {
@@ -17,17 +18,49 @@ public class UI_Spectate : UI_Panel
 
     void Update()
     {
-        
-    }
-
-    public override bool RequestHide()
-    {
-        return true;
+        if (_player == null)
+        {
+            if (PlayerManager.Instance.TryGetPlayer(spectatedEntityId, out _player))
+            {
+                _player.Spectate();
+                nickname.text = AccountManager.Instance.GetNickname(_player.AccountId);
+            }
+        }
     }
 
     public override bool RequestShow()
     {
+        if (InputModeManager.Instance.CurrentMode != InputMode.Game)
+        {
+            return false;
+        }
+
+        if (!InputModeManager.Instance.Enter(InputMode.UI, this))
+        {
+            return false;
+        }
+
+        ShowInternal();
         return true;
+    }
+
+    public override bool RequestHide()
+    {
+        if (!InputModeManager.Instance.Release(this))
+        {
+            return false;      
+        }
+
+        HideInternal();
+        return true;
+    }    
+
+    public InputModeChangeableInfo GetInputModeInfo()
+    {
+        InputModeChangeableInfo info;
+        info.Name = "UI";
+        info.Description = "Spectate UI";
+        return info;
     }
 
     public void SetEntityId(uint id)
@@ -61,10 +94,7 @@ public class UI_Spectate : UI_Panel
 
     public void Spectate(uint entityId)
     {
-        if (PlayerManager.Instance.TryGetPlayer(entityId, out var player))
-        {
-            player.Spectate();
-            nickname.text = AccountManager.Instance.GetNickname(player.AccountId);
-        }
+        spectatedEntityId = entityId;
+        _player = null;
     }
 }

@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 public class PlayerInfo
 {
     public long AccountId;
     public string Nickname;
+    public int Level;
 }
 
 public class AccountManager : MonoBehaviour
@@ -26,6 +28,7 @@ public class AccountManager : MonoBehaviour
 
     public int AccountId { get; private set; }
     public string Nickname { get; private set; }
+    public int Level { get; private set; }
 
     private readonly Dictionary<long, PlayerInfo> _players = new();
     private readonly Dictionary<string, long> _accountIds = new();
@@ -40,10 +43,11 @@ public class AccountManager : MonoBehaviour
         }
     }
 
-    public void SetAccount(int accountId, string nickname)
+    public void SetAccount(int accountId, string nickname, int level)
     {
         AccountId = accountId;
         Nickname = nickname;
+        Level = level;
     }
 
     public void AddPlayer(PlayerInfo info)

@@ -18,6 +18,7 @@ public class PlayerHealth : NetBehaviour
     private HealthRevised _health;
 
     public ushort currentHealth = 150;
+    public float maximumHealth = 150;
 
     public float InvincibilityDuration = 0.0f;
 
@@ -30,6 +31,7 @@ public class PlayerHealth : NetBehaviour
     public override void OnSpawn(int tick)
     {
         base.OnSpawn(tick);
+        maximumHealth = _health.MaximumHealth;
         _health.SetHealth(currentHealth);
     }
 
@@ -50,36 +52,34 @@ public class PlayerHealth : NetBehaviour
             case (ushort)PacketID.S_ProjectileHit:
             {
                 var p = packet as S_NtfProjectileHit;
-                _tickScheduler.ScheduleAt(p.currentTick, () =>
-                {
-                    _health.Damage(
-                        p.damage, 
-                        gameObject, 
-                        InvincibilityDuration, 
-                        InvincibilityDuration,
-                        Vector3.up);
-                    currentHealth -= p.damage;
-                });
-
+                Damage(p.currentTick, p.damage);
                 break;
             }
             case (ushort)PacketID.S_HitscanHit:
             {
                 var p = packet as S_HitscanHit;
-                _tickScheduler.ScheduleAt(p.serverTick, () =>
-                {
-                    _health.Damage(
-                        p.damage,
-                        gameObject,
-                        InvincibilityDuration,
-                        InvincibilityDuration,
-                        Vector3.up);
-                    currentHealth -= p.damage;
-                });
-
+                Damage(p.serverTick, p.damage);
                 break;
             }
         }
+    }
+
+    public void Damage(int serverTick, ushort damage)
+    {
+        Player player = (Player)Entity;
+        _tickScheduler.ScheduleAt(serverTick, () =>
+        {
+            _health.Damage(
+                damage,
+                gameObject,
+                InvincibilityDuration,
+                InvincibilityDuration,
+                Vector3.up);
+
+            currentHealth -= damage;
+
+            player.NamePlate.SetHP(currentHealth / maximumHealth);
+        });
     }
 
     public void SetHealth(ushort health)

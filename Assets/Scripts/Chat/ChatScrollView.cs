@@ -55,7 +55,10 @@ namespace Assets.Scripts.Chat
 
         private void OnDisable()
         {
-            ChatManager.Instance.Unregister(this);
+            if (!ChatManager.quitting)
+            {
+                ChatManager.Instance.Unregister(this);
+            }
         }
     }
 }

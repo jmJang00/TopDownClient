@@ -68,6 +68,12 @@ public class Player : NetEntity
     {
         base.OnDespawn();
 
+        if (AccountId == AccountManager.Instance.AccountId)
+        {
+            GameScene scene = NetworkManager.Instance.game;
+            scene.gameSelectUI.ShowDefeat();
+        }
+
         PlayerManager.Instance.RemovePlayer(entityId);
 
         WorldUIManager.Instance.RemoveNamePlate(_namePlate);

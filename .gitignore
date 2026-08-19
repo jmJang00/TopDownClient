@@ -104,3 +104,5 @@ InitTestScene*.unity*
 /PacketGenerator/pdlbackup
 /Assets/StreamingAssets/DevConfig.json
 /Assets/StreamingAssets/DevConfig.json.meta
+/Assets/MMData.meta
+/Assets/_Recovery.meta

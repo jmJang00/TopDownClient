@@ -17,7 +17,7 @@ class PacketHandler
         {
             Debug.Log("게임 서버 인증 성공");
             NetworkManager.Instance.GameSession.ChangeState(NetworkState.Connected, NetworkState.Authorized);
-            AccountManager.Instance.SetAccount(pkt.accountId, pkt.accountNickname);
+            AccountManager.Instance.SetAccount(pkt.accountId, pkt.accountNickname, pkt.accountLevel);
             Debug.Log("Hello " + pkt.accountNickname);
         }
         NetworkEventBus.Publish(PacketID.S_ResLoginGameServer, packet);
@@ -43,7 +43,8 @@ class PacketHandler
             AccountManager.Instance.AddPlayer(new PlayerInfo()
             {
                 AccountId = account.id,
-                Nickname = account.nickname
+                Nickname = account.nickname,
+                Level = account.level
             });
         }
     }
@@ -104,7 +105,11 @@ class PacketHandler
 
     internal static void S_NtfSpectateUserHandler(PacketSession session, IPacket packet)
     {
-
+        S_NtfSpectateUser pkt = packet as S_NtfSpectateUser;
+        NetworkManager.Instance.tickScheduler.ScheduleAt(pkt.tick, () =>
+        {
+            NetworkManager.Instance.game.gameSelectUI.ShowSpectate(pkt.entityId);
+        });
     }
 
     public static void S_MoveStartHandler(PacketSession session, IPacket packet)
@@ -277,7 +282,22 @@ class PacketHandler
     internal static void S_GameEndHandler(PacketSession session, IPacket packet)
     {
         S_GameEnd pkt = packet as S_GameEnd;
-        NetworkManager.Instance.OnGameEnd(pkt.win);
+        List<PlayerResult> results = new List<PlayerResult>();
+        foreach (var result in pkt.resultInfos)
+        {
+            if (AccountManager.Instance.TryGetPlayer(result.accountId, out PlayerInfo playerInfo))
+            {
+                results.Add(new PlayerResult()
+                {
+                    Nickname = playerInfo.Nickname,
+                    Level = playerInfo.Level,
+                    Kill = result.kill,
+                    Score = result.score,
+                    Exp = result.exp
+                });
+            }
+        }
+        NetworkManager.Instance.OnGameEnd(pkt.win, results);
     }
 
     internal static void S_MatchFoundHandler(PacketSession session, IPacket packet)
@@ -359,7 +379,7 @@ class PacketHandler
         {
             Debug.LogError("IN S_NtfChestInfoHandler : 옳바르지않는 EntityID 호출");
             //TODO ERROR
-        }       
+        }
 
         InventoryItem[] items = new InventoryItem[pkt.itemLists.Count];
         for (int i = 0; i < pkt.itemLists.Count; ++i)

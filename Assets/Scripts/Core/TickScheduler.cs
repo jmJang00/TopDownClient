@@ -34,6 +34,7 @@ public class TickScheduler : MonoBehaviour
     private int _serverTick;     // TickSync로 갱신
 
     private bool _hasServerTick; // 초기 동기화 여부
+    private bool _isRunning;
 
     private MinHeap<ScheduledEvent> _pq = new MinHeap<ScheduledEvent>();
 
@@ -51,11 +52,17 @@ public class TickScheduler : MonoBehaviour
     {
         if (!_hasServerTick)
         {
+            _isRunning = true;
             _hasServerTick = true;
             _currentTick = tick;
         }
 
         _serverTick = tick;
+    }
+
+    public void Stop()
+    {
+        _isRunning = false;
     }
 
     public int ScheduleAfter(int delayTick, System.Action action)
@@ -93,7 +100,7 @@ public class TickScheduler : MonoBehaviour
 
     public void Simulate()
     {
-        if (!_hasServerTick)
+        if (!_hasServerTick || !_isRunning)
         {
             Alpha = 0f;
             return;

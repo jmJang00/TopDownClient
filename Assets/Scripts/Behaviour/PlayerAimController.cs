@@ -107,10 +107,6 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
 
     public void Update()
     {
-        if (InputModeManager.Instance.CurrentMode != InputMode.Game &&
-            InputModeManager.Instance.CurrentMode != InputMode.Inventory)
-            return;
-
         if (!Ready)
         {
             return;
@@ -118,14 +114,17 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
 
         if (_handleWeapon.CurrentWeapon != null)
         {
-            _weaponAim =
-                _handleWeapon.CurrentWeapon.gameObject.MMGetComponentNoAlloc<WeaponAim3D>();
+            _weaponAim = _handleWeapon.CurrentWeapon.gameObject.MMGetComponentNoAlloc<WeaponAim3D>();
         }
 
         if (!hasAuthority)
         {
             return;
         }
+
+        if (InputModeManager.Instance.CurrentMode != InputMode.Game &&
+            InputModeManager.Instance.CurrentMode != InputMode.Inventory)
+            return;
 
         UpdatePlane();
         GetMouseAim();
@@ -210,10 +209,7 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
         if (_runner.TryGetRenderPair(out AimState prev, out AimState curr))
         {
             float angle = Mathf.LerpAngle(prev.currentAngle, curr.currentAngle, alpha);
-            //float prevAngle = NormalizeAngle(prev.currentAngle);
-            //float currAngle = NormalizeAngle(_state.targetAngle);
 
-            //float angle = MMMaths.Remap(0.5f, 0f, 1f, prevAngle, currAngle);
             if (_weaponAim != null)
             {
                 Vector3 dir = ToVectorXZ(angle);
