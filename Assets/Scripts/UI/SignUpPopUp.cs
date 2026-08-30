@@ -145,7 +145,7 @@ private bool SignUp()
 
         WebManager.Instance.SendPostRequest<CreateAccountPacketRes>("account/create", packet, (res) =>
         {
-            Debug.Log(res.CreateOk);
+           // Debug.Log(res.CreateOk);
         });
 
         return true;
