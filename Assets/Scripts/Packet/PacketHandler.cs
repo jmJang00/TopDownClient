@@ -424,6 +424,7 @@ class PacketHandler
         }
 
         manager.CurrentPlayerInventory.SetInventoryFromItemArray(items);
+        manager.CurrentPlayerInventory.SetLastUpdateTick(pkt.serverTick);
     }
 
     internal static void S_NtfUpdateBulletHandler(PacketSession session, IPacket packet)

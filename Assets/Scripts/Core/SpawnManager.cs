@@ -7,8 +7,15 @@ public class SpawnManager : MonoBehaviour
     private Bullet _bulletPrefab;
     [SerializeField]
     private Picker _pickerPrefab;
+    [SerializeField]
+    private Player _otherPlayerHPrefab;
+    [SerializeField]
+    private Player _otherPlayerPPrefab;
+
     private ObjectPool<Bullet> _pool;
     private ObjectPool<Picker> _pickerPool;
+    private ObjectPool<Player> _otherPlayerPPool;
+    private ObjectPool<Player> _otherPlayerHPool;
     private GameScene _game;
 
     public void Awake()
@@ -16,6 +23,8 @@ public class SpawnManager : MonoBehaviour
         _game = GetComponent<GameScene>();
         _pool = new ObjectPool<Bullet>(_bulletPrefab, 32, transform);
         _pickerPool = new ObjectPool<Picker>(_pickerPrefab, 32, transform);
+        _otherPlayerPPool = new ObjectPool<Player>(_otherPlayerPPrefab, 20, transform);
+        _otherPlayerHPool = new ObjectPool<Player>(_otherPlayerPPrefab, 20, transform);
     }
 
     public NetEntity SpawnAt(int tick, EntityType type, uint id, Vector3 position)
@@ -71,15 +80,7 @@ public class SpawnManager : MonoBehaviour
             }
             case EntityType.OtherPlayer:
             {
-                GameObject prefab = Resources.Load<GameObject>("Prefabs/OtherPlayer");
-                if (prefab == null)
-                {
-                    Debug.Log("Can't find " + type.ToString());
-                    return null;
-                }
-
-                GameObject obj = Instantiate(prefab);
-                Player player = obj.GetComponent<Player>();
+                Player player = _otherPlayerPPool.Acquire();
                 player.entityId = id;
                 player.transform.position = position;
                 player.type = EntityType.OtherPlayer;
@@ -109,15 +110,7 @@ public class SpawnManager : MonoBehaviour
             }
             case EntityType.OtherPlayerH:
             {
-                GameObject prefab = Resources.Load<GameObject>("Prefabs/OtherPlayerHitscan");
-                if (prefab == null)
-                {
-                    Debug.Log("Can't find " + type.ToString());
-                    return null;
-                }
-
-                GameObject obj = Instantiate(prefab);
-                Player player = obj.GetComponent<Player>();
+                Player player = _otherPlayerHPool.Acquire();
                 player.entityId = id;
                 player.transform.position = position;
                 player.type = EntityType.OtherPlayerH;
@@ -279,7 +272,8 @@ public class SpawnManager : MonoBehaviour
             }
             case EntityType.OtherPlayer:
             {
-                GameObject.Destroy(entity.gameObject);
+                entity.gameObject.SetActive(false);
+                _otherPlayerPPool.Release((Player)entity);
                 break;
             }
             case EntityType.MyPlayerH:
@@ -291,9 +285,8 @@ public class SpawnManager : MonoBehaviour
             }
             case EntityType.OtherPlayerH:
             {
-                //entity.gameObject.SetActive(false);
-                //오브젝트를 false로 설정하면 Pause화면이 나옴
-                GameObject.Destroy(entity.gameObject);
+                entity.gameObject.SetActive(false);
+                _otherPlayerHPool.Release((Player)entity);
                 break;
             }
             case EntityType.Projectile:

@@ -112,12 +112,17 @@ public class ReplayerRunner<TState, TInput> : ITickRunner
                         minTick = Mathf.Min(minTick, clientPending.tick);
                         _replayer.RemoveInput(clientPending.tick);
 
+                        // 클라이언트 틱은 그대로인데 내용을 수정
+                        if (serverPending.tick == -2)
+                        {
+                            minTick = Mathf.Min(minTick, clientPending.tick);
+                            _replayer.AddInput(clientPending.tick, serverPending.input);
+                        }
                         // 요청이 취소된 경우가 아니라면
-                        if (serverPending.tick != -1)
+                        else if (serverPending.tick != -1)
                         {
                             minTick = Mathf.Min(minTick, serverPending.tick);
                             _replayer.AddInput(serverPending.tick, serverPending.input);
-
                         }
                     }
                 }

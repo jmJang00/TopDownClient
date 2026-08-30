@@ -34,6 +34,7 @@ namespace MoreMountains.InventoryEngine
                     pkt.lastChestUpdateTick = manager.CurrentChest.LastUpdateTick;
                     pkt.chestId = manager.CurrentChestInventory.Index;
                     pkt.inventoryCursor = (uint)this.Index;
+                    pkt.lastInventoryUpdateTick = manager.CurrentPlayerInventory.LastUpdateTick;
                     NetworkManager.Instance.GameSend(pkt.Write());
 
                     //MMMyChestInventoryEvent.Trigger(MMMyChestInventoryEventType.InventoryToChest,
@@ -50,6 +51,7 @@ namespace MoreMountains.InventoryEngine
                     pkt.lastChestUpdateTick = manager.CurrentChest.LastUpdateTick;
                     pkt.chestId = manager.CurrentChestInventory.Index;
                     pkt.chestCursor = (uint)this.Index;
+                    pkt.lastInventoryUpdateTick = manager.CurrentPlayerInventory.LastUpdateTick;
                     NetworkManager.Instance.GameSend(pkt.Write());
 
                     //MMMyChestInventoryEvent.Trigger(MMMyChestInventoryEventType.ChestToInventory,

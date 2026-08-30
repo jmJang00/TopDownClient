@@ -55,16 +55,13 @@ public class PlayerHitscanSync : NetBehaviour
     public override void Init()
     {
         base.Init();
-        _character = GetComponentInParent<Character>();
-        TargetHandleWeaponAbility = _character?.FindAbility<CharacterHandleWeapon>();
+        _character = GetComponent<Character>();
+        TargetHandleWeaponAbility = _character.FindAbility<CharacterHandleWeapon>();
         _updateTimer = updateInterval;
     }
 
     public void Update()
     {
-        if (InputModeManager.Instance.CurrentMode != InputMode.Game)
-            return;
-
         if (TargetHandleWeaponAbility?.CurrentWeapon != null)
         {
             if (TargetHandleWeaponAbility.CurrentWeapon is HitscanWeaponRevised p)
@@ -77,6 +74,9 @@ public class PlayerHitscanSync : NetBehaviour
         {
             ObjectPooler = GetComponent<MMObjectPooler>();
         }
+
+        if (InputModeManager.Instance.CurrentMode != InputMode.Game)
+            return;
 
         bool hasInput = Input.GetMouseButton(0);
 
@@ -144,9 +144,15 @@ public class PlayerHitscanSync : NetBehaviour
             {
                 if (!hasAuthority)
                 {
-                    StartCoroutine(ShootTrigger());
                     S_HitscanShootStart pkt = packet as S_HitscanShootStart;
-                    LaserManager.Instance.DrawLaser(new Vector3(pkt.startX, 2.23f, pkt.startY), new Vector3(pkt.endX, 2.23f, pkt.endY));
+                    _tickScheduler.ScheduleAt(pkt.acceptTick, () =>
+                    {
+                        if (gameObject.activeInHierarchy)
+                        {
+                            StartCoroutine(ShootTrigger());
+                        }
+                        LaserManager.Instance.DrawLaser(new Vector3(pkt.startX, 2.23f, pkt.startY), new Vector3(pkt.endX, 2.23f, pkt.endY));
+                    });
                 }
                 break;
             }
