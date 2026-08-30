@@ -18,6 +18,8 @@ public class GridMapSOEditor : Editor
         Color.black,          // 1
         Color.green,          // 2
         Color.cyan,           // 3
+        Color.blue,           // 4
+        Color.red,           // 5
     };
 
     byte selectedValue = 1;
@@ -87,7 +89,7 @@ public class GridMapSOEditor : Editor
 
         EditorGUILayout.EndHorizontal();
 
-        GUILayout.Label("0=Empty  1=Blocked  2=Waypoint  3=Spawn");
+        GUILayout.Label("0=Empty 1=Blocked 2=Waypoint 3=ItemSpawn 4=ChestSpawn 5=PlayerSpawn");
     }
 
     void DrawGrid(GridMapSO so)
@@ -150,7 +152,8 @@ public class GridMapSOEditor : Editor
             return true;
         }
 
-        return fineGrid[y * width + x] == 1;
+        byte value = fineGrid[y * width + x];
+        return value == 1 || value == 3 || value == 4 || value == 5;
     }
 
     public static bool HasLineOfSight(byte[] grid, int width, int height, float startX, float startY, float endX, float endY)
@@ -287,7 +290,7 @@ public class GridMapSOEditor : Editor
                     {
                         int dstX = startX + x;
 
-                        fineGrid[rowOffset + dstX] = (byte)(value == 1 ? 1 : 0);
+                        fineGrid[rowOffset + dstX] = value;
                     }
                 }
             }
@@ -367,7 +370,9 @@ public class GridMapSOEditor : Editor
 
         byte[] fineGrid = new byte[fineWidth * fineHeight];
 
-        List<Vector2> spawns = new List<Vector2>();
+        List<Vector2> itemSpawns = new List<Vector2>();
+        List<Vector2> chestSpawns = new List<Vector2>();
+        List<Vector2> playerSpawns = new List<Vector2>();
 
         for (int ty = 0; ty < so.height; ++ty)
         {
@@ -388,8 +393,16 @@ public class GridMapSOEditor : Editor
                 }
                 else if (value == 3)
                 {
-                    spawns.Add(new Vector2(centerX, centerY));
+                    itemSpawns.Add(new Vector2(centerX, centerY));
                     value = 0;
+                }
+                else if (value == 4)
+                {
+                    chestSpawns.Add(new Vector2(centerX, centerY));
+                }
+                else if (value == 5)
+                {
+                    playerSpawns.Add(new Vector2(centerX, centerY));
                 }
 
                 for (int y = 0; y < so.tileSize; ++y)
@@ -448,13 +461,31 @@ public class GridMapSOEditor : Editor
                 bw.Write(so.links[i]);
             }
 
-            // spawns
-            bw.Write(spawns.Count);
+            // item spawns
+            bw.Write(itemSpawns.Count);
 
-            for (int i = 0; i < spawns.Count; ++i)
+            for (int i = 0; i < itemSpawns.Count; ++i)
             {
-                bw.Write(spawns[i].x);
-                bw.Write(spawns[i].y);
+                bw.Write(itemSpawns[i].x);
+                bw.Write(itemSpawns[i].y);
+            }
+
+            // chest spawns
+            bw.Write(chestSpawns.Count);
+
+            for (int i = 0; i < chestSpawns.Count; ++i)
+            {
+                bw.Write(chestSpawns[i].x);
+                bw.Write(chestSpawns[i].y);
+            }
+
+            // player spawns
+            bw.Write(playerSpawns.Count);
+
+            for (int i = 0; i < playerSpawns.Count; ++i)
+            {
+                bw.Write(playerSpawns[i].x);
+                bw.Write(playerSpawns[i].y);
             }
         }
 

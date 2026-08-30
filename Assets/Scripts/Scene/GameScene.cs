@@ -7,6 +7,7 @@ public class GameScene : MonoBehaviour
     public EntitySystem entitySystem;
     public SpawnManager spawnManager;
     public UI_GameMenu gameSelectUI;
+    public GridMapSO gridMapSO;
     public bool debugPlayer = false;
     private float _debugAccum;
     private int _debugTick;

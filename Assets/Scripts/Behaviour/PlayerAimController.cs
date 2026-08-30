@@ -143,7 +143,7 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
                 AimInput input;
                 input.targetAngle = _angle;
                 _runner.EnqueueClientInput(_tickScheduler.GetCurrentTick(), input, 3);
-                Debug.Log("Set Angle" + _angle);
+                //Debug.Log("Set Angle" + _angle);
             }
 
             timer = 0f;
@@ -157,7 +157,7 @@ public class PlayerAimController : NetBehaviour, ITickable<AimState, AimInput>
                 AimInput input;
                 input.targetAngle = _angle;
                 _runner.EnqueueClientInput(_tickScheduler.GetCurrentTick(), input, 3);
-                Debug.Log("Set Angle" + _angle);
+                //Debug.Log("Set Angle" + _angle);
             }
         }
     }

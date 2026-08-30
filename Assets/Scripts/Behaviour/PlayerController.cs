@@ -19,8 +19,6 @@ struct MoveInput
 
 public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
 {
-    public GridMapSO gridMapSO;
-
     public float radius = 0.3f;
     public float moveSpeed = 4.0f;
     public float stopThreshold = 0.05f;
@@ -51,7 +49,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
     {
         base.Init();
         _topdown = GetComponent<TopdownControllerRevised>();
-        _map = new GridMap(gridMapSO);
+        _map = new GridMap(NetworkManager.Instance.game.gridMapSO);
         _runner = new ReplayerRunner<MoveState, MoveInput>(this, hasAuthority, Entity.renderDelay, 
             onApplied : (int tick, MoveInput input) => 
             {

@@ -31,16 +31,13 @@ public class PlayerProjectileSync : NetBehaviour
     public override void Init()
     {
         base.Init();
-        _character = GetComponentInParent<Character>();
-        TargetHandleWeaponAbility = _character?.FindAbility<CharacterHandleWeapon>();
+        _character = GetComponent<Character>();
+        TargetHandleWeaponAbility = _character.FindAbility<CharacterHandleWeapon>();
         _updateTimer = updateInterval;
     }
 
     public void Update()
     {
-        if (InputModeManager.Instance.CurrentMode != InputMode.Game)
-            return;
-
         if (!Ready)
         {
             return;
@@ -54,6 +51,9 @@ public class PlayerProjectileSync : NetBehaviour
                 //p.OnSpawnProjectile += ShootTrigger;
             }
         }
+
+        if (InputModeManager.Instance.CurrentMode != InputMode.Game)
+            return;
 
         bool hasInput = Input.GetMouseButton(0);
 
@@ -110,9 +110,16 @@ public class PlayerProjectileSync : NetBehaviour
         {
             case (ushort)PacketID.S_ProjectileShootStart:
             {
+                S_ShootStart pkt = packet as S_ShootStart;
                 if (!hasAuthority)
                 {
-                    StartCoroutine(ShootTrigger());
+                    _tickScheduler.ScheduleAt(pkt.accpetTick, () =>
+                    {
+                        if (gameObject.activeInHierarchy)
+                        {
+                            StartCoroutine(ShootTrigger());
+                        }
+                    });
                 }
                 break;
             }

@@ -610,8 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19539112fb9f0854ba4c970ce7de77c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoreMountains.TopDownEngine.DummyPicker
-  PickedMMFeedbacks: {fileID: 154168061774554502, guid: e286395a5a527194398a4119bd37eb9a,
-    type: 3}
+  PickedMMFeedbacks: {fileID: 8101359157492775107}
   DisableColliderOnPick: 0
   DisableObjectOnPick: 1
   DisableDelay: 0
@@ -641,7 +640,7 @@ MonoBehaviour:
   entityId: 0
   renderDelay: 0
   active: 0
-  type: 12
+  type: 11
   isDebugMode: 0
   picker: {fileID: 0}
 --- !u!1 &1525573181621684

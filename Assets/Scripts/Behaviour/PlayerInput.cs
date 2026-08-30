@@ -129,7 +129,7 @@ public class PlayerInput : MonoBehaviour
                 Vector2 target = current + d * moveSpeed * predictTime;
 
                 controller.SetMoveTarget(_prevDir, target);
-                Debug.Log("Start Target " + controller.Target);
+                //Debug.Log("Start Target " + controller.Target);
             }
         }
         else
@@ -143,7 +143,7 @@ public class PlayerInput : MonoBehaviour
                 Vector2 target = current + d * moveSpeed * 0.3f;
 
                 controller.SetMoveTarget(_prevDir, target);
-                Debug.Log("Stop Target " + controller.Target);
+                //Debug.Log("Stop Target " + controller.Target);
             }
 
             _updateTimer = updateInterval; // 다음 입력 들어오면 바로 반응하도록
