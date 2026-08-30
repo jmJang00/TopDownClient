@@ -10,6 +10,7 @@ using UnityEngine;
 
 class PacketHandler
 {
+    //서에서 S_ResLoginGameServer패킷을 보내야 start 버튼 활성화
     internal static void S_ResLoginGameServerHandler(PacketSession session, IPacket packet)
     {
         S_ResLoginGameServer pkt = packet as S_ResLoginGameServer;
@@ -430,5 +431,33 @@ class PacketHandler
         S_NtfUpdateBullet pkt = packet as S_NtfUpdateBullet;
 
         MyChestInventoryManager.Instance.UpdateAmmoInfo(pkt.bulletCount, pkt.bulletCount);        
+    }
+    public static void S_SendFriendReqResultHandler(PacketSession session, IPacket packet)
+    {
+        S_SendFriendReqResult pkt = packet as S_SendFriendReqResult;
+    }
+    public static void S_FriendReqFromOtherHandler(PacketSession session, IPacket packet)
+    {
+        S_FriendReqFromOther pkt = packet as S_FriendReqFromOther;
+    }
+
+    public static void S_FriendReqResFromTargetHandler(PacketSession session, IPacket packet)
+    {
+        S_FriendReqResFromTarget pkt = packet as S_FriendReqResFromTarget;
+    }
+
+    public static void S_RemoveFriendResultHandler(PacketSession session, IPacket packet)
+    {
+        S_RemoveFriendResult pkt = packet as S_RemoveFriendResult;
+    }
+
+    public static void S_FriendListHandler(PacketSession session, IPacket packet)
+    {
+        S_FriendList pkt = packet as S_FriendList;
+    }
+
+    public static void S_FriendReqListHandler(PacketSession session, IPacket packet)
+    {
+        S_FriendReqList pkt = packet as S_FriendReqList;
     }
 }

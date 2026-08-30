@@ -44,6 +44,11 @@
 			<string name="friendname"/>
 		</array>
 	</packet>
+	<packet name="C_CheckNewId"></packet>
+	<packet name="S_CheckNewIdResult"></packet>
+	<packet name="C_CheckNickname"></packet>
+	<packet name="S_CheckNicknameResult"></packet>
+	
 	
 	
 </PDL>

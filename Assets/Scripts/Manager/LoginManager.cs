@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -20,33 +21,33 @@ public class LoginManager : MonoBehaviour
        //UIEventBus.Subscribe();
     }
 
-    public bool TrySignUp(string id, string pw)
-    {
-        //회원가입 요청
-
-        //회원가입 성공
-        //signupresult = (int)RQResult.Success;
-
-        //회원가입 실패
-        //signupresult = (int)RQResult.Fail;        
+    public void TrySignUp(string id, string pw, string nickname,Action<int> onResult)
+    {        
+        Debug.Log($"TrySignUp id:{id}, pw:{pw}, nickname:{nickname}");       
+               
         string account = id;
         string password = pw;
-        if (string.IsNullOrWhiteSpace(account) || string.IsNullOrWhiteSpace(password))
+        if (string.IsNullOrWhiteSpace(account) || string.IsNullOrWhiteSpace(nickname) || string.IsNullOrWhiteSpace(password)) 
         {
-            return false;
+            onResult?.Invoke(-1);
+            return ;
         }
 
         CreateAccountPacketReq packet = new CreateAccountPacketReq()
         {
-            AccountName = account,
-            Password = password
+            AccountName = account,            
+            Password = password,
+            Nickname = nickname
         };
 
         WebManager.Instance.SendPostRequest<CreateAccountPacketRes>("account/create", packet, (res) =>
         {
-            //Debug.Log(res.CreateOk);  
+           
+            //Debug.Log(((CreateAccountError)res.ErrorCode).ToString());
+            onResult?.Invoke(res.ErrorCode);
+
         });
-        return true;
+        return;
     }
 
     public bool TryLogin(string id, string pw)
@@ -69,13 +70,13 @@ public class LoginManager : MonoBehaviour
         //웹서버 로그인 인증
         WebManager.Instance.SendPostRequest<LoginAccountPacketRes>("account/login", packet, (res) =>
         {
-            Debug.Log(res.LoginOk);            
+            Debug.Log(res.LoginOk);
 
             if (res.LoginOk)
             {
                 //success
                 usersession.UserLogin(id, 1); //서버에서 받아온 유저정보라고 가정  
-                NetworkManager.Instance.ConnectToGame(res.SessionKey, res.ServerInfo.Ip, res.ServerInfo.Port);                
+                NetworkManager.Instance.ConnectToGame(res.SessionKey, res.ServerInfo.Ip, res.ServerInfo.Port);
             }
         });
         return true;
