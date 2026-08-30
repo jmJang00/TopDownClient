@@ -172,7 +172,6 @@ public class NetworkManager : MonoBehaviour
         {
             ApplicationUtil.ShowErrorAndQuit("게임서버와의 연결이 끊어졌습니다.", "네트워크 오류");
         };
-
         try
         {
             Task task1 = _chatSession.TryConnectAndAuthorize(sessionKey, ip, port, _shutdownCts.Token);

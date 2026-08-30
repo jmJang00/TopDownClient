@@ -7,17 +7,17 @@ public class SignUpPopUp : MMPopup
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created      
     [SerializeField] private InputField IF_newid;
+    [SerializeField] private InputField IF_nickname;
     [SerializeField] private InputField IF_newpassword;
-    [SerializeField] private InputField IF_newpasswordcheck;
-    [SerializeField] private Text TXT_idcheckresult;
+    [SerializeField] private InputField IF_newpasswordcheck;   
     [SerializeField] private Text TXT_passwordcheckresult;
-    [SerializeField] private Text TXT_signupresult;
+    [SerializeField] private Text TXT_signupresult; 
 
-
+    private LoginManager loginmanager;
     private string newid;
+    private string nickname;
     private string newpassword;
     private string newpasswordcheck;
-    private bool idChecked = false;
     private bool passwordmatched = false;
 
     protected override void Start()
@@ -31,6 +31,7 @@ public class SignUpPopUp : MMPopup
         newid = IF_newid.text;
         newpassword = IF_newpassword.text;
         newpasswordcheck = IF_newpasswordcheck.text;
+        loginmanager = GameObject.Find("LoginManager").GetComponent<LoginManager>();
     }
     // Update is called once per frame
     protected override void  Update()
@@ -65,89 +66,47 @@ public class SignUpPopUp : MMPopup
         base.Open();      
     }
     public override void Close()
-    {
-       
+    {       
         IF_newid.text = "";
         IF_newpassword.text = "";
         IF_newpasswordcheck.text = "";
-        TXT_idcheckresult.text = "";
         TXT_passwordcheckresult.text = "";
         TXT_signupresult.text = "";
         //this.gameObject.SetActive(false);
         base.Close();
     }
-   
-
-    public void OnClickCheckNewId()
-    {
-        //Debug.Log("OnClickCheckNewId");
-        newid = IF_newid.text;      
-        
-        bool result = true; //SendPacketCheckID(newid);
-        if (!result)
-        {
-            //ID 중복
-            TXT_idcheckresult.text = "ID is already taken.";
-        }
-        else
-        {
-            //사용가능
-            TXT_idcheckresult.text = "ID is available.";
-            idChecked = true;
-        }
-
-    }
     public void OnClickSignUp()
-    {         
-        //Debug.Log("OnClickSignUp");
+    {       
+        newid = IF_newid.text;        
+        nickname = IF_nickname.text;
         newpassword = IF_newpassword.text;
-        newpasswordcheck = IF_newpasswordcheck.text;
 
-        if (!idChecked)
+        loginmanager.TrySignUp(newid, newpassword, nickname, (errcode) =>
         {
-            TXT_idcheckresult.text = "Please check the ID first.";
-            TXT_signupresult.text = "Sign Up is Failed.";
-            return;
-        }
-        if(!passwordmatched)
-        {
-            TXT_passwordcheckresult.text = "Passwords do not match.";
-            TXT_signupresult.text = "Sign Up is Failed.";
-            return;
-        }
-        if(!SignUp())
-        {
-            TXT_signupresult.text = "Sign Up is Failed.";            
-        }
-        else 
-        {
-            TXT_signupresult.text = "Sign Up is successful.";
-        }           
+            if (errcode == (int)CreateAccountError.Success)
+            {
+                Debug.Log("회원가입 성공");
+                TXT_signupresult.text = "Sign Up success.";
+            }
+            else if (errcode == (int)CreateAccountError.DuplicateAccountName)
+            {
+                Debug.Log("이미 존재하는 아이디");
+                TXT_signupresult.text = "Duplicate Account Name.";
+            }
+            else if (errcode == (int)CreateAccountError.DuplicateAccountNickName)
+            {
+                Debug.Log("이미 존재하는 닉네임");
+                TXT_signupresult.text = "Duplicate Nickname.";
+            }
+            else
+            {
+                Debug.Log($"회원가입 실패: {errcode}");
+                TXT_signupresult.text = "Please Input ID,Nickname,PassWord.";
+            }
+        });
     }
     public void OnClickClose()
     {        
         Close();
     }   
-private bool SignUp()
-    {
-        string account = newid;
-        string password = newpassword;
-        if (string.IsNullOrWhiteSpace(account) || string.IsNullOrWhiteSpace(password))
-        {
-            return false;
-        }
-
-        CreateAccountPacketReq packet = new CreateAccountPacketReq()
-        {
-            AccountName = account,
-            Password = password
-        };
-
-        WebManager.Instance.SendPostRequest<CreateAccountPacketRes>("account/create", packet, (res) =>
-        {
-           // Debug.Log(res.CreateOk);
-        });
-
-        return true;
-    }
 }
