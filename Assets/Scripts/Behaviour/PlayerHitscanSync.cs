@@ -103,7 +103,7 @@ public class PlayerHitscanSync : NetBehaviour
                         else
                         {
                             //없다면 리로드 요청하기.
-                            C_ReqReloadBullet pkt = new C_ReqReloadBullet();
+                            C_ReqReloadAmmo pkt = new C_ReqReloadAmmo();
                             pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
 
                             NetworkManager.Instance.GameSend(pkt.Write());

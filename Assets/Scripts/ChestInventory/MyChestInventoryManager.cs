@@ -21,10 +21,16 @@ public class MyChestInventoryManager : MonoBehaviour, MMEventListener<MMMyChestI
     private MyInventoryInputManager _defaultInventoryInputManager;
     public MyInventoryInputManager CurrentInventoryInputManager { get { return _defaultInventoryInputManager; } }
 
+
     [SerializeField]
     private MyInventory _defaultPlayerInventory;
     public MyInventory CurrentPlayerInventory { get { return _currentPlayerInventory; } }
     private MyInventory _currentPlayerInventory;
+
+    [SerializeField]
+    private MyInventory _defaultPlayerWeaponInventory;
+    public MyInventory CurrentPlayerWeaponInventory { get { return _currentPlayerWeaponInventory; } }
+    private MyInventory _currentPlayerWeaponInventory;
 
     public Chest CurrentChest;
     public MyInventory CurrentChestInventory;
@@ -48,7 +54,8 @@ public class MyChestInventoryManager : MonoBehaviour, MMEventListener<MMMyChestI
             {
                 Debug.LogError("플레이어 인벤토리를 지정해야합니다");
             }
-            _currentPlayerInventory = _defaultPlayerInventory;            
+            _currentPlayerInventory = _defaultPlayerInventory;
+            _currentPlayerWeaponInventory = _defaultPlayerWeaponInventory;
         }
     }
 
@@ -137,7 +144,7 @@ public class MyChestInventoryManager : MonoBehaviour, MMEventListener<MMMyChestI
 
     public bool DecreaseAmmo()
     {
-        if(_playerCurrentAmmo > 0)
+        if (_playerCurrentAmmo > 0)
         {
             --_playerCurrentAmmo;
             UpdateAmmoDisplay();
@@ -146,6 +153,36 @@ public class MyChestInventoryManager : MonoBehaviour, MMEventListener<MMMyChestI
         else
         {
             return false;
+        }
+    }
+
+    public void SetPlayerWeapon(WeaponType weaponType)
+    {
+        if(weaponType == WeaponType.Rifle)
+        {
+            InventoryItem item = EnumToItemResource.GetWeaponItem(WeaponType.Rifle);
+
+            if(item == null)
+            {
+                throw new System.Exception("무기 생성 실패");
+            }
+
+
+            CurrentPlayerWeaponInventory.RemoveItemAll();
+            CurrentPlayerWeaponInventory.AddItem(item, 1);
+        }
+        else
+        {
+            InventoryItem item = EnumToItemResource.GetWeaponItem(WeaponType.Laser);
+
+            if (item == null)
+            {
+                throw new System.Exception("무기 생성 실패");
+            }
+
+
+            CurrentPlayerWeaponInventory.RemoveItemAll();
+            CurrentPlayerWeaponInventory.AddItem(item, 1);
         }
     }
 }

@@ -35,7 +35,6 @@ public class UI_LoginScene : UI_Panel
 			Password = password,
             Nickname = nickname
 		};
-
 		WebManager.Instance.SendPostRequest<CreateAccountPacketRes>("account/create", packet, (res) =>
 		{
 			Debug.Log(((CreateAccountError)res.ErrorCode).ToString());

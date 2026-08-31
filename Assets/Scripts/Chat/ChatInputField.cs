@@ -139,8 +139,8 @@ namespace Assets.Scripts.Chat
 
             if (msg.Length > 0)
             {
-                ChatManager.Instance.MessageTest(msg, _chatChannel);
-                //ChatManager.Instance.SendChatMessage(msg);
+                //ChatManager.Instance.MessageTest(msg, _chatChannel);
+                ChatManager.Instance.SendChatMessage(msg, _chatChannel);
             }
         }
 
