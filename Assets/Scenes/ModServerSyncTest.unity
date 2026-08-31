@@ -2824,11 +2824,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3322368110302181332, guid: 586f9e35636968641b38eb7ff53c953c,
+        type: 3}
+      propertyPath: _otherPlayerHPrefab
+      value: 
+      objectReference: {fileID: 1271730497239247086, guid: ea833412b0d22e04cb34311b8fcf2ce3,
+        type: 3}
+    - target: {fileID: 3322368110302181332, guid: 586f9e35636968641b38eb7ff53c953c,
+        type: 3}
+      propertyPath: _otherPlayerPPrefab
+      value: 
+      objectReference: {fileID: 1271730497239247086, guid: 51a2e41422eb449408b70020c07a3504,
+        type: 3}
     - target: {fileID: 4372227253839474085, guid: 586f9e35636968641b38eb7ff53c953c,
         type: 3}
       propertyPath: m_Name
       value: GameScene
       objectReference: {fileID: 0}
+    - target: {fileID: 8285817401219089867, guid: 586f9e35636968641b38eb7ff53c953c,
+        type: 3}
+      propertyPath: gridMapSO
+      value: 
+      objectReference: {fileID: 11400000, guid: a0102db427c9c09419c25483eefdad2b,
+        type: 2}
     - target: {fileID: 8285817401219089867, guid: 586f9e35636968641b38eb7ff53c953c,
         type: 3}
       propertyPath: gameSelectUI
@@ -3326,7 +3344,7 @@ PrefabInstance:
     - target: {fileID: 5137101650580972029, guid: 8a9950f6e8c836540b0075a7e0c2b217,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0004784267
+      value: 0.00033807132
       objectReference: {fileID: 0}
     - target: {fileID: 6289525098677854392, guid: 8a9950f6e8c836540b0075a7e0c2b217,
         type: 3}
@@ -4470,3 +4488,5 @@ SceneRoots:
   - {fileID: 2032568066}
   - {fileID: 723296871298557332}
   - {fileID: 783315457}
+  - {fileID: 1787819894}
+  - {fileID: 2087500097}

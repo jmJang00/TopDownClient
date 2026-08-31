@@ -10402,11 +10402,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-<<<<<<< Updated upstream
   - {fileID: 8010925210630054809}
-=======
-  - {fileID: 3477287403075419197}
->>>>>>> Stashed changes
   - {fileID: 4122969310152496}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
