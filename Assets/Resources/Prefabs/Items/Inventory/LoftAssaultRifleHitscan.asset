@@ -41,7 +41,7 @@ MonoBehaviour:
   ItemName: Assault Rifle Hitscan
   ShortDescription: First used during World War II
   Description: A rapid-fire, magazine-fed automatic rifle designed for infantry use.
-  Icon: {fileID: 21300008, guid: febaf98c9e2e16b4693de2178a533b43, type: 3}
+  Icon: {fileID: 21300010, guid: febaf98c9e2e16b4693de2178a533b43, type: 3}
   Prefab: {fileID: 1630057665610706, guid: 1e4b4acb39b7684409706041b9ec1ab7, type: 3}
   ForcePrefabDropQuantity: 0
   PrefabDropQuantity: 1

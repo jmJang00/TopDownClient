@@ -49,12 +49,12 @@ namespace MoreMountains.InventoryEngine
             pkt.clientTick = NetworkManager.Instance.tickScheduler.GetCurrentTick();
             NetworkManager.Instance.GameSend(pkt.Write());
 
-            base.OpenInventory();
-            
             if (MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer.Count > 0)
             {
                 MyChestInventoryManager.Instance.CurrentInventoryDisplay.SetCurrentlySelectedSlot(MyChestInventoryManager.Instance.CurrentInventoryDisplay.SlotContainer[0]);
             }
+
+            base.OpenInventory();                     
         }
 
         public override void CloseInventory()

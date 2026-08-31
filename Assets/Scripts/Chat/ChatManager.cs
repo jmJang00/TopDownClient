@@ -64,9 +64,10 @@ public class ChatManager : MonoBehaviour
     public bool SendChatMessage(string message, ChatChannel channel)
     {
         C_ChatMessage pkt = new C_ChatMessage();
+        pkt.channel = (ushort)channel;
         pkt.message = message;
 
-        //NetworkManager.Instance.Send(pkt.Write());
+        NetworkManager.Instance.ChatSend(pkt.Write());
         //TODO 이부분은 차후 채팅세션으로 보내도록 수정
         return true;
     }

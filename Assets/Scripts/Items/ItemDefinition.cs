@@ -98,6 +98,36 @@ public static class EnumToItemResource
         return newItem;       
     }
 
+    public static InventoryItem GetWeaponItem(WeaponType type)
+    {
+        if(type == WeaponType.Rifle)
+        {
+            InventoryItem item = Resources.Load<InventoryItem>("Prefabs/Items/Inventory/LoftAssaultRifle");
+
+            if (item == null)
+            {
+                Debug.LogError("Undefined Item Type");
+                return null;
+            }
+
+            InventoryItem newItem = UnityEngine.Object.Instantiate(item);
+            return newItem;            
+        }
+        else
+        {
+            InventoryItem item = Resources.Load<InventoryItem>("Prefabs/Items/Inventory/LoftAssaultRifleHitscan");
+
+            if (item == null)
+            {
+                Debug.LogError("Undefined Item Type");
+                return null;
+            }
+
+            InventoryItem newItem = UnityEngine.Object.Instantiate(item);
+            return newItem;
+        }
+    }
+
     public static EntityType ConvertToEntityType(ItemType itemType)
     {
         switch (itemType)

@@ -118,8 +118,11 @@ public class PacketManager
         _makeFunc.Add((ushort)PacketID.S_ResLoginGameServer, MakePacket<S_ResLoginGameServer>);
         _handler.Add((ushort)PacketID.S_ResLoginGameServer, PacketHandler.S_ResLoginGameServerHandler);
 
-        _makeFunc.Add((ushort)PacketID.S_NtfUpdateBullet, MakePacket<S_NtfUpdateBullet>);
-        _handler.Add((ushort)PacketID.S_NtfUpdateBullet, PacketHandler.S_NtfUpdateBulletHandler);
+        _makeFunc.Add((ushort)PacketID.S_NtfUpdateAmmo, MakePacket<S_NtfUpdateAmmo>);
+        _handler.Add((ushort)PacketID.S_NtfUpdateAmmo, PacketHandler.S_NtfUpdateAmmoHandler);
+
+        _makeFunc.Add((ushort)PacketID.S_NtfChatMessage, MakePacket<S_NtfChatMessage>);
+        _handler.Add((ushort)PacketID.S_NtfChatMessage, PacketHandler.S_NtfChatMessageHandler);
 
         //friend
         _makeFunc.Add((ushort)PacketID.S_SendFriendReqResult, MakePacket<S_SendFriendReqResult>);

@@ -10,6 +10,8 @@ namespace MoreMountains.InventoryEngine
         static MyInventoryDisplay _instance;
         public static MyInventoryDisplay Instance { get { return _instance; } }
 
+        public bool SlotEnable = true;
+
         // Use this for initialization
         void Start()
 		{            
@@ -132,6 +134,18 @@ namespace MoreMountains.InventoryEngine
                 MMGUI.SetSize(textObjectRectTransform, (SlotSize - Vector2.one * QtyPadding));
 
                 _slotPrefab.name = "SlotPrefab";
+
+                if (SlotEnable)
+                {
+                    _slotPrefab.SlotEnabled = true;
+                    _slotPrefab.interactable = true;
+                }
+                else
+                {
+                    _slotPrefab.SlotEnabled = false;
+                    _slotPrefab.interactable = false;
+                }
+
             }
         }
     }

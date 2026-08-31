@@ -1,3 +1,4 @@
+using Assets.Scripts.Chat;
 using MoreMountains.InventoryEngine;
 using MoreMountains.TopDownEngine;
 using ServerCore;
@@ -60,10 +61,12 @@ class PacketHandler
             if ((WeaponType)pkt.weaponId == WeaponType.Rifle)
             {
                 player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayer, pkt.entityId, new Vector3(0, 2, 0)) as Player;
+                MyChestInventoryManager.Instance.SetPlayerWeapon(WeaponType.Rifle);
             }
             else
             {
                 player = NetworkManager.Instance.spawnManager.SpawnAt(pkt.serverTick, EntityType.MyPlayerH, pkt.entityId, new Vector3(0, 2, 0)) as Player;
+                MyChestInventoryManager.Instance.SetPlayerWeapon(WeaponType.Laser);
             }
 
             player.AccountId = AccountManager.Instance.AccountId;
@@ -427,11 +430,11 @@ class PacketHandler
         manager.CurrentPlayerInventory.SetLastUpdateTick(pkt.serverTick);
     }
 
-    internal static void S_NtfUpdateBulletHandler(PacketSession session, IPacket packet)
+    internal static void S_NtfUpdateAmmoHandler(PacketSession session, IPacket packet)
     {
-        S_NtfUpdateBullet pkt = packet as S_NtfUpdateBullet;
+        S_NtfUpdateAmmo pkt = packet as S_NtfUpdateAmmo;
 
-        MyChestInventoryManager.Instance.UpdateAmmoInfo(pkt.bulletCount, pkt.bulletCount);        
+        MyChestInventoryManager.Instance.UpdateAmmoInfo(pkt.ammoCount, pkt.ammoCount);        
     }
     public static void S_SendFriendReqResultHandler(PacketSession session, IPacket packet)
     {
@@ -460,5 +463,16 @@ class PacketHandler
     public static void S_FriendReqListHandler(PacketSession session, IPacket packet)
     {
         S_FriendReqList pkt = packet as S_FriendReqList;
+    }
+    internal static void S_NtfChatMessageHandler(PacketSession session, IPacket packet)
+    {
+        S_NtfChatMessage pkt = packet as S_NtfChatMessage;
+
+        ChatMessage message = new ChatMessage();
+        message.Sender = AccountManager.Instance.GetNickname(pkt.accountId);
+        message.Message = pkt.message;
+        message.Channel = (ChatChannel)pkt.channel;
+
+        ChatManager.Instance.ReceiveChatMessage(message);
     }
 }
