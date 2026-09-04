@@ -1604,7 +1604,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: -1197108306
         Label: Sound
-        OriginalLabel: 
+        OriginalLabel: Sound
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -1729,7 +1729,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: 1804504585
         Label: Instantiate Object
-        OriginalLabel: 
+        OriginalLabel: Instantiate Object
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -1820,7 +1820,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: 1546088193
         Label: Lens Distortion
-        OriginalLabel: 
+        OriginalLabel: Lens Distortion
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -1996,7 +1996,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: -1893550774
         Label: Flash
-        OriginalLabel: 
+        OriginalLabel: Flash
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}

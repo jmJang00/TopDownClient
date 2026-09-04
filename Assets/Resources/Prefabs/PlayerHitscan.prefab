@@ -5275,7 +5275,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: cefb2661e65fc8c4c9c9e8319d6e9912, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10407,6 +10406,8 @@ Transform:
   m_Children:
   - {fileID: 7929393533276261181}
   - {fileID: 4122969310152496}
+  - {fileID: 6328248594023486777}
+  - {fileID: 8762835065965258679}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &143542821446051776
@@ -10959,7 +10960,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176bad9561d530643a5c4f83aeab190e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  gridMapSO: {fileID: 11400000, guid: a0102db427c9c09419c25483eefdad2b, type: 2}
   radius: 0.3
   moveSpeed: 4
   stopThreshold: 0.05

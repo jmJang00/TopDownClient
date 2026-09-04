@@ -729,6 +729,7 @@ MonoBehaviour:
   _defaultInventoryDisplay: {fileID: 774891181}
   _defaultInventoryInputManager: {fileID: 774891182}
   _defaultPlayerInventory: {fileID: 462014373}
+  _defaultPlayerWeaponInventory: {fileID: 1392718423}
   CurrentChest: {fileID: 0}
   CurrentChestInventory: {fileID: 0}
 --- !u!1001 &774891178
@@ -3060,7 +3061,7 @@ PrefabInstance:
     - target: {fileID: 5137101650580972029, guid: 8a9950f6e8c836540b0075a7e0c2b217,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.023924652
+      value: 0.019284088
       objectReference: {fileID: 0}
     - target: {fileID: 5137101650580972029, guid: 8a9950f6e8c836540b0075a7e0c2b217,
         type: 3}
