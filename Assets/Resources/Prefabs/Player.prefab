@@ -10405,6 +10405,7 @@ Transform:
   m_Children:
   - {fileID: 5448652774448325007}
   - {fileID: 4122969310152496}
+  - {fileID: 8789327302247672861}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &143542821446051776
@@ -10877,7 +10878,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176bad9561d530643a5c4f83aeab190e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  gridMapSO: {fileID: 11400000, guid: a0102db427c9c09419c25483eefdad2b, type: 2}
   radius: 0.3
   moveSpeed: 4
   stopThreshold: 0.05
@@ -11006,7 +11006,7 @@ MonoBehaviour:
   ResetHealthOnEnable: 1
   OnHealFeedback: {fileID: 0}
   ImmuneToDamage: 0
-  DamageMMFeedbacks: {fileID: 0}
+  DamageMMFeedbacks: {fileID: 956573894401959423}
   FeedbackIsProportionalToDamage: 0
   PreventTakeSelfDamage: 0
   ImmuneToKnockback: 0
@@ -30081,7 +30081,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: 959947201
         Label: Particles Play
-        OriginalLabel: 
+        OriginalLabel: Particles Play
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
@@ -30167,7 +30167,7 @@ MonoBehaviour:
         Active: 1
         UniqueID: -1563155795
         Label: Sound
-        OriginalLabel: 
+        OriginalLabel: Sound
         ChannelMode: 0
         Channel: 0
         MMChannelDefinition: {fileID: 0}
