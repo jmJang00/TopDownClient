@@ -76,6 +76,13 @@ public class Player : NetEntity
 
         PlayerManager.Instance.RemovePlayer(entityId);
 
-        WorldUIManager.Instance.RemoveNamePlate(_namePlate);
+        if (_namePlate)
+        {
+            WorldUIManager.Instance.RemoveNamePlate(_namePlate);
+        }
+        else
+        {
+            Debug.LogWarning("NamePlate is null for player: " + entityId);
+        }
     }
 }

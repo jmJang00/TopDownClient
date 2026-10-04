@@ -57,6 +57,7 @@ public class PlayerHitscanSync : NetBehaviour
         base.Init();
         _character = GetComponent<Character>();
         TargetHandleWeaponAbility = _character.FindAbility<CharacterHandleWeapon>();
+        TargetHandleWeaponAbility.ResetAbility();
         _updateTimer = updateInterval;
     }
 
@@ -127,6 +128,7 @@ public class PlayerHitscanSync : NetBehaviour
 
     public override void OnDespawn()
     {
+        TargetHandleWeaponAbility.ForceStop();
         base.OnDespawn();        
     }
 
@@ -145,14 +147,21 @@ public class PlayerHitscanSync : NetBehaviour
                 if (!hasAuthority)
                 {
                     S_HitscanShootStart pkt = packet as S_HitscanShootStart;
-                    _tickScheduler.ScheduleAt(pkt.acceptTick, () =>
+
+                    int tick = _tickScheduler.GetCurrentTick();
+
+                    // 너무 과거의 애니메이션은 재생하지 않는다
+                    if (pkt.acceptTick > tick - 3)
                     {
-                        if (gameObject.activeInHierarchy)
+                        _tickScheduler.ScheduleAt(pkt.acceptTick, () =>
                         {
-                            StartCoroutine(ShootTrigger());
-                        }
-                        LaserManager.Instance.DrawLaser(new Vector3(pkt.startX, 2.23f, pkt.startY), new Vector3(pkt.endX, 2.23f, pkt.endY));
-                    });
+                            if (gameObject.activeInHierarchy)
+                            {
+                                StartCoroutine(ShootTrigger());
+                            }
+                            LaserManager.Instance.DrawLaser(new Vector3(pkt.startX, 2.23f, pkt.startY), new Vector3(pkt.endX, 2.23f, pkt.endY));
+                        });
+                    }
                 }
                 break;
             }
@@ -175,7 +184,8 @@ public class PlayerHitscanSync : NetBehaviour
     }
 
     public IEnumerator ShootTrigger()
-    {        
+    {
+        Debug.Log("Hitscan Shoot Trigger");
         TargetHandleWeaponAbility.ShootStart();
 
         yield return new WaitForSeconds(0.05f);

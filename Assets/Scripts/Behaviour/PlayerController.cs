@@ -36,6 +36,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
     private ReplayerRunner<MoveState, MoveInput> _runner;
 
     private TopdownControllerRevised _topdown;
+    private Player _player;
 
     public bool hasAuthority;
 
@@ -50,6 +51,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
         base.Init();
         _topdown = GetComponent<TopdownControllerRevised>();
         _map = new GridMap(NetworkManager.Instance.game.gridMapSO);
+        _player = Entity as Player;
         _runner = new ReplayerRunner<MoveState, MoveInput>(this, hasAuthority, Entity.renderDelay, 
             onApplied : (int tick, MoveInput input) => 
             {
@@ -252,7 +254,7 @@ public class PlayerController : NetBehaviour, ITickable<MoveState, MoveInput>
             return;
         }
 
-        if (!CheckWall(_map, nextPos))
+        if (_player.IsBot || !CheckWall(_map, nextPos))
         {
             _state.pos = nextPos;
         }

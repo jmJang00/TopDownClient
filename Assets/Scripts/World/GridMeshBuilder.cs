@@ -11,6 +11,7 @@ public class GridMeshBuilder : MonoBehaviour
 {
     public float tileSize = 1.0f;
     public float wallHeight = 2.0f;
+    public bool drawGridGizmos = false;
 
     public Material material; // Standard 머티리얼
 
@@ -344,9 +345,10 @@ public class GridMeshBuilder : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (gridMap != null)
+        if (gridMap != null && drawGridGizmos)
         {
-            gridMap.Draw();
+            gridMap.DrawGrid();
+            gridMap.DrawWaypoints();
         }
     }
 #endif

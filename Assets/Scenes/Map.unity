@@ -524,6 +524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GridMeshBuilder
   tileSize: 4
   wallHeight: 6
+  drawGridGizmos: 1
   material: {fileID: 2100000, guid: 82da3ef8ffba57445a7fba8ad983a0e4, type: 2}
   gridMap: {fileID: 11400000, guid: 10a7752ad92bb644e990d6dba0e0a7d6, type: 2}
 --- !u!23 &87208022

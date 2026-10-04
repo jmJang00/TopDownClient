@@ -34,7 +34,7 @@ public class GridMapSO : ScriptableObject
     }
 
 #if UNITY_EDITOR
-    public void Draw()
+    public void DrawWaypoints()
     {
         if (waypoints == null || links == null)
         {
@@ -75,6 +75,72 @@ public class GridMapSO : ScriptableObject
             UnityEditor.Handles.SphereHandleCap(0, pos, Quaternion.identity, 0.3f, EventType.Repaint);
 
             UnityEditor.Handles.Label(pos + Vector3.up * 0.2f, i.ToString());
+        }
+    }
+
+    public void DrawGrid()
+    {
+        if (width <= 0 || height <= 0 || tileSize <= 0)
+            return;
+
+        float mapWidth = width * tileSize;
+        float mapHeight = height * tileSize;
+
+        // Blocked Cell
+        if (data != null && data.Length == width * height)
+        {
+            Color fillColor = new Color(1.0f, 0.2f, 0.2f, 0.20f);
+            Color outlineColor = new Color(1.0f, 0.2f, 0.2f, 0.6f);
+
+            for (int y = 0; y < height; ++y)
+            {
+                for (int x = 0; x < width; ++x)
+                {
+                    int index = y * width + x;
+
+                    if (data[index] != 1)
+                        continue;
+
+                    float minX = x * tileSize;
+                    float minZ = y * tileSize;
+                    float maxX = minX + tileSize;
+                    float maxZ = minZ + tileSize;
+
+                    Vector3[] vertices =
+                    {
+                    new Vector3(minX, 0.01f, minZ),
+                    new Vector3(minX, 0.01f, maxZ),
+                    new Vector3(maxX, 0.01f, maxZ),
+                    new Vector3(maxX, 0.01f, minZ),
+                };
+
+                    UnityEditor.Handles.DrawSolidRectangleWithOutline(
+                        vertices,
+                        fillColor,
+                        outlineColor);
+                }
+            }
+        }
+
+        // Grid Line
+        UnityEditor.Handles.color = new Color(0.3f, 0.8f, 1.0f, 0.7f);
+
+        for (int x = 0; x <= width; ++x)
+        {
+            float px = x * tileSize;
+
+            UnityEditor.Handles.DrawLine(
+                new Vector3(px, 0.02f, 0.0f),
+                new Vector3(px, 0.02f, mapHeight));
+        }
+
+        for (int y = 0; y <= height; ++y)
+        {
+            float pz = y * tileSize;
+
+            UnityEditor.Handles.DrawLine(
+                new Vector3(0.0f, 0.02f, pz),
+                new Vector3(mapWidth, 0.02f, pz));
         }
     }
 #endif
