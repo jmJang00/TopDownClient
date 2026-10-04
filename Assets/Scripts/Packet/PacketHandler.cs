@@ -179,6 +179,7 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
+            int tick = NetworkManager.Instance.game.tickScheduler.GetCurrentTick();
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Projectile, packet);
         }
@@ -214,7 +215,11 @@ class PacketHandler
         if (NetworkManager.Instance.game)
         {
             NetEntity bullet = NetworkManager.Instance.entitySystem.Get(pkt.bulletId);
-            bullet.DispatchPacket(NetBehaviourType.BulletMovement, packet);
+            // 불릿은 자기 자신이 디스폰 하는 경우도 존재함
+            if (bullet)
+            {
+                bullet.DispatchPacket(NetBehaviourType.BulletMovement, packet);
+            }
 
             NetEntity collision = NetworkManager.Instance.entitySystem.Get(pkt.collisionId);
             collision.DispatchPacket(NetBehaviourType.Health, packet);
@@ -228,11 +233,12 @@ class PacketHandler
 
         if (NetworkManager.Instance.game)
         {
+            int tick = NetworkManager.Instance.game.tickScheduler.GetCurrentTick();
             NetEntity entity = NetworkManager.Instance.entitySystem.Get(pkt.entityId);
             entity.DispatchPacket(NetBehaviourType.Hitscan, packet);
         }
-
     }
+
     internal static void S_HitscanHitHandler(PacketSession session, IPacket packet)
     {
         S_HitscanHit pkt = packet as S_HitscanHit;

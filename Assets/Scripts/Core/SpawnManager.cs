@@ -24,7 +24,7 @@ public class SpawnManager : MonoBehaviour
         _pool = new ObjectPool<Bullet>(_bulletPrefab, 32, transform);
         _pickerPool = new ObjectPool<Picker>(_pickerPrefab, 32, transform);
         _otherPlayerPPool = new ObjectPool<Player>(_otherPlayerPPrefab, 20, transform);
-        _otherPlayerHPool = new ObjectPool<Player>(_otherPlayerPPrefab, 20, transform);
+        _otherPlayerHPool = new ObjectPool<Player>(_otherPlayerHPrefab, 20, transform);
     }
 
     public NetEntity SpawnAt(int tick, EntityType type, uint id, Vector3 position)

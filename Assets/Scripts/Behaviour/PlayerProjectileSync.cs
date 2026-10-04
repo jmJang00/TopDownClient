@@ -33,6 +33,7 @@ public class PlayerProjectileSync : NetBehaviour
         base.Init();
         _character = GetComponent<Character>();
         TargetHandleWeaponAbility = _character.FindAbility<CharacterHandleWeapon>();
+        TargetHandleWeaponAbility.ResetAbility();
         _updateTimer = updateInterval;
     }
 
@@ -100,6 +101,7 @@ public class PlayerProjectileSync : NetBehaviour
 
     public override void OnDespawn()
     {
+        TargetHandleWeaponAbility.ForceStop();
         base.OnDespawn();
     }
 
@@ -113,13 +115,19 @@ public class PlayerProjectileSync : NetBehaviour
                 S_ShootStart pkt = packet as S_ShootStart;
                 if (!hasAuthority)
                 {
-                    _tickScheduler.ScheduleAt(pkt.accpetTick, () =>
+                    int tick = _tickScheduler.GetCurrentTick();
+
+                    // 너무 과거의 애니메이션은 재생하지 않는다
+                    if (pkt.accpetTick > tick - 3)
                     {
-                        if (gameObject.activeInHierarchy)
+                        _tickScheduler.ScheduleAt(pkt.accpetTick, () =>
                         {
-                            StartCoroutine(ShootTrigger());
-                        }
-                    });
+                            if (gameObject.activeInHierarchy)
+                            {
+                                StartCoroutine(ShootTrigger());
+                            }
+                        });
+                    }
                 }
                 break;
             }
@@ -128,6 +136,7 @@ public class PlayerProjectileSync : NetBehaviour
 
     public IEnumerator ShootTrigger()
     {
+        Debug.Log("Projectile ShootTrigger");
         TargetHandleWeaponAbility.ShootStart();
 
         if (hasAuthority)
